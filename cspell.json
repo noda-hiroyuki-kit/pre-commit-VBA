@@ -7,6 +7,7 @@
         "chardet",
         "colorama",
         "distlib",
+        "EDITMSG",
         "filelock",
         "iniconfig",
         "mypy",
