@@ -4,12 +4,15 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "typer>=0.20.0",
+]
 
 [dependency-groups]
 dev = [
     "mypy>=1.18.2",
     "pre-commit>=4.4.0",
+    "pre-commit-uv>=4.2.0",
     "pytest>=9.0.1",
     "pytest-cov>=7.0.0",
     "ruff>=0.14.5",
@@ -58,18 +61,11 @@ target-version = "py314"
 # Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`) codes by default.
 # Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
 # McCabe complexity (`C901`) by default.
-select = [
-    "F",    # Pyflakes
-    "E",    # pycodestyle
-    "W",    # pycodestyle warnings
-    "I",
-    "D",
-    "S",    # flake8-bandit (S)
-    "B"     # flake8-bugbear (B)
-]
+select = ["ALL"]
 ignore = [
     "D203", # incorrect-blank-line-before-class
-    "D213"  # multi-line-summary-second-line
+    "D213", # multi-line-summary-second-line
+    "COM812" # missing-trailing-comma
 ]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.
@@ -142,3 +138,37 @@ python_version = "3.14"
 [[tool.mypy.overrides]]
 module = "tests.*"
 ignore_errors = true
+
+[tool.tox]
+requires = ["tox>=4.19"]
+env_list = ["fix", "type", "3.14"]
+
+[tool.tox.env_run_base]
+runner = "uv-venv-lock-runner"
+description = "Run test under {base_python}"
+allowlist_externals = ["pytest", "mypy", "pre-commit","uv"]
+commands=[["pytest"]]
+
+[tool.tox.env.fix]
+runner = "uv-venv-lock-runner"
+description = "run code formatter and linter (auto-fix)"
+skip_install = true
+commands = [
+    ["uv", "run", "pre-commit", "run", "--all-files", "--show-diff-on-failure"],
+]
+
+[tool.tox.env.type]
+runner = "uv-venv-lock-runner"
+description = "run type checker via mypy"
+skip_install = true
+commands = [
+    ["mypy", "."],
+    ["mypy", "tests"],
+]
+
+[tool.pytest]
+minversion = "9.0"
+addopts = ["-v", "-s"]
+testpaths = [
+    "tests"
+]
