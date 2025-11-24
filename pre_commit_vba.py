@@ -22,7 +22,7 @@ class ExcelVbComponent:
     @property
     def components(self) -> dict[str, int | None]:
         """Return components dict."""
-        return {"ThisWorkbook": None}
+        return {"ThisWorkbook": 100}
 
 
 @app.command()
