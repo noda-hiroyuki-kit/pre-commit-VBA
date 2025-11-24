@@ -12,6 +12,19 @@ basicConfig(level=DEBUG)
 logger = getLogger(__name__)
 
 
+class ExcelVbComponent:
+    """A placeholder class for ExcelVbComponent."""
+
+    def __init__(self, file_path: str) -> None:
+        """Initialize with file path."""
+        self.file_path = file_path
+
+    @property
+    def components(self) -> dict[str, int | None]:
+        """Return components dict."""
+        return {"ThisWorkbook": None}
+
+
 @app.command()
 def main() -> None:
     """Log info Hello pre-commit-vba script."""
