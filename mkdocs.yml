@@ -1,3 +1,4 @@
+---
 site_name: pre-commit-vba
 repo_name: pre-commit-vba
 repo_url: https://github.com/noda-hiroyuki-kit/pre-commit-vba
@@ -58,7 +59,7 @@ nav:
   - 使用方法: usage.md
   - 設定: configuration.md
   - 開発:
-    - 貢献: contributing.md
+      - 貢献: contributing.md
 markdown_extensions:
   - abbr
   - admonition
@@ -79,22 +80,22 @@ markdown_extensions:
   - pymdownx.mark
   - pymdownx.superfences:
       custom_fences:
-      - name: mermaid
-        class: mermaid
-        format: !!python/name:pymdownx.superfences.fence_code_format
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tilde
   - pymdownx.blocks.admonition:
       types:
-      - note
-      - attention
-      - caution
-      - danger
-      - error
-      - tip
-      - hint
-      - warning
-      - info
-      - check
+        - note
+        - attention
+        - caution
+        - danger
+        - error
+        - tip
+        - hint
+        - warning
+        - info
+        - check
   - pymdownx.blocks.details
   - pymdownx.blocks.tab:
       alternate_style: true
@@ -102,9 +103,9 @@ markdown_extensions:
       server: https://www.plantuml.com/plantuml
 extra:
   alternate:
-  - link: /
-    name: ja - 日本語
-    lang: ja
-  - link: /en/
-    name: en - English
-    lang: en
+    - link: /
+      name: ja - 日本語
+      lang: ja
+    - link: /en/
+      name: en - English
+      lang: en
