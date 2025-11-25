@@ -4,8 +4,10 @@ extract code files from excel workbook with codes.
 """
 
 from logging import DEBUG, basicConfig, getLogger
+from pathlib import Path
 
 import typer
+from win32com.client import gencache
 
 app = typer.Typer()
 basicConfig(level=DEBUG)
@@ -17,12 +19,25 @@ class ExcelVbComponent:
 
     def __init__(self, file_path: str) -> None:
         """Initialize with file path."""
-        self.file_path = file_path
+        self._app = self._get_xl_app()
+        self._workbook = self._app.Workbooks.Open(
+            f"{Path.cwd()}\\{file_path}", ReadOnly=True
+        )
+        self._components: dict[str, int | None] = {}
+        for vb_comp in self._workbook.VBProject.VBComponents:
+            self._components[vb_comp.Name] = vb_comp.Type
+
+    def _get_xl_app(self) -> gencache.Dispatch:
+        """Get Excel application."""
+        excel_app = gencache.EnsureDispatch("Excel.Application")
+        excel_app.Visible = True
+        excel_app.DisplayAlerts = False
+        return excel_app
 
     @property
     def components(self) -> dict[str, int | None]:
         """Return components dict."""
-        return {"ThisWorkbook": 100}
+        return self._components
 
 
 @app.command()

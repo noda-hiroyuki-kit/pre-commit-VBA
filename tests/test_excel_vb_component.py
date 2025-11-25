@@ -8,10 +8,10 @@ class TestExcelVbComponent:
 
     def test_this_work_book_exists(self) -> None:
         """Test that ThisWorkbook component exists in the test Excel file."""
-        sut = ExcelVbComponent("tests/test.xlsm")
+        sut = ExcelVbComponent("tests\\test.xlsm")
         assert sut.components["ThisWorkbook"] is not None  # noqa: S101
 
     def test_sheet1_exists(self) -> None:
         """Test that sheet1 component exists in the test Excel file."""
-        sut = ExcelVbComponent("tests/test.xlsm")
-        assert sut.components["sheet1"] is not None  # noqa: S101
+        sut = ExcelVbComponent("tests\\test.xlsm")
+        assert sut.components["Sheet1"] is not None  # noqa: S101

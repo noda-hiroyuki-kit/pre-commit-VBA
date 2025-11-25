@@ -26,6 +26,7 @@
         "envrc",
         "filelock",
         "fontawesome",
+        "gencache",
         "htmlcov",
         "iniconfig",
         "inlinehilite",
