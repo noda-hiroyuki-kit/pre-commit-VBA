@@ -61,6 +61,7 @@
         "pyproject",
         "pytest",
         "pytype",
+        "pywin",
         "pyyaml",
         "rabbitmq",
         "ropeproject",
