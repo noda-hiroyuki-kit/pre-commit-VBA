@@ -4,6 +4,7 @@
     "words": [
         "Abstra",
         "addopts",
+        "autouse",
         "betterem",
         "Cabe",
         "cachetools",
@@ -61,6 +62,7 @@
         "pypirc",
         "pyproject",
         "pytest",
+        "pythoncom",
         "pytype",
         "pywin",
         "pyyaml",

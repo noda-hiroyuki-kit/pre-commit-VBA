@@ -34,6 +34,15 @@ class ExcelVbComponent:
         excel_app.DisplayAlerts = False
         return excel_app
 
+    def __del__(self) -> None:
+        """Destructor to close workbook and quit app."""
+        try:
+            self._workbook.Close(SaveChanges=False)
+            self._app.Quit()
+        except Exception:
+            logger.exception("Error in destructor")
+            raise
+
     @property
     def components(self) -> dict[str, int | None]:
         """Return components dict."""

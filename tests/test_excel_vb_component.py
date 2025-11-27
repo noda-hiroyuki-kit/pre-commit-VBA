@@ -1,17 +1,25 @@
 """Tests for ExcelVbComponent class."""
 
+import pytest
+
 from pre_commit_vba import ExcelVbComponent
 
 
 class TestExcelVbComponent:
     """Tests for ExcelVbComponent class."""
 
-    def test_this_work_book_exists(self) -> None:
-        """Test that ThisWorkbook component exists in the test Excel file."""
-        sut = ExcelVbComponent("tests\\test.xlsm")
-        assert sut.components["ThisWorkbook"] is not None  # noqa: S101
+    class TestConstructExcelVbComponent:
+        """Tests for construct ExcelVbComponent."""
 
-    def test_sheet1_exists(self) -> None:
-        """Test that sheet1 component exists in the test Excel file."""
-        sut = ExcelVbComponent("tests\\test.xlsm")
-        assert sut.components["Sheet1"] is not None  # noqa: S101
+        @pytest.fixture(scope="class")
+        def sut(self) -> ExcelVbComponent:
+            """Act first this tests."""
+            return ExcelVbComponent("tests\\test.xlsm")
+
+        def test_exists_this_workbook(self, sut: ExcelVbComponent) -> None:
+            """Test that ThisWorkbook component exists."""
+            assert sut.components["ThisWorkbook"] is not None  # noqa: S101
+
+        def test_exists_sheet1(self, sut: ExcelVbComponent) -> None:
+            """Test that Sheet1 component exists."""
+            assert sut.components["Sheet1"] is not None  # noqa: S101
