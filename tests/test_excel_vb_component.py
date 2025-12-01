@@ -23,3 +23,8 @@ class TestExcelVbComponent:
         def test_exists_sheet1(self, sut: ExcelVbComponent) -> None:
             """Test that Sheet1 component exists."""
             assert sut.components["Sheet1"] is not None  # noqa: S101
+
+        def test_equals_this_workbook_type_100(self, sut: ExcelVbComponent) -> None:
+            """Test that ThisWorkbook component exists."""
+            expected_type_id = 100  # vbext_ct_Document
+            assert sut.components["ThisWorkbook"] == expected_type_id  # noqa: S101

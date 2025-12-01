@@ -172,7 +172,8 @@ commands = [
 
 [tool.pytest]
 minversion = "9.0"
-addopts = ["-v", "-s"]
+addopts = ["-v", "-s", "--strict-markers"]
 testpaths = [
     "tests"
 ]
+markers=["develop_research"]
