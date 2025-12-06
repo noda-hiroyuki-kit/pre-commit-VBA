@@ -8,7 +8,7 @@ from logging import DEBUG, basicConfig, getLogger
 from pathlib import Path
 
 import typer
-from win32com.client import gencache, makepy
+from win32com.client import Dispatch
 
 
 class UndefineTypeError(Exception):
@@ -41,12 +41,9 @@ class ExcelVbComponent:
         for vb_comp in self._workbook.VBProject.VBComponents:
             self._components[vb_comp.Name] = vb_comp.Type
 
-    def _get_xl_app(self) -> gencache.Dispatch:
+    def _get_xl_app(self) -> Dispatch:
         """Get Excel application."""
-        excel_app = gencache.EnsureDispatch("Excel.Application")
-        makepy.GenerateFromTypeLibSpec(
-            "Microsoft Visual Basic for Applications Extensibility 5.3"
-        )
+        excel_app = Dispatch("Excel.Application")
         excel_app.Visible = True
         excel_app.DisplayAlerts = False
         return excel_app
