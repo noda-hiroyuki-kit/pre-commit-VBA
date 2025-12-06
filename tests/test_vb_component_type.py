@@ -1,12 +1,6 @@
 """Test module for IVbComponentType class."""
 
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from collections.abc import Generator
-
 import pytest
-from win32com.client import constants, gencache, makepy
 
 from pre_commit_vba import (
     ClassModule,
@@ -14,19 +8,9 @@ from pre_commit_vba import (
     StdModule,
     UndefineTypeError,
     UserFormModule,
+    constants,
     vb_component_type_factory,
 )
-
-
-@pytest.fixture(scope="module", name="arrange_excel_app")
-def arrange_excel_app() -> Generator[None]:
-    """Arrange Excel Application for tests."""
-    excel_app = gencache.EnsureDispatch("Excel.Application")
-    makepy.GenerateFromTypeLibSpec(
-        "Microsoft Visual Basic for Applications Extensibility 5.3"
-    )
-    yield
-    excel_app.Quit()
 
 
 class TestVbComponentType:
@@ -46,7 +30,6 @@ class TestVbComponentType:
         )
         def test_vb_component_type_factory(
             self,
-            arrange_excel_app: Generator,  # noqa: ARG002
             module_name: str,
             type_id: int,
             expected_class: type,
@@ -55,10 +38,7 @@ class TestVbComponentType:
             vb_component = vb_component_type_factory(module_name, type_id)
             assert isinstance(vb_component, expected_class)  # noqa: S101
 
-        def test_vb_component_type_factory_invalid_type(
-            self,
-            arrange_excel_app: Generator,  # noqa: ARG002
-        ) -> None:
+        def test_vb_component_type_factory_invalid_type(self) -> None:
             """Test vb_component_type_factory raises ValueError for invalid type_id."""
             with pytest.raises(UndefineTypeError) as exc_info:
                 vb_component_type_factory("InvalidModule", 999)
@@ -69,18 +49,18 @@ class TestVbComponentType:
 class TestConstants:
     """Tests for VbComponentType constants."""
 
-    def test_vbext_ct_std_module_is_1(self, arrange_excel_app: Generator) -> None:  # noqa: ARG002
+    def test_vbext_ct_std_module_is_1(self) -> None:
         """Test that VbComponentType constants have expected values."""
         assert constants.vbext_ct_StdModule == 1  # noqa: S101
 
-    def test_vbext_ct_class_module_is_2(self, arrange_excel_app: Generator) -> None:  # noqa: ARG002
+    def test_vbext_ct_class_module_is_2(self) -> None:
         """Test that VbComponentType constants have expected values."""
         assert constants.vbext_ct_ClassModule == 2  # noqa: PLR2004, S101
 
-    def test_vbext_ct_msform_is_3(self, arrange_excel_app: Generator) -> None:  # noqa: ARG002
+    def test_vbext_ct_msform_is_3(self) -> None:
         """Test that VbComponentType constants have expected values."""
         assert constants.vbext_ct_MSForm == 3  # noqa: PLR2004, S101
 
-    def test_vbext_ct_document_is_100(self, arrange_excel_app: Generator) -> None:  # noqa: ARG002
+    def test_vbext_ct_document_is_100(self) -> None:
         """Test that VbComponentType constants have expected values."""
         assert constants.vbext_ct_Document == 100  # noqa: PLR2004, S101

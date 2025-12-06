@@ -8,15 +8,24 @@ from logging import DEBUG, basicConfig, getLogger
 from pathlib import Path
 
 import typer
-from win32com.client import constants, gencache, makepy
-
-app = typer.Typer()
-basicConfig(level=DEBUG)
-logger = getLogger(__name__)
+from win32com.client import gencache, makepy
 
 
 class UndefineTypeError(Exception):
     """Custom UndefineTypeError exception."""
+
+
+class Constants:
+    """Constants Class for win32com.
+
+    This class can replace win32com.client.constants as follows:
+    `constants=Constants()`
+    """
+
+    vbext_ct_ClassModule: int = 2  # from enum vbext_ComponentType  # noqa: N815
+    vbext_ct_Document: int = 100  # from enum vbext_ComponentType  # noqa: N815
+    vbext_ct_MSForm: int = 3  # from enum vbext_ComponentType  # noqa: N815
+    vbext_ct_StdModule: int = 1  # from enum vbext_ComponentType  # noqa: N815
 
 
 class ExcelVbComponent:
@@ -118,6 +127,12 @@ class SheetClassModule(IVbComponentType):
     def file_name(self) -> str:
         """Return module name."""
         return self.module_name + ".cls"
+
+
+app = typer.Typer()
+basicConfig(level=DEBUG)
+logger = getLogger(__name__)
+constants = Constants()
 
 
 @app.command()
