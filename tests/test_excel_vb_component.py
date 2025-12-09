@@ -1,5 +1,7 @@
 """Tests for ExcelVbComponent class."""
 
+from pathlib import Path
+
 import pytest
 
 from pre_commit_vba import ExcelVbComponent
@@ -14,7 +16,7 @@ class TestExcelVbComponent:
         @pytest.fixture(scope="class")
         def sut(self) -> ExcelVbComponent:
             """Act first this tests."""
-            return ExcelVbComponent("tests\\test.xlsm")
+            return ExcelVbComponent(f"{Path.cwd()}\\tests", "test.xlsm")
 
         def test_exists_this_workbook(self, sut: ExcelVbComponent) -> None:
             """Test that ThisWorkbook component exists."""

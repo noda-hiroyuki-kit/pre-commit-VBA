@@ -6,7 +6,7 @@ extract code files from excel workbook with codes.
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from logging import DEBUG, basicConfig, getLogger
-from pathlib import Path
+from pathlib import Path  # noqa: F401
 
 import typer
 from win32com.client import Dispatch
@@ -33,11 +33,11 @@ class Constants:
 class ExcelVbComponent:
     """A placeholder class for ExcelVbComponent."""
 
-    def __init__(self, file_path: str) -> None:
+    def __init__(self, target_folder: str, workbook_name: str) -> None:
         """Initialize with file path."""
         self._app = self._get_xl_app()
         self._workbook = self._app.Workbooks.Open(
-            f"{Path.cwd()}\\{file_path}", ReadOnly=True
+            f"{target_folder}\\{workbook_name}", ReadOnly=True
         )
         self._components: dict[str, int | None] = {}
         for vb_comp in self._workbook.VBProject.VBComponents:
