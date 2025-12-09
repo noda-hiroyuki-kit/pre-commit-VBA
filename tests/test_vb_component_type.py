@@ -46,6 +46,25 @@ class TestVbComponentType:
                 vb_component_type_factory("InvalidModule", 999)
             assert "999" in str(exc_info.value)  # noqa: S101
 
+        @pytest.mark.parametrize(
+            ("module_name", "type_id", "expected"),
+            [
+                ("Module1", 1, "Module1.bas"),
+                ("Class1", 2, "Class1.cls"),
+                ("UserForm1", 3, "UserForm1.frm"),
+                ("Sheet1", 100, "Sheet1.cls"),
+            ],
+        )
+        def test_return_proper_file_name(
+            self,
+            module_name: str,
+            type_id: int,
+            expected: str,
+        ) -> None:
+            """Test vb_component_type_factory returns correct instance."""
+            sut = vb_component_type_factory(module_name, type_id)
+            assert sut.file_name == expected  # noqa: S101
+
 
 @pytest.mark.develop_research
 class TestConstants:
