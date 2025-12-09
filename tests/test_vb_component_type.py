@@ -64,3 +64,8 @@ class TestConstants:
     def test_vbext_ct_document_is_100(self) -> None:
         """Test that VbComponentType constants have expected values."""
         assert constants.vbext_ct_Document == 100  # noqa: PLR2004, S101
+
+    def test_cannot_change_vbext_ct_std_module_is_1(self) -> None:
+        """Test overwrite constants."""
+        with pytest.raises(Exception):  # noqa: B017, PT011
+            constants.vbext_ct_StdModule = 20  # type: ignore  # noqa: PGH003
