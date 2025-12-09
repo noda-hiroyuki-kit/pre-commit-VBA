@@ -1,5 +1,7 @@
 """Test module for IVbComponentType class."""
 
+from dataclasses import FrozenInstanceError
+
 import pytest
 
 from pre_commit_vba import (
@@ -67,5 +69,5 @@ class TestConstants:
 
     def test_cannot_change_vbext_ct_std_module_is_1(self) -> None:
         """Test overwrite constants."""
-        with pytest.raises(Exception):  # noqa: B017, PT011
+        with pytest.raises(FrozenInstanceError):
             constants.vbext_ct_StdModule = 20  # type: ignore  # noqa: PGH003
