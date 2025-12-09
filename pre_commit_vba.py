@@ -4,6 +4,7 @@ extract code files from excel workbook with codes.
 """
 
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from logging import DEBUG, basicConfig, getLogger
 from pathlib import Path
 
@@ -15,6 +16,7 @@ class UndefineTypeError(Exception):
     """Custom UndefineTypeError exception."""
 
 
+@dataclass(frozen=True)
 class Constants:
     """Constants Class for win32com.
 
