@@ -22,6 +22,11 @@ class TestExcelVbComponent:
             """Test that ThisWorkbook component exists."""
             assert sut.components["ThisWorkbook"] is not None  # noqa: S101
 
+        def test_exists_this_workbook_file(self, sut: ExcelVbComponent) -> None:  # noqa: ARG002
+            """Test that ThisWorkbook component file exists."""
+            expected_file = f"{Path.cwd()}\\tests\\test.VBA\\ThisWorkbook.cls"
+            assert Path.is_file(expected_file)  # noqa: S101
+
         def test_exists_sheet1(self, sut: ExcelVbComponent) -> None:
             """Test that Sheet1 component exists."""
             assert sut.components["Sheet1"] is not None  # noqa: S101
