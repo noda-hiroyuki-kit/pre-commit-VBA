@@ -6,7 +6,7 @@ extract code files from excel workbook with codes.
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from logging import DEBUG, basicConfig, getLogger
-from pathlib import Path  # noqa: F401
+from pathlib import Path
 
 import typer
 from win32com.client import Dispatch
@@ -39,9 +39,15 @@ class ExcelVbComponent:
         self._workbook = self._app.Workbooks.Open(
             f"{target_folder}\\{workbook_name}", ReadOnly=True
         )
+        vb_comp_export_folder = f"{target_folder}\\{workbook_name.split('.')[0]}.VBA"
+        Path(vb_comp_export_folder).mkdir(exist_ok=True)
         self._components: dict[str, int | None] = {}
         for vb_comp in self._workbook.VBProject.VBComponents:
             self._components[vb_comp.Name] = vb_comp.Type
+            vb_comp_file_name = vb_component_type_factory(
+                vb_comp.Name, vb_comp.Type
+            ).file_name
+            vb_comp.Export(f"{vb_comp_export_folder}\\{vb_comp_file_name}")
 
     def _get_xl_app(self) -> Dispatch:
         """Get Excel application."""
