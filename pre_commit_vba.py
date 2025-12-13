@@ -33,13 +33,17 @@ class Constants:
 class ExcelVbComponent:
     """A placeholder class for ExcelVbComponent."""
 
-    def __init__(self, target_folder: str, workbook_name: str) -> None:
+    def __init__(
+        self, target_folder: str, workbook_name: str, folder_suffix: str
+    ) -> None:
         """Initialize with file path."""
         self._app = self._get_xl_app()
         self._workbook = self._app.Workbooks.Open(
             f"{target_folder}\\{workbook_name}", ReadOnly=True
         )
-        vb_comp_export_folder = f"{target_folder}\\{workbook_name.split('.')[0]}.VBA"
+        vb_comp_export_folder = (
+            f"{target_folder}\\{workbook_name.split('.')[0]}{folder_suffix}"
+        )
         Path(vb_comp_export_folder).mkdir(exist_ok=True)
         self._components: dict[str, int | None] = {}
         for vb_comp in self._workbook.VBProject.VBComponents:

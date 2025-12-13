@@ -27,7 +27,7 @@ class TestExcelVbComponent:
             vb_component_export_folder = f"{Path.cwd()}\\tests\\test.VBA"
             if Path.is_dir(vb_component_export_folder):
                 shutil.rmtree(vb_component_export_folder)
-            yield ExcelVbComponent(f"{Path.cwd()}\\tests", "test.xlsm")
+            yield ExcelVbComponent(f"{Path.cwd()}\\tests", "test.xlsm", ".VBA")
             shutil.rmtree(vb_component_export_folder)
 
         def test_exists_this_workbook_file(self, sut: ExcelVbComponent) -> None:  # noqa: ARG002
