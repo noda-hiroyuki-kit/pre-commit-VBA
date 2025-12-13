@@ -45,7 +45,6 @@ class ExcelVbaExporter:
             f"{target_folder}\\{workbook_name.split('.')[0]}{folder_suffix}"
         )
         Path(vb_comp_export_folder).mkdir(exist_ok=True)
-        self._components: dict[str, int | None] = {}
         for vb_comp in self._workbook.VBProject.VBComponents:
             vb_comp_file_name = vb_component_type_factory(
                 vb_comp.Name, vb_comp.Type
