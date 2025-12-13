@@ -30,20 +30,12 @@ class TestExcelVbComponent:
             yield ExcelVbComponent(f"{Path.cwd()}\\tests", "test.xlsm")
             shutil.rmtree(vb_component_export_folder)
 
-        def test_exists_this_workbook(self, sut: ExcelVbComponent) -> None:
-            """Test that ThisWorkbook component exists."""
-            assert sut.components["ThisWorkbook"] is not None  # noqa: S101
-
         def test_exists_this_workbook_file(self, sut: ExcelVbComponent) -> None:  # noqa: ARG002
             """Test that ThisWorkbook component file exists."""
             expected_file = f"{Path.cwd()}\\tests\\test.VBA\\ThisWorkbook.cls"
             assert Path.is_file(expected_file)  # noqa: S101
 
-        def test_exists_sheet1(self, sut: ExcelVbComponent) -> None:
-            """Test that Sheet1 component exists."""
-            assert sut.components["Sheet1"] is not None  # noqa: S101
-
-        def test_equals_this_workbook_type_100(self, sut: ExcelVbComponent) -> None:
-            """Test that ThisWorkbook component exists."""
-            expected_type_id = 100  # vbext_ct_Document
-            assert sut.components["ThisWorkbook"] == expected_type_id  # noqa: S101
+        def test_exists_sheet1_file(self, sut: ExcelVbComponent) -> None:  # noqa: ARG002
+            """Test that ThisWorkbook component file exists."""
+            expected_file = f"{Path.cwd()}\\tests\\test.VBA\\sheet1.cls"
+            assert Path.is_file(expected_file)  # noqa: S101

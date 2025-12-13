@@ -43,7 +43,6 @@ class ExcelVbComponent:
         Path(vb_comp_export_folder).mkdir(exist_ok=True)
         self._components: dict[str, int | None] = {}
         for vb_comp in self._workbook.VBProject.VBComponents:
-            self._components[vb_comp.Name] = vb_comp.Type
             vb_comp_file_name = vb_component_type_factory(
                 vb_comp.Name, vb_comp.Type
             ).file_name
@@ -64,11 +63,6 @@ class ExcelVbComponent:
         except Exception:
             logger.exception("Error in destructor")
             raise
-
-    @property
-    def components(self) -> dict[str, int | None]:
-        """Return components dict."""
-        return self._components
 
 
 def vb_component_type_factory(module_name: str, type_id: int) -> IVbComponentType:
