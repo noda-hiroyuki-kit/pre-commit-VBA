@@ -30,8 +30,8 @@ class Constants:
     vbext_ct_StdModule: int = 1  # from enum vbext_ComponentType  # noqa: N815
 
 
-class ExcelVbComponent:
-    """A placeholder class for ExcelVbComponent."""
+class ExcelVbaExporter:
+    """A placeholder class for ExcelVbaExporter."""
 
     def __init__(
         self, target_folder: str, workbook_name: str, folder_suffix: str
