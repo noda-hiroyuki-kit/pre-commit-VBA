@@ -1,5 +1,13 @@
 """Tests for ExcelVbComponent class."""
 
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Generator
+
+import shutil
 from pathlib import Path
 
 import pytest
@@ -14,9 +22,13 @@ class TestExcelVbComponent:
         """Tests for construct ExcelVbComponent."""
 
         @pytest.fixture(scope="class")
-        def sut(self) -> ExcelVbComponent:
+        def sut(self) -> Generator[ExcelVbComponent]:
             """Act first this tests."""
-            return ExcelVbComponent(f"{Path.cwd()}\\tests", "test.xlsm")
+            vb_component_export_folder = f"{Path.cwd()}\\tests\\test.VBA"
+            if Path.is_dir(vb_component_export_folder):
+                shutil.rmtree(vb_component_export_folder)
+            yield ExcelVbComponent(f"{Path.cwd()}\\tests", "test.xlsm")
+            shutil.rmtree(vb_component_export_folder)
 
         def test_exists_this_workbook(self, sut: ExcelVbComponent) -> None:
             """Test that ThisWorkbook component exists."""
