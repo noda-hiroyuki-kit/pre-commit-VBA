@@ -131,6 +131,19 @@ class SheetClassModule(IVbComponentType):
         return self.module_name + ".cls"
 
 
+class ExcelCustomUiExtractor:
+    """A placeholder class for ExcelCustomUiExtractor."""
+
+    def __init__(
+        self,
+        target_folder: str,
+        workbook_name: str,
+        folder_suffix: str,
+        custom_ui_folder_name: str,
+    ) -> None:
+        """Initialize with file path."""
+
+
 app = typer.Typer()
 basicConfig(level=DEBUG)
 logger = getLogger(__name__)
