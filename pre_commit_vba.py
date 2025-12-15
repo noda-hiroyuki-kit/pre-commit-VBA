@@ -7,6 +7,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from logging import DEBUG, basicConfig, getLogger
 from pathlib import Path
+from zipfile import ZipFile
 
 import typer
 from win32com.client import Dispatch
@@ -142,6 +143,41 @@ class ExcelCustomUiExtractor:
         custom_ui_folder_name: str,
     ) -> None:
         """Initialize with file path."""
+        self._target_folder = target_folder
+        self._workbook_name = workbook_name
+        self._folder_suffix = folder_suffix
+        self._custom_ui_folder_name = custom_ui_folder_name
+        self._extract_custom_ui_files()
+
+    def _extract_custom_ui_files(self) -> None:
+        self._make_export_folder()
+        self._extract_custom_ui_file("customUI/customUI14.xml")
+        self._extract_custom_ui_file("customUI/customUI.xml")
+
+    def _make_export_folder(self) -> None:
+        self._xml_export_folder = (
+            f"{self._target_folder}"
+            f"\\{self._workbook_name.split('.')[0]}{self._folder_suffix}"
+            f"\\{self._custom_ui_folder_name}"
+        )
+        Path(self._xml_export_folder).mkdir(parents=True, exist_ok=True)
+
+    def _extract_custom_ui_file(self, full_item_name: str) -> None:
+        try:
+            with ZipFile(
+                f"{self._target_folder}\\{self._workbook_name}", "r"
+            ) as zip_ref:
+                file_data = zip_ref.read(full_item_name)
+            with Path(f"{self._xml_export_folder}\\{Path(full_item_name).name}").open(
+                mode="wb"
+            ) as xml_file:
+                xml_file.write(file_data)
+        except KeyError:
+            logger.info(
+                "%s does not exists in %s",
+                Path(full_item_name).name,
+                self._workbook_name,
+            )
 
 
 app = typer.Typer()
