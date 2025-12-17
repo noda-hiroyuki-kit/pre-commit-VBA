@@ -31,26 +31,58 @@ class Constants:
     vbext_ct_StdModule: int = 1  # from enum vbext_ComponentType  # noqa: N815
 
 
+class SettingsHandleExcel:
+    """Settings for handling Excel."""
+
+    def __init__(
+        self,
+        target_folder: str,
+        folder_suffix: str,
+        export_folder: str,
+        custom_ui_folder: str,
+    ) -> None:
+        """Initialize settings."""
+        self._target_folder = target_folder
+        self._folder_suffix = folder_suffix
+        self._export_folder = export_folder
+        self._custom_ui_folder = custom_ui_folder
+
+    def target_folder(self) -> str:
+        """Return target folder path."""
+        return self._target_folder
+
+    def common_folder(self, workbook_name: str) -> str:
+        """Return common folder path."""
+        return (
+            f"{self._target_folder}\\{workbook_name.split('.')[0]}{self._folder_suffix}"
+        )
+
+    def export_folder(self, workbook_name: str) -> str:
+        """Return export folder path."""
+        return f"{self.common_folder(workbook_name)}\\{self._export_folder}"
+
+    def custom_ui_folder(self, workbook_name: str) -> str:
+        """Return custom UI folder path."""
+        return f"{self.common_folder(workbook_name)}\\{self._custom_ui_folder}"
+
+
 class ExcelVbaExporter:
     """A placeholder class for ExcelVbaExporter."""
 
-    def __init__(
-        self, target_folder: str, workbook_name: str, folder_suffix: str
-    ) -> None:
+    def __init__(self, workbook_name: str, settings: SettingsHandleExcel) -> None:
         """Initialize with file path."""
         self._app = self._get_xl_app()
         self._workbook = self._app.Workbooks.Open(
-            f"{target_folder}\\{workbook_name}", ReadOnly=True
+            f"{settings.target_folder()}\\{workbook_name}", ReadOnly=True
         )
-        vb_comp_export_folder = (
-            f"{target_folder}\\{workbook_name.split('.')[0]}{folder_suffix}"
-        )
-        Path(vb_comp_export_folder).mkdir(exist_ok=True)
+        Path(settings.export_folder(workbook_name)).mkdir(parents=True, exist_ok=True)
         for vb_comp in self._workbook.VBProject.VBComponents:
             vb_comp_file_name = vb_component_type_factory(
                 vb_comp.Name, vb_comp.Type
             ).file_name
-            vb_comp.Export(f"{vb_comp_export_folder}\\{vb_comp_file_name}")
+            vb_comp.Export(
+                f"{settings.export_folder(workbook_name)}\\{vb_comp_file_name}"
+            )
 
     def _get_xl_app(self) -> Dispatch:
         """Get Excel application."""
@@ -135,18 +167,10 @@ class SheetClassModule(IVbComponentType):
 class ExcelCustomUiExtractor:
     """A placeholder class for ExcelCustomUiExtractor."""
 
-    def __init__(
-        self,
-        target_folder: str,
-        workbook_name: str,
-        folder_suffix: str,
-        custom_ui_folder_name: str,
-    ) -> None:
+    def __init__(self, workbook_name: str, settings: SettingsHandleExcel) -> None:
         """Initialize with file path."""
-        self._target_folder = target_folder
         self._workbook_name = workbook_name
-        self._folder_suffix = folder_suffix
-        self._custom_ui_folder_name = custom_ui_folder_name
+        self._settings = settings
         self._extract_custom_ui_files()
 
     def _extract_custom_ui_files(self) -> None:
@@ -155,17 +179,13 @@ class ExcelCustomUiExtractor:
         self._extract_custom_ui_file("customUI/customUI.xml")
 
     def _make_export_folder(self) -> None:
-        self._xml_export_folder = (
-            f"{self._target_folder}"
-            f"\\{self._workbook_name.split('.')[0]}{self._folder_suffix}"
-            f"\\{self._custom_ui_folder_name}"
-        )
+        self._xml_export_folder = self._settings.custom_ui_folder(self._workbook_name)
         Path(self._xml_export_folder).mkdir(parents=True, exist_ok=True)
 
     def _extract_custom_ui_file(self, full_item_name: str) -> None:
         try:
             with ZipFile(
-                f"{self._target_folder}\\{self._workbook_name}", "r"
+                f"{self._settings.target_folder()}\\{self._workbook_name}", "r"
             ) as zip_ref:
                 file_data = zip_ref.read(full_item_name)
             with Path(f"{self._xml_export_folder}\\{Path(full_item_name).name}").open(
