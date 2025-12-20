@@ -65,6 +65,10 @@ class SettingsHandleExcel:
         """Return custom UI folder path."""
         return f"{self.common_folder(workbook_name)}\\{self._custom_ui_folder}"
 
+    def code_folder(self, workbook_name: str) -> str:
+        """Return code folder path."""
+        return f"{self.common_folder(workbook_name)}\\code"
+
 
 class ExcelVbaExporter:
     """A placeholder class for ExcelVbaExporter."""
@@ -205,6 +209,22 @@ class Utf8Converter:
 
     def __init__(self, workbook_name: str, settings: SettingsHandleExcel) -> None:
         """Initialize with file path."""
+        self._workbook_name = workbook_name
+        self._settings = settings
+        self._convert_to_utf8()
+
+    def _convert_to_utf8(self) -> None:
+        export_folder = self._settings.export_folder(self._workbook_name)
+        code_folder = self._settings.code_folder(self._workbook_name)
+        Path(code_folder).mkdir(parents=True, exist_ok=True)
+        for file_path in Path(export_folder).glob("*.*"):
+            content_org = file_path.read_text(encoding="shift-jis")
+            content = (
+                content_org.replace("\r\n", "\n").replace("\r", "\n").rstrip("\n")
+                + "\n"
+            )
+            code_path = Path(code_folder, file_path.name)
+            code_path.write_text(content, encoding="utf-8", newline="\n")
 
 
 app = typer.Typer()
