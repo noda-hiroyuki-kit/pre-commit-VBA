@@ -200,6 +200,13 @@ class ExcelCustomUiExtractor:
             )
 
 
+class Utf8Converter:
+    """A placeholder class for Utf8Converter."""
+
+    def __init__(self, workbook_name: str, settings: SettingsHandleExcel) -> None:
+        """Initialize with file path."""
+
+
 app = typer.Typer()
 basicConfig(level=DEBUG)
 logger = getLogger(__name__)
