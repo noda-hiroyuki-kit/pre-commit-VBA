@@ -218,13 +218,14 @@ class Utf8Converter:
         code_folder = self._settings.code_folder(self._workbook_name)
         Path(code_folder).mkdir(parents=True, exist_ok=True)
         for file_path in Path(export_folder).glob("*.*"):
-            content_org = file_path.read_text(encoding="shift-jis")
-            content = (
-                content_org.replace("\r\n", "\n").replace("\r", "\n").rstrip("\n")
-                + "\n"
+            content = self._format_line_breaks(
+                file_path.read_text(encoding="shift-jis")
             )
             code_path = Path(code_folder, file_path.name)
             code_path.write_text(content, encoding="utf-8", newline="\n")
+
+    def _format_line_breaks(self, text: str) -> str:
+        return text.replace("\r\n", "\n").replace("\r", "\n").rstrip("\n") + "\n"
 
 
 app = typer.Typer()
