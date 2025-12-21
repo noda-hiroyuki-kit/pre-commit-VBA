@@ -3,6 +3,7 @@
 extract code files from excel workbook with codes.
 """
 
+import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from logging import DEBUG, basicConfig, getLogger
@@ -215,17 +216,28 @@ class Utf8Converter:
 
     def _convert_to_utf8(self) -> None:
         export_folder = self._settings.export_folder(self._workbook_name)
-        code_folder = self._settings.code_folder(self._workbook_name)
-        Path(code_folder).mkdir(parents=True, exist_ok=True)
+        code_root_folder = self._settings.code_folder(self._workbook_name)
+        Path(code_root_folder).mkdir(parents=True, exist_ok=True)
         for file_path in Path(export_folder).glob("*.*"):
             content = self._format_line_breaks(
                 file_path.read_text(encoding="shift-jis")
             )
+            code_folder = self._get_code_folder(content)
+            code_folder.mkdir(parents=True, exist_ok=True)
             code_path = Path(code_folder, file_path.name)
             code_path.write_text(content, encoding="utf-8", newline="\n")
 
     def _format_line_breaks(self, text: str) -> str:
         return text.replace("\r\n", "\n").replace("\r", "\n").rstrip("\n") + "\n"
+
+    def _get_code_folder(self, text: str) -> Path:
+        pattern = r"\'@Folder \"(.*)\""
+        if match := re.search(pattern, text):
+            return Path(
+                self._settings.code_folder(self._workbook_name),
+                *match.group(1).split("."),
+            )
+        return Path(self._settings.code_folder(self._workbook_name))
 
 
 app = typer.Typer()
