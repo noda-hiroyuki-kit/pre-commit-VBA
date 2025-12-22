@@ -232,7 +232,7 @@ class Utf8Converter:
         pattern = r"\'@Folder \"(.*)\""
         code_root_folder = Path(self._settings.code_folder(self._workbook_name))
         if match := re.search(pattern, text):
-            return code_root_folder.joinpath(*match.group(1).split("."))
+            return Path(code_root_folder, *match.group(1).split("."))
         return code_root_folder
 
 
