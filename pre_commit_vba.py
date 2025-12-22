@@ -232,12 +232,10 @@ class Utf8Converter:
 
     def _get_code_folder(self, text: str) -> Path:
         pattern = r"\'@Folder \"(.*)\""
+        code_root_folder = Path(self._settings.code_folder(self._workbook_name))
         if match := re.search(pattern, text):
-            return Path(
-                self._settings.code_folder(self._workbook_name),
-                *match.group(1).split("."),
-            )
-        return Path(self._settings.code_folder(self._workbook_name))
+            return code_root_folder.joinpath(*match.group(1).split("."))
+        return code_root_folder
 
 
 app = typer.Typer()
