@@ -216,8 +216,6 @@ class Utf8Converter:
 
     def _convert_to_utf8(self) -> None:
         export_folder = self._settings.export_folder(self._workbook_name)
-        code_root_folder = self._settings.code_folder(self._workbook_name)
-        Path(code_root_folder).mkdir(parents=True, exist_ok=True)
         for file_path in Path(export_folder).glob("*.*"):
             content = self._format_line_breaks(
                 file_path.read_text(encoding="shift-jis")
