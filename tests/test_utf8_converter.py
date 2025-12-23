@@ -31,8 +31,8 @@ class TestExcelVbaExporter:
         vb_component_export_folder = settings.common_folder(book_name)
         if Path.is_dir(vb_component_export_folder):
             shutil.rmtree(vb_component_export_folder)
-        ExcelVbaExporter("test.xlsm", settings)
-        yield Utf8Converter("test.xlsm", settings)
+        ExcelVbaExporter(book_name, settings)
+        yield Utf8Converter(book_name, settings)
         shutil.rmtree(vb_component_export_folder)
 
     def test_exists_this_workbook_file(self, sut: Utf8Converter) -> None:  # noqa: ARG002
