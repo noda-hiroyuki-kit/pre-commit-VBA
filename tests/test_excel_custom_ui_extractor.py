@@ -37,5 +37,7 @@ class TestExcelCustomUiExtractor:
 
     def test_exists_custom_ui_14_xml_file(self, sut: ExcelCustomUiExtractor) -> None:  # noqa: ARG002
         """Test that customUI14.xml file exists."""
-        expected_file = f"{Path.cwd()}\\tests\\test.VBA\\customUI\\customUI14.xml"
+        expected_file = Path(
+            "Path.cwd()", "tests", "test.VBA", "customUI", "customUI14.xml"
+        )
         assert Path.is_file(expected_file)  # noqa: S101

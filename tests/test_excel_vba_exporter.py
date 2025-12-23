@@ -37,10 +37,12 @@ class TestExcelVbaExporter:
 
     def test_exists_this_workbook_file(self, sut: ExcelVbaExporter) -> None:  # noqa: ARG002
         """Test that ThisWorkbook component file exists."""
-        expected_file = f"{Path.cwd()}\\tests\\test.VBA\\export\\ThisWorkbook.cls"
+        expected_file = Path(
+            Path.cwd(), "tests", "test.VBA", "export", "ThisWorkbook.cls"
+        )
         assert Path.is_file(expected_file)  # noqa: S101
 
     def test_exists_sheet1_file(self, sut: ExcelVbaExporter) -> None:  # noqa: ARG002
         """Test that ThisWorkbook component file exists."""
-        expected_file = f"{Path.cwd()}\\tests\\test.VBA\\export\\sheet1.cls"
+        expected_file = Path(Path.cwd(), "tests", "test.VBA", "export", "sheet1.cls")
         assert Path.is_file(expected_file)  # noqa: S101
