@@ -41,12 +41,14 @@ class SettingsHandleExcel:
         folder_suffix: str,
         export_folder: str,
         custom_ui_folder: str,
+        code_folder: str,
     ) -> None:
         """Initialize settings."""
         self._target_folder = target_folder
         self._folder_suffix = folder_suffix
         self._export_folder = export_folder
         self._custom_ui_folder = custom_ui_folder
+        self._code_folder = code_folder
 
     def target_folder(self) -> str:
         """Return target folder path."""
@@ -68,7 +70,7 @@ class SettingsHandleExcel:
 
     def code_folder(self, workbook_name: str) -> str:
         """Return code folder path."""
-        return f"{self.common_folder(workbook_name)}\\code"
+        return f"{self.common_folder(workbook_name)}\\{self._code_folder}"
 
 
 class ExcelVbaExporter:

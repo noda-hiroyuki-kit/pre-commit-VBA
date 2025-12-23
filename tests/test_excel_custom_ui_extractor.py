@@ -26,6 +26,7 @@ class TestExcelCustomUiExtractor:
             folder_suffix=".VBA",
             export_folder="",
             custom_ui_folder="customUI",
+            code_folder="",
         )
         book_name = "test.xlsm"
         vb_component_export_folder = settings.common_folder(book_name)
