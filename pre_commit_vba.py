@@ -35,13 +35,15 @@ class Constants:
 class SettingsHandleExcel:
     """Settings for handling Excel."""
 
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         target_folder: str,
         folder_suffix: str,
         export_folder: str,
         custom_ui_folder: str,
         code_folder: str,
+        *,
+        enable_folder_annotation: bool,
     ) -> None:
         """Initialize settings."""
         self._target_folder = target_folder
@@ -49,6 +51,7 @@ class SettingsHandleExcel:
         self._export_folder = export_folder
         self._custom_ui_folder = custom_ui_folder
         self._code_folder = code_folder
+        self._enable_folder_annotation = enable_folder_annotation
 
     def target_folder(self) -> str:
         """Return target folder path."""
@@ -71,6 +74,10 @@ class SettingsHandleExcel:
     def code_folder(self, workbook_name: str) -> str:
         """Return code folder path."""
         return f"{self.common_folder(workbook_name)}\\{self._code_folder}"
+
+    def enable_folder_annotation(self) -> bool:
+        """Return whether folder annotation is enabled."""
+        return self._enable_folder_annotation
 
 
 class ExcelVbaExporter:
@@ -231,8 +238,10 @@ class Utf8Converter:
         return text.replace("\r\n", "\n").replace("\r", "\n").rstrip("\n") + "\n"
 
     def _get_code_folder(self, text: str) -> Path:
-        pattern = r"\'@Folder \"(.*)\""
         code_root_folder = Path(self._settings.code_folder(self._workbook_name))
+        if not self._settings.enable_folder_annotation():
+            return code_root_folder
+        pattern = r"\'@Folder \"(.*)\""
         if match := re.search(pattern, text):
             return Path(code_root_folder, *match.group(1).split("."))
         return code_root_folder

@@ -27,6 +27,7 @@ class TestExcelVbaExporter:
             export_folder="export",
             custom_ui_folder="",
             code_folder="code",
+            enable_folder_annotation=True,
         )
         book_name = "test.xlsm"
         vb_component_export_folder = settings.common_folder(book_name)

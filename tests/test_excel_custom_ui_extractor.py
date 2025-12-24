@@ -27,6 +27,7 @@ class TestExcelCustomUiExtractor:
             export_folder="",
             custom_ui_folder="customUI",
             code_folder="",
+            enable_folder_annotation=False,
         )
         book_name = "test.xlsm"
         vb_component_export_folder = settings.common_folder(book_name)
@@ -38,6 +39,6 @@ class TestExcelCustomUiExtractor:
     def test_exists_custom_ui_14_xml_file(self, sut: ExcelCustomUiExtractor) -> None:  # noqa: ARG002
         """Test that customUI14.xml file exists."""
         expected_file = Path(
-            "Path.cwd()", "tests", "test.VBA", "customUI", "customUI14.xml"
+            Path.cwd(), "tests", "test.VBA", "customUI", "customUI14.xml"
         )
         assert Path.is_file(expected_file)  # noqa: S101
