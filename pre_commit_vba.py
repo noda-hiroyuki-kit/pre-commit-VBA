@@ -116,6 +116,10 @@ class SettingsOptionsHandleExcel:
         """Return enable folder annotation setting."""
         return self.__enable_folder_annotation
 
+    def create_gitignore(self) -> bool:
+        """Return create gitignore setting."""
+        return self.__create_gitignore
+
 
 class ExcelVbaExporter:
     """A placeholder class for ExcelVbaExporter."""
@@ -251,7 +255,17 @@ class Utf8Converter:
         """Initialize with file path."""
         self.__settings = settings
         self.__options = options
+        self.__add_gitignore_file()
         self.__convert_to_utf8()
+
+    def __add_gitignore_file(self) -> None:
+        if not self.__options.create_gitignore():
+            return
+        gitignore_content = f"{self.__settings.export_folder.name}/\n"
+        with Path(self.__settings.common_folder, ".gitignore").open(
+            mode="w", encoding="utf-8", newline="\n"
+        ) as gitignore_file:
+            gitignore_file.write(gitignore_content)
 
     def __convert_to_utf8(self) -> None:
         for file_path in self.__settings.export_folder.glob("*.*"):
