@@ -105,9 +105,12 @@ class SettingsFoldersHandleExcel:
 class SettingsOptionsHandleExcel:
     """Settings for handling Excel options."""
 
-    def __init__(self, *, enable_folder_annotation: bool) -> None:
+    def __init__(
+        self, *, enable_folder_annotation: bool, create_gitignore: bool
+    ) -> None:
         """Initialize settings."""
         self.__enable_folder_annotation = enable_folder_annotation
+        self.__create_gitignore = create_gitignore
 
     def enable_folder_annotation(self) -> bool:
         """Return enable folder annotation setting."""

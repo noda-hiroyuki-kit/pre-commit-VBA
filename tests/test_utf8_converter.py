@@ -38,6 +38,7 @@ class TestExcelVbaExporter:
         )
         options = SettingsOptionsHandleExcel(
             enable_folder_annotation=True,
+            create_gitignore=True,
         )
         if Path.is_dir(settings.common_folder):
             shutil.rmtree(settings.common_folder)
@@ -68,5 +69,15 @@ class TestExcelVbaExporter:
             "excel document modules",
             "シート",
             "sheet1.cls",
+        )
+        assert Path.is_file(expected_file)  # noqa: S101
+
+    def test_exists_gitignore_file(self, sut: Utf8Converter) -> None:  # noqa: ARG002
+        """Test that ThisWorkbook component file exists."""
+        expected_file = Path(
+            Path.cwd(),
+            "tests",
+            "test.VBA",
+            ".gitignore",
         )
         assert Path.is_file(expected_file)  # noqa: S101
