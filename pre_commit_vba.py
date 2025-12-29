@@ -32,73 +32,105 @@ class Constants:
     vbext_ct_StdModule: int = 1  # from enum vbext_ComponentType  # noqa: N815
 
 
-class SettingsHandleExcel:
+class SettingsCommonFolder:
+    """Settings for handling common folder."""
+
+    def __init__(
+        self,
+        workbook_path: Path,
+        folder_suffix: str,
+    ) -> None:
+        """Initialize settings."""
+        self.__workbook_path = workbook_path
+        self.__folder_suffix = folder_suffix
+
+    @property
+    def common_folder(self) -> Path:
+        """Return common folder path."""
+        return Path(
+            self.__workbook_path.parent,
+            f"{self.__workbook_path.name.split('.')[0]}{self.__folder_suffix}",
+        )
+
+    @property
+    def workbook_path(self) -> Path:
+        """Return workbook path."""
+        return self.__workbook_path
+
+
+class SettingsFoldersHandleExcel:
     """Settings for handling Excel."""
 
-    def __init__(  # noqa: PLR0913
+    def __init__(
         self,
-        target_folder: str,
-        folder_suffix: str,
+        settings_common_folder: SettingsCommonFolder,
         export_folder: str,
         custom_ui_folder: str,
         code_folder: str,
-        *,
-        enable_folder_annotation: bool,
     ) -> None:
         """Initialize settings."""
-        self._target_folder = target_folder
-        self._folder_suffix = folder_suffix
-        self._export_folder = export_folder
-        self._custom_ui_folder = custom_ui_folder
-        self._code_folder = code_folder
-        self._enable_folder_annotation = enable_folder_annotation
+        self.__settings_common_folder = settings_common_folder
+        self.__export_folder = export_folder
+        self.__custom_ui_folder = custom_ui_folder
+        self.__code_folder = code_folder
 
-    def target_folder(self) -> str:
-        """Return target folder path."""
-        return self._target_folder
-
-    def common_folder(self, workbook_name: str) -> str:
+    @property
+    def export_folder(self) -> Path:
         """Return common folder path."""
-        return (
-            f"{self._target_folder}\\{workbook_name.split('.')[0]}{self._folder_suffix}"
+        return Path(self.__settings_common_folder.common_folder, self.__export_folder)
+
+    @property
+    def custom_ui_folder(self) -> Path:
+        """Return custom UI folder path."""
+        return Path(
+            self.__settings_common_folder.common_folder, self.__custom_ui_folder
         )
 
-    def export_folder(self, workbook_name: str) -> str:
-        """Return export folder path."""
-        return f"{self.common_folder(workbook_name)}\\{self._export_folder}"
-
-    def custom_ui_folder(self, workbook_name: str) -> str:
-        """Return custom UI folder path."""
-        return f"{self.common_folder(workbook_name)}\\{self._custom_ui_folder}"
-
-    def code_folder(self, workbook_name: str) -> str:
+    @property
+    def code_folder(self) -> Path:
         """Return code folder path."""
-        return f"{self.common_folder(workbook_name)}\\{self._code_folder}"
+        return Path(self.__settings_common_folder.common_folder, self.__code_folder)
+
+    @property
+    def workbook_path(self) -> Path:
+        """Return workbook path."""
+        return self.__settings_common_folder.workbook_path
+
+    @property
+    def common_folder(self) -> Path:
+        """Return common folder path."""
+        return self.__settings_common_folder.common_folder
+
+
+class SettingsOptionsHandleExcel:
+    """Settings for handling Excel options."""
+
+    def __init__(self, *, enable_folder_annotation: bool) -> None:
+        """Initialize settings."""
+        self.__enable_folder_annotation = enable_folder_annotation
 
     def enable_folder_annotation(self) -> bool:
-        """Return whether folder annotation is enabled."""
-        return self._enable_folder_annotation
+        """Return enable folder annotation setting."""
+        return self.__enable_folder_annotation
 
 
 class ExcelVbaExporter:
     """A placeholder class for ExcelVbaExporter."""
 
-    def __init__(self, workbook_name: str, settings: SettingsHandleExcel) -> None:
+    def __init__(self, settings: SettingsFoldersHandleExcel) -> None:
         """Initialize with file path."""
-        self._app = self._get_xl_app()
-        self._workbook = self._app.Workbooks.Open(
-            f"{settings.target_folder()}\\{workbook_name}", ReadOnly=True
+        self.__app = self.__get_xl_app()
+        self.__workbook = self.__app.Workbooks.Open(
+            settings.workbook_path, ReadOnly=True
         )
-        Path(settings.export_folder(workbook_name)).mkdir(parents=True, exist_ok=True)
-        for vb_comp in self._workbook.VBProject.VBComponents:
+        settings.export_folder.mkdir(parents=True, exist_ok=True)
+        for vb_comp in self.__workbook.VBProject.VBComponents:
             vb_comp_file_name = vb_component_type_factory(
                 vb_comp.Name, vb_comp.Type
             ).file_name
-            vb_comp.Export(
-                f"{settings.export_folder(workbook_name)}\\{vb_comp_file_name}"
-            )
+            vb_comp.Export(Path(settings.export_folder, f"{vb_comp_file_name}"))
 
-    def _get_xl_app(self) -> Dispatch:
+    def __get_xl_app(self) -> Dispatch:
         """Get Excel application."""
         excel_app = Dispatch("Excel.Application")
         excel_app.Visible = True
@@ -108,8 +140,8 @@ class ExcelVbaExporter:
     def __del__(self) -> None:
         """Destructor to close workbook and quit app."""
         try:
-            self._workbook.Close(SaveChanges=False)
-            self._app.Quit()
+            self.__workbook.Close(SaveChanges=False)
+            self.__app.Quit()
         except Exception:
             logger.exception("Error in destructor")
             raise
@@ -181,28 +213,21 @@ class SheetClassModule(IVbComponentType):
 class ExcelCustomUiExtractor:
     """A placeholder class for ExcelCustomUiExtractor."""
 
-    def __init__(self, workbook_name: str, settings: SettingsHandleExcel) -> None:
+    def __init__(self, settings: SettingsFoldersHandleExcel) -> None:
         """Initialize with file path."""
-        self._workbook_name = workbook_name
-        self._settings = settings
-        self._extract_custom_ui_files()
+        self.__settings = settings
+        self.__extract_custom_ui_files()
 
-    def _extract_custom_ui_files(self) -> None:
-        self._make_export_folder()
-        self._extract_custom_ui_file("customUI/customUI14.xml")
-        self._extract_custom_ui_file("customUI/customUI.xml")
+    def __extract_custom_ui_files(self) -> None:
+        self.__settings.custom_ui_folder.mkdir(parents=True, exist_ok=True)
+        self.__extract_custom_ui_file("customUI/customUI14.xml")
+        self.__extract_custom_ui_file("customUI/customUI.xml")
 
-    def _make_export_folder(self) -> None:
-        self._xml_export_folder = self._settings.custom_ui_folder(self._workbook_name)
-        Path(self._xml_export_folder).mkdir(parents=True, exist_ok=True)
-
-    def _extract_custom_ui_file(self, full_item_name: str) -> None:
+    def __extract_custom_ui_file(self, full_item_name: str) -> None:
         try:
-            with ZipFile(
-                f"{self._settings.target_folder()}\\{self._workbook_name}", "r"
-            ) as zip_ref:
+            with ZipFile(self.__settings.workbook_path, "r") as zip_ref:
                 file_data = zip_ref.read(full_item_name)
-            with Path(f"{self._xml_export_folder}\\{Path(full_item_name).name}").open(
+            with Path(self.__settings.custom_ui_folder, Path(full_item_name).name).open(
                 mode="wb"
             ) as xml_file:
                 xml_file.write(file_data)
@@ -210,36 +235,37 @@ class ExcelCustomUiExtractor:
             logger.info(
                 "%s does not exists in %s",
                 Path(full_item_name).name,
-                self._workbook_name,
+                self.__settings.workbook_path.name,
             )
 
 
 class Utf8Converter:
     """A placeholder class for Utf8Converter."""
 
-    def __init__(self, workbook_name: str, settings: SettingsHandleExcel) -> None:
+    def __init__(
+        self, settings: SettingsFoldersHandleExcel, options: SettingsOptionsHandleExcel
+    ) -> None:
         """Initialize with file path."""
-        self._workbook_name = workbook_name
-        self._settings = settings
-        self._convert_to_utf8()
+        self.__settings = settings
+        self.__options = options
+        self.__convert_to_utf8()
 
-    def _convert_to_utf8(self) -> None:
-        export_folder = self._settings.export_folder(self._workbook_name)
-        for file_path in Path(export_folder).glob("*.*"):
-            content = self._format_line_breaks(
+    def __convert_to_utf8(self) -> None:
+        for file_path in self.__settings.export_folder.glob("*.*"):
+            content = self.__format_line_breaks(
                 file_path.read_text(encoding="shift-jis")
             )
-            code_folder = self._get_code_folder(content)
+            code_folder = self.__get_code_folder(content)
             code_folder.mkdir(parents=True, exist_ok=True)
             code_path = Path(code_folder, file_path.name)
             code_path.write_text(content, encoding="utf-8", newline="\n")
 
-    def _format_line_breaks(self, text: str) -> str:
+    def __format_line_breaks(self, text: str) -> str:
         return text.replace("\r\n", "\n").replace("\r", "\n").rstrip("\n") + "\n"
 
-    def _get_code_folder(self, text: str) -> Path:
-        code_root_folder = Path(self._settings.code_folder(self._workbook_name))
-        if not self._settings.enable_folder_annotation():
+    def __get_code_folder(self, text: str) -> Path:
+        code_root_folder = self.__settings.code_folder
+        if not self.__options.enable_folder_annotation():
             return code_root_folder
         pattern = r"\'@Folder \"(.*)\""
         if match := re.search(pattern, text):

@@ -12,7 +12,11 @@ from pathlib import Path
 
 import pytest
 
-from pre_commit_vba import ExcelCustomUiExtractor, SettingsHandleExcel
+from pre_commit_vba import (
+    ExcelCustomUiExtractor,
+    SettingsCommonFolder,
+    SettingsFoldersHandleExcel,
+)
 
 
 class TestExcelCustomUiExtractor:
@@ -21,20 +25,19 @@ class TestExcelCustomUiExtractor:
     @pytest.fixture(scope="class")
     def sut(self) -> Generator[ExcelCustomUiExtractor]:
         """Act first this tests."""
-        settings = SettingsHandleExcel(
-            target_folder=f"{Path.cwd()}\\tests",
-            folder_suffix=".VBA",
+        common_folder = SettingsCommonFolder(
+            Path(Path.cwd(), "tests", "test.xlsm"), ".VBA"
+        )
+        settings = SettingsFoldersHandleExcel(
+            settings_common_folder=common_folder,
             export_folder="",
             custom_ui_folder="customUI",
             code_folder="",
-            enable_folder_annotation=False,
         )
-        book_name = "test.xlsm"
-        vb_component_export_folder = settings.common_folder(book_name)
-        if Path.is_dir(vb_component_export_folder):
-            shutil.rmtree(vb_component_export_folder)
-        yield ExcelCustomUiExtractor(book_name, settings)
-        shutil.rmtree(vb_component_export_folder)
+        if Path.is_dir(settings.common_folder):
+            shutil.rmtree(settings.common_folder)
+        yield ExcelCustomUiExtractor(settings)
+        shutil.rmtree(settings.common_folder)
 
     def test_exists_custom_ui_14_xml_file(self, sut: ExcelCustomUiExtractor) -> None:  # noqa: ARG002
         """Test that customUI14.xml file exists."""
