@@ -4,14 +4,14 @@ from logging import INFO
 
 from typer.testing import CliRunner
 
-from pre_commit_vba import app, main
+from pre_commit_vba import app, extract
 
 runner = CliRunner()
 
 
-def test_main_function_exists() -> None:
-    """Test that the main function exists in pre_commit_vba module."""
-    assert callable(main)  # noqa: S101
+def test_extract_function_exists() -> None:
+    """Test that the extract function exists in pre_commit_vba module."""
+    assert callable(extract)  # noqa: S101
 
 
 def test_main_command_execution(caplog) -> None:  # noqa: ANN001

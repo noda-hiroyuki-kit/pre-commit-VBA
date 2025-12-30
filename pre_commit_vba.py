@@ -297,7 +297,7 @@ constants = Constants()
 
 
 @app.command()
-def main() -> None:
+def extract() -> None:
     """Log info Hello pre-commit-vba script."""
     logger.info("Hello from pre-commit-vba!")
 
