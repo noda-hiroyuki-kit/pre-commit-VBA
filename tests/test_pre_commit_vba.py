@@ -14,9 +14,9 @@ def test_extract_function_exists() -> None:
     assert callable(extract)  # noqa: S101
 
 
-def test_main_command_execution(caplog) -> None:  # noqa: ANN001
-    """Test that the main command executes without errors."""
+def test_extract_command_execution(caplog) -> None:  # noqa: ANN001
+    """Test that the extract command executes without errors."""
     caplog.set_level(INFO)
-    result = runner.invoke(app)
+    result = runner.invoke(app, ["extract"])
     assert result.exit_code == 0  # noqa: S101
     assert "Hello from pre-commit-vba!" in caplog.text  # noqa: S101

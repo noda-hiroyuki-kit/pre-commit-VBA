@@ -302,5 +302,11 @@ def extract() -> None:
     logger.info("Hello from pre-commit-vba!")
 
 
+@app.command()
+def dummy() -> None:
+    """Act dummy. For enable extract command."""
+    logger.info("This is a dummy command.")
+
+
 if __name__ == "__main__":
     app()
