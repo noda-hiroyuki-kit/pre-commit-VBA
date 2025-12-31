@@ -8,6 +8,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from logging import DEBUG, basicConfig, getLogger
 from pathlib import Path
+from typing import Annotated
 from zipfile import ZipFile
 
 import typer
@@ -297,9 +298,10 @@ constants = Constants()
 
 
 @app.command()
-def extract() -> None:
+def extract(target_path: Annotated[str, typer.Option()] = ".") -> None:
     """Log info Hello pre-commit-vba script."""
     logger.info("Hello from pre-commit-vba!")
+    logger.info("Target path: %s", str(Path(target_path).resolve()).lower())
 
 
 @app.command()
