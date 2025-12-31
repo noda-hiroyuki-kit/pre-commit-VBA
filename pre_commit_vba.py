@@ -300,16 +300,21 @@ constants = Constants()
 @app.command()
 def extract(  # noqa: PLR0913
     target_path: Annotated[str, typer.Option()] = ".",
-    export_folder: Annotated[str, typer.Option()] = ".",  # noqa: ARG001
-    custom_ui_folder: Annotated[str, typer.Option()] = ".",  # noqa: ARG001
-    code_folder: Annotated[str, typer.Option()] = ".",  # noqa: ARG001
+    export_folder: Annotated[str, typer.Option()] = ".",
+    custom_ui_folder: Annotated[str, typer.Option()] = ".",
+    code_folder: Annotated[str, typer.Option()] = ".",
     *,
-    enable_folder_annotation: Annotated[bool, typer.Option()] = False,  # noqa: ARG001
-    create_gitignore: Annotated[bool, typer.Option()] = False,  # noqa: ARG001
+    enable_folder_annotation: Annotated[bool, typer.Option()] = False,
+    create_gitignore: Annotated[bool, typer.Option()] = False,
 ) -> None:
     """Log info Hello pre-commit-vba script."""
     logger.info("Hello from pre-commit-vba!")
     logger.info("Target path: %s", str(Path(target_path).resolve()).lower())
+    logger.info("export-folder: %s", export_folder)
+    logger.info("custom-ui-folder: %s", custom_ui_folder)
+    logger.info("code-folder: %s", code_folder)
+    logger.info("enable-folder-annotation: %s", enable_folder_annotation)
+    logger.info("create-gitignore: %s", create_gitignore)
 
 
 @app.command()
