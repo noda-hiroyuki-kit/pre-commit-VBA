@@ -23,9 +23,61 @@ def test_extract_command_execution(caplog) -> None:  # noqa: ANN001
     assert "Hello from pre-commit-vba!" in caplog.text  # noqa: S101
 
 
-def test_extract_command_with_target_path_argument(caplog) -> None:  # noqa: ANN001
-    """Test that the extract command executes without errors."""
-    caplog.set_level(INFO)
-    result = runner.invoke(app, ["extract", "--target-path", "."])
-    assert result.exit_code == 0  # noqa: S101
-    assert f"{Path.cwd()}".lower() in caplog.text  # noqa: S101
+class TestExtractCommandPositiveOptions:
+    """Test class for extract command."""
+
+    def extract_command_fixture(self, caplog) -> CliRunner:  # noqa: ANN001
+        """Test that the extract command executes without errors."""
+        caplog.set_level(INFO)
+        return runner.invoke(
+            app,
+            [
+                "extract",
+                "--target-path",
+                ".",
+                "--export-folder",
+                "export",
+                "--custom-ui-folder",
+                "customUI",
+                "--code-folder",
+                "code",
+                "--enable-folder-annotation",
+                "--create-gitignore",
+            ],
+        )
+
+    def test_target_path_is_current_directory(self, caplog) -> None:  # noqa: ANN001
+        """Test that target_path is current directory."""
+        result = self.extract_command_fixture(caplog)
+        assert result.exit_code == 0  # noqa: S101
+        assert f"{Path.cwd()}".lower() in caplog.text  # noqa: S101
+
+    def test_export_folder_is_export(self, caplog) -> None:  # noqa: ANN001
+        """Test that export folder is 'export'."""
+        result = self.extract_command_fixture(caplog)
+        assert result.exit_code == 0  # noqa: S101
+        assert "export-folder: export" in caplog.text  # noqa: S101
+
+    def test_custom_ui_folder_is_custom_ui(self, caplog) -> None:  # noqa: ANN001
+        """Test that custom ui folder is 'customUI'."""
+        result = self.extract_command_fixture(caplog)
+        assert result.exit_code == 0  # noqa: S101
+        assert "custom-ui-folder: customUI" in caplog.text  # noqa: S101
+
+    def test_code_folder_is_code(self, caplog) -> None:  # noqa: ANN001
+        """Test that code folder is 'code'."""
+        result = self.extract_command_fixture(caplog)
+        assert result.exit_code == 0  # noqa: S101
+        assert "code-folder: code" in caplog.text  # noqa: S101
+
+    def test_enable_folder_annotation_is_true(self, caplog) -> None:  # noqa: ANN001
+        """Test that enable-folder-annotation is True."""
+        result = self.extract_command_fixture(caplog)
+        assert result.exit_code == 0  # noqa: S101
+        assert "enable-folder-annotation: True" in caplog.text  # noqa: S101
+
+    def test_create_gitignore_is_true(self, caplog) -> None:  # noqa: ANN001
+        """Test that create-gitignore is True."""
+        result = self.extract_command_fixture(caplog)
+        assert result.exit_code == 0  # noqa: S101
+        assert "create-gitignore: True" in caplog.text  # noqa: S101

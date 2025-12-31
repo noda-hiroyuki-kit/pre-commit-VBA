@@ -298,7 +298,15 @@ constants = Constants()
 
 
 @app.command()
-def extract(target_path: Annotated[str, typer.Option()] = ".") -> None:
+def extract(  # noqa: PLR0913
+    target_path: Annotated[str, typer.Option()] = ".",
+    export_folder: Annotated[str, typer.Option()] = ".",  # noqa: ARG001
+    custom_ui_folder: Annotated[str, typer.Option()] = ".",  # noqa: ARG001
+    code_folder: Annotated[str, typer.Option()] = ".",  # noqa: ARG001
+    *,
+    enable_folder_annotation: Annotated[bool, typer.Option()] = False,  # noqa: ARG001
+    create_gitignore: Annotated[bool, typer.Option()] = False,  # noqa: ARG001
+) -> None:
     """Log info Hello pre-commit-vba script."""
     logger.info("Hello from pre-commit-vba!")
     logger.info("Target path: %s", str(Path(target_path).resolve()).lower())
