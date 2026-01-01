@@ -321,6 +321,24 @@ def extract(  # noqa: PLR0913
     logger.info("code-folder: %s", code_folder)
     logger.info("enable-folder-annotation: %s", enable_folder_annotation)
     logger.info("create-gitignore: %s", create_gitignore)
+    options = SettingsOptionsHandleExcel(
+        enable_folder_annotation=enable_folder_annotation,
+        create_gitignore=create_gitignore,
+    )
+    for workbook_path in Path(target_path).resolve().glob("*.xls*"):
+        common_folder_settings = SettingsCommonFolder(
+            workbook_path=workbook_path,
+            folder_suffix=folder_suffix,
+        )
+        folder_settings = SettingsFoldersHandleExcel(
+            settings_common_folder=common_folder_settings,
+            export_folder=export_folder,
+            custom_ui_folder=custom_ui_folder,
+            code_folder=code_folder,
+        )
+        ExcelVbaExporter(folder_settings)
+        ExcelCustomUiExtractor(folder_settings)
+        Utf8Converter(folder_settings, options)
 
 
 @app.command()

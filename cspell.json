@@ -51,6 +51,7 @@
         "Pipfile",
         "platformdirs",
         "pluggy",
+        "Predeclared",
         "pybuilder",
         "pycache",
         "pycodestyle",
