@@ -6,7 +6,7 @@ extract code files from excel workbook with codes.
 import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from logging import DEBUG, basicConfig, getLogger
+from logging import INFO, basicConfig, getLogger
 from pathlib import Path
 from typing import Annotated
 from zipfile import ZipFile
@@ -292,7 +292,7 @@ class Utf8Converter:
 
 
 app = typer.Typer()
-basicConfig(level=DEBUG)
+basicConfig(level=INFO)
 logger = getLogger(__name__)
 constants = Constants()
 
