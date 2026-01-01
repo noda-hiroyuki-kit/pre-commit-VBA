@@ -1,6 +1,5 @@
 """Test module for pre-commit-vba script."""
 
-import shutil
 from logging import DEBUG
 from pathlib import Path
 
@@ -85,10 +84,7 @@ class TestExtractCommandExistenceFiles:
 
     @pytest.fixture(scope="class")
     def sut(self) -> CliRunner:
-        """Test that the extract command executes without errors."""
-        common_folder = Path(Path.cwd(), "tests", "test.VBA")
-        if Path.is_dir(common_folder):
-            shutil.rmtree(common_folder)
+        """Fixture for TestExtractCommandExistenceFiles."""
         return runner.invoke(
             app,
             [

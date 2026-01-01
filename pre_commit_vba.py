@@ -4,6 +4,7 @@ extract code files from excel workbook with codes.
 """
 
 import re
+import shutil
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from logging import INFO, basicConfig, getLogger
@@ -335,6 +336,8 @@ def extract(  # noqa: PLR0913
             custom_ui_folder=custom_ui_folder,
             code_folder=code_folder,
         )
+        if folder_settings.common_folder.exists():
+            shutil.rmtree(folder_settings.common_folder)
         ExcelVbaExporter(folder_settings)
         ExcelCustomUiExtractor(folder_settings)
         Utf8Converter(folder_settings, options)
