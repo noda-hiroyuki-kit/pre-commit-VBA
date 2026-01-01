@@ -312,15 +312,14 @@ def extract(  # noqa: PLR0913
         bool, typer.Option("--create-gitignore/--not-create-gitignore")
     ] = True,
 ) -> None:
-    """Log info Hello pre-commit-vba script."""
-    logger.info("Hello from pre-commit-vba!")
-    logger.info("Target path: %s", str(Path(target_path).resolve()).lower())
-    logger.info("folder-suffix: %s", folder_suffix)
-    logger.info("export-folder: %s", export_folder)
-    logger.info("custom-ui-folder: %s", custom_ui_folder)
-    logger.info("code-folder: %s", code_folder)
-    logger.info("enable-folder-annotation: %s", enable_folder_annotation)
-    logger.info("create-gitignore: %s", create_gitignore)
+    """Extract VBA code from Excel files."""
+    logger.debug("Target path: %s", str(Path(target_path).resolve()).lower())
+    logger.debug("folder-suffix: %s", folder_suffix)
+    logger.debug("export-folder: %s", export_folder)
+    logger.debug("custom-ui-folder: %s", custom_ui_folder)
+    logger.debug("code-folder: %s", code_folder)
+    logger.debug("enable-folder-annotation: %s", enable_folder_annotation)
+    logger.debug("create-gitignore: %s", create_gitignore)
     options = SettingsOptionsHandleExcel(
         enable_folder_annotation=enable_folder_annotation,
         create_gitignore=create_gitignore,
