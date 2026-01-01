@@ -1,8 +1,10 @@
 """Test module for pre-commit-vba script."""
 
+import shutil
 from logging import INFO
 from pathlib import Path
 
+import pytest
 from typer.testing import CliRunner
 
 from pre_commit_vba import app, extract
@@ -89,6 +91,55 @@ class TestExtractCommandPositiveOptions:
         result = self.extract_command_fixture(caplog)
         assert result.exit_code == 0  # noqa: S101
         assert "create-gitignore: True" in caplog.text  # noqa: S101
+
+
+class TestExtractCommandExistenceFiles:
+    """Test class for extract command."""
+
+    @pytest.fixture(scope="class")
+    def sut(self) -> CliRunner:
+        """Test that the extract command executes without errors."""
+        common_folder = Path(Path.cwd(), "tests", "test.VBA")
+        if Path.is_dir(common_folder):
+            shutil.rmtree(common_folder)
+        return runner.invoke(
+            app,
+            [
+                "extract",
+                "--target-path",
+                "tests",
+                "--folder-suffix",
+                ".VBA",
+                "--export-folder",
+                "export",
+                "--custom-ui-folder",
+                "customUI",
+                "--code-folder",
+                "code",
+                "--enable-folder-annotation",
+                "--create-gitignore",
+            ],
+        )
+
+    @pytest.mark.parametrize(
+        "file",
+        [
+            f"{Path('.gitignore')}",
+            f"{Path('export', 'Sheet1.cls')}",
+            f"{Path('export', 'ThisWorkbook.cls')}",
+            f"{Path('export', 'CustomUI.bas')}",
+            f"{Path('export', 'SampleTab.bas')}",
+            f"{Path('customUI', 'customUI14.xml')}",
+            f"{Path('code', 'excel document modules', 'ブック', 'ThisWorkbook.cls')}",
+            f"{Path('code', 'excel document modules', 'シート', 'Sheet1.cls')}",
+            f"{Path('code', 'customUI', 'CustomUI.bas')}",
+            f"{Path('code', 'customUI', 'sample_tab', 'SampleTab.bas')}",
+        ],
+    )
+    def test_exists_files(self, sut: CliRunner, file: str) -> None:
+        """Test that the extract command creates expected files and folders."""
+        assert sut.exit_code == 0  # noqa: S101
+        assert Path(Path.cwd(), "tests", "test.VBA", file).exists()  # noqa: S101
 
 
 class TestExtractCommandNegativeOptions:
