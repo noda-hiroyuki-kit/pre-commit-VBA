@@ -301,16 +301,16 @@ constants = Constants()
 def extract(  # noqa: PLR0913
     target_path: Annotated[str, typer.Option()] = ".",
     folder_suffix: Annotated[str, typer.Option()] = ".VBA",
-    export_folder: Annotated[str, typer.Option()] = ".",
-    custom_ui_folder: Annotated[str, typer.Option()] = ".",
-    code_folder: Annotated[str, typer.Option()] = ".",
+    export_folder: Annotated[str, typer.Option()] = "export",
+    custom_ui_folder: Annotated[str, typer.Option()] = "customUI",
+    code_folder: Annotated[str, typer.Option()] = "code",
     *,
     enable_folder_annotation: Annotated[
         bool, typer.Option("--enable-folder-annotation/--disable-folder-annotation")
-    ] = False,
+    ] = True,
     create_gitignore: Annotated[
         bool, typer.Option("--create-gitignore/--not-create-gitignore")
-    ] = False,
+    ] = True,
 ) -> None:
     """Log info Hello pre-commit-vba script."""
     logger.info("Hello from pre-commit-vba!")
