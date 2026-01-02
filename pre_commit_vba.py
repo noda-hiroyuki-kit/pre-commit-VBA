@@ -5,6 +5,7 @@ extract code files from excel workbook with codes.
 
 import re
 import shutil
+import subprocess
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from logging import INFO, basicConfig, getLogger
@@ -296,7 +297,17 @@ class Utf8Converter:
 
 def get_current_branch_name() -> str:
     """Get current branch name."""
-    return ""
+    proc = subprocess.Popen(
+        ["git", "rev-parse", "--abbrev-ref", "HEAD"],  # noqa: S607
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    try:
+        outs, errs = proc.communicate(timeout=15)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        outs, errs = proc.communicate()  # noqa: RUF059
+    return outs.decode("utf-8").replace("\n", "")
 
 
 app = typer.Typer()
