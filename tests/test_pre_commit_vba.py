@@ -1,5 +1,6 @@
 """Test module for pre-commit-vba script."""
 
+import re
 from logging import DEBUG
 from pathlib import Path
 
@@ -161,3 +162,36 @@ class TestExtractCommandNegativeOptions:
         result = self.extract_command_fixture(caplog)
         assert result.exit_code == 0  # noqa: S101
         assert "create-gitignore: False" in caplog.text  # noqa: S101
+
+
+@pytest.mark.parametrize(
+    "subcommand",
+    [
+        "extract",
+        "dummy",
+    ],
+)
+def test_display_version_subcommand(subcommand: str) -> None:
+    """Test that the version is displayed correctly."""
+    result = runner.invoke(
+        app,
+        [
+            subcommand,
+            "--version",
+        ],
+    )
+    assert result.exit_code == 0  # noqa: S101
+    text = result.output.rstrip()
+    pattern = r"pre-commit-vba version: (.*)"
+    match = re.search(pattern, text)
+    assert match is not None, "Version string not found in output"  # noqa: S101
+    sem_ver_pattern = (
+        r"^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)"
+        r"\.(?P<patch>0|[1-9]\d*)"
+        r"(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)"
+        r"(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))"
+        r"?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
+    )
+    assert re.match(sem_ver_pattern, match.group(1)) is not None, (  # noqa: S101
+        "Version string is not in semantic versioning format"
+    )

@@ -6,6 +6,7 @@
         "addopts",
         "autouse",
         "betterem",
+        "buildmetadata",
         "Cabe",
         "cachetools",
         "caplog",

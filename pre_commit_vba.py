@@ -15,6 +15,8 @@ from zipfile import ZipFile
 import typer
 from win32com.client import Dispatch
 
+__version__ = "0.0.1"
+
 
 class UndefineTypeError(Exception):
     """Custom UndefineTypeError exception."""
@@ -298,14 +300,24 @@ logger = getLogger(__name__)
 constants = Constants()
 
 
-@app.command()
-def extract(  # noqa: PLR0913
+def version_callback(value: bool) -> None:  # noqa: FBT001
+    """Print version information."""
+    if value:
+        typer.echo(f"pre-commit-vba version: {__version__}")
+        raise typer.Exit
+
+
+@app.command("extract")
+def extract_vba_code_from_workbooks(  # noqa: PLR0913
     target_path: Annotated[str, typer.Option()] = ".",
     folder_suffix: Annotated[str, typer.Option()] = ".VBA",
     export_folder: Annotated[str, typer.Option()] = "export",
     custom_ui_folder: Annotated[str, typer.Option()] = "customUI",
     code_folder: Annotated[str, typer.Option()] = "code",
     *,
+    version: Annotated[  # noqa: ARG001
+        bool | None, typer.Option("--version", callback=version_callback, is_eager=True)
+    ] = None,
     enable_folder_annotation: Annotated[
         bool, typer.Option("--enable-folder-annotation/--disable-folder-annotation")
     ] = True,
@@ -313,7 +325,7 @@ def extract(  # noqa: PLR0913
         bool, typer.Option("--create-gitignore/--not-create-gitignore")
     ] = True,
 ) -> None:
-    """Extract VBA code from Excel files."""
+    """Extract VBA code from Excel workbooks."""
     logger.debug("Target path: %s", str(Path(target_path).resolve()).lower())
     logger.debug("folder-suffix: %s", folder_suffix)
     logger.debug("export-folder: %s", export_folder)
@@ -344,7 +356,12 @@ def extract(  # noqa: PLR0913
 
 
 @app.command()
-def dummy() -> None:
+def dummy(
+    *,
+    version: Annotated[  # noqa: ARG001
+        bool | None, typer.Option("--version", callback=version_callback, is_eager=True)
+    ] = None,
+) -> None:
     """Act dummy. For enable extract command."""
     logger.info("This is a dummy command.")
 
