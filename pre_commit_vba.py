@@ -294,6 +294,11 @@ class Utf8Converter:
         return code_root_folder
 
 
+def get_current_branch_name() -> str:
+    """Get current branch name."""
+    return ""
+
+
 app = typer.Typer()
 basicConfig(level=INFO)
 logger = getLogger(__name__)
