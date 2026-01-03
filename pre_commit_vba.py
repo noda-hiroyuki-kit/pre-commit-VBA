@@ -310,9 +310,18 @@ def get_current_branch_name() -> str:
     return outs.decode("utf-8").replace("\n", "")
 
 
-def get_workbook_version(workbook_path: Path) -> str:  # noqa: ARG001
+def get_workbook_version(workbook_path: Path) -> str:
     """Get workbook version."""
-    return ""
+    app = Dispatch("Excel.Application")
+    app.Visible = False
+    app.DisplayAlerts = False
+    workbook = app.Workbooks.Open(workbook_path, ReadOnly=True)
+    try:
+        version = str(workbook.BuiltinDocumentProperties("Document version"))
+    finally:
+        workbook.Close(SaveChanges=False)
+        app.Quit()
+    return version
 
 
 app = typer.Typer()
