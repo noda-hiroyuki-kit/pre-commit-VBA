@@ -310,6 +310,11 @@ def get_current_branch_name() -> str:
     return outs.decode("utf-8").replace("\n", "")
 
 
+def get_workbook_version(workbook_path: Path) -> str:  # noqa: ARG001
+    """Get workbook version."""
+    return ""
+
+
 app = typer.Typer()
 basicConfig(level=INFO)
 logger = getLogger(__name__)
