@@ -23,6 +23,14 @@ class UndefineTypeError(Exception):
     """Custom UndefineTypeError exception."""
 
 
+class NotReleaseBranchError(Exception):
+    """Custom NotReleaseBranch exception."""
+
+
+class InvalidSemVerError(Exception):
+    """Custom InvalidSemVer exception."""
+
+
 @dataclass(frozen=True)
 class Constants:
     """Constants Class for win32com.
@@ -293,6 +301,25 @@ class Utf8Converter:
         if match := re.search(pattern, text):
             return Path(code_root_folder, *match.group(1).split("."))
         return code_root_folder
+
+
+def get_version_from_branch_name() -> str:
+    """Get version from branch name."""
+    branch_name = get_current_branch_name()
+    branch_name_header = "release/v"
+    if not branch_name.startswith(branch_name_header):
+        raise NotReleaseBranchError(branch_name)
+    sem_ver_pattern = (
+        r"(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)"
+        r"\.(?P<patch>0|[1-9]\d*)"
+        r"(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)"
+        r"(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))"
+        r"?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
+    )
+    match = re.search(sem_ver_pattern, branch_name)
+    if match:
+        return match.group(0)
+    raise InvalidSemVerError(branch_name)
 
 
 def get_current_branch_name() -> str:
