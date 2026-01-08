@@ -377,12 +377,12 @@ def version_callback(value: bool) -> None:  # noqa: FBT001
 
 @app.command("extract")
 def extract_vba_code_from_workbooks(  # noqa: PLR0913
+    *,
     target_path: Annotated[str, typer.Option()] = ".",
     folder_suffix: Annotated[str, typer.Option()] = ".VBA",
     export_folder: Annotated[str, typer.Option()] = "export",
     custom_ui_folder: Annotated[str, typer.Option()] = "customUI",
     code_folder: Annotated[str, typer.Option()] = "code",
-    *,
     version: Annotated[  # noqa: ARG001
         bool | None, typer.Option("--version", callback=version_callback, is_eager=True)
     ] = None,
@@ -426,10 +426,10 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913
 @app.command()
 def check(
     *,
+    target_path: Annotated[str, typer.Option()] = ".",
     version: Annotated[  # noqa: ARG001
         bool | None, typer.Option("--version", callback=version_callback, is_eager=True)
     ] = None,
-    target_path: Annotated[str, typer.Option()] = ".",
 ) -> None:
     """Check between workbook version and repository name."""
     try:
