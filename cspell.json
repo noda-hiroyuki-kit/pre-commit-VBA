@@ -10,6 +10,7 @@
         "Cabe",
         "cachetools",
         "caplog",
+        "capsys",
         "celerybeat",
         "cfgv",
         "chardet",

@@ -1,13 +1,22 @@
 """Test module for pre-commit-vba script."""
 
+import logging
 import re
+from collections.abc import Generator
 from logging import DEBUG
 from pathlib import Path
+from typing import TYPE_CHECKING
+from unittest import mock
 
 import pytest
 from typer.testing import CliRunner
 
+import pre_commit_vba
 from pre_commit_vba import app
+
+if TYPE_CHECKING:
+    from collections.abc import Generator
+
 
 runner = CliRunner()
 
@@ -168,7 +177,7 @@ class TestExtractCommandNegativeOptions:
     "subcommand",
     [
         "extract",
-        "dummy",
+        "check",
     ],
 )
 def test_display_version_subcommand(subcommand: str) -> None:
@@ -195,3 +204,59 @@ def test_display_version_subcommand(subcommand: str) -> None:
     assert re.match(sem_ver_pattern, match.group(1)) is not None, (  # noqa: S101
         "Version string is not in semantic versioning format"
     )
+
+
+class TestCheckSubCommand:
+    """Tests for check sub command."""
+
+    def test_not_exist_workbook_outs_no_found(
+        self, caplog: Generator[pytest.LogCaptureFixture]
+    ) -> None:
+        """Test not exist workbook in target path."""
+        sut = runner.invoke(app, ["check"])
+        assert sut.exit_code == 0  # noqa: S101
+        assert (  # noqa: S101
+            "No Excel workbooks found in the target path." in caplog.text
+        )
+
+    def test_not_a_release_branch_outs_in_feature_branch(
+        self, caplog: Generator[pytest.LogCaptureFixture]
+    ) -> None:
+        """Test not release branch."""
+        caplog.set_level(logging.INFO)
+        with mock.patch.object(
+            pre_commit_vba,
+            "get_current_branch_name",
+            return_value="feature/issue-1234",
+        ):
+            sut = runner.invoke(app, ["check", "--target-path", "tests"])
+            assert sut.exit_code == 0  # noqa: S101
+            assert "Not a release branch" in caplog.text  # noqa: S101
+
+    def test_branch_release_v_0_0_1_0123_outs_invalid_semantic_version(
+        self, caplog: Generator[pytest.LogCaptureFixture]
+    ) -> None:
+        """Test invalid semantic version in branch name."""
+        caplog.set_level(logging.INFO)
+        with mock.patch.object(
+            pre_commit_vba,
+            "get_current_branch_name",
+            return_value="release/v0.0.1-0123",
+        ):
+            sut = runner.invoke(app, ["check", "--target-path", "tests"])
+            assert sut.exit_code == 1  # noqa: S101
+            assert "Invalid semantic version in branch name" in caplog.text  # noqa: S101
+
+    def test_branch_release_v_0_0_1_alpha_outs_version_check_passed(
+        self, caplog: Generator[pytest.LogCaptureFixture]
+    ) -> None:
+        """Test check ok."""
+        caplog.set_level(logging.INFO)
+        with mock.patch.object(
+            pre_commit_vba,
+            "get_current_branch_name",
+            return_value="release/v0.0.1-alpha",
+        ):
+            sut = runner.invoke(app, ["check", "--target-path", "tests"])
+            assert sut.exit_code == 0  # noqa: S101
+            assert "Version check passed." in caplog.text  # noqa: S101

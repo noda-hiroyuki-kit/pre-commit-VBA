@@ -6,6 +6,7 @@ extract code files from excel workbook with codes.
 import re
 import shutil
 import subprocess
+import sys
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from logging import INFO, basicConfig, getLogger
@@ -306,9 +307,19 @@ class Utf8Converter:
 def get_version_from_branch_name() -> str:
     """Get version from branch name."""
     branch_name = get_current_branch_name()
+    check_valid_branch_name(branch_name)
+    return get_and_check_version_from_branch_name(branch_name)
+
+
+def check_valid_branch_name(branch_name: str) -> None:
+    """Check valid branch name."""
     branch_name_header = "release/v"
     if not branch_name.startswith(branch_name_header):
         raise NotReleaseBranchError(branch_name)
+
+
+def get_and_check_version_from_branch_name(branch_name: str) -> str:
+    """Get and check version from branch name."""
     sem_ver_pattern = (
         r"(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)"
         r"\.(?P<patch>0|[1-9]\d*)"
@@ -413,14 +424,37 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913
 
 
 @app.command()
-def dummy(
+def check(
     *,
     version: Annotated[  # noqa: ARG001
         bool | None, typer.Option("--version", callback=version_callback, is_eager=True)
     ] = None,
+    target_path: Annotated[str, typer.Option()] = ".",
 ) -> None:
-    """Act dummy. For enable extract command."""
-    logger.info("This is a dummy command.")
+    """Check between workbook version and repository name."""
+    try:
+        exist_workbook: bool = False
+        for workbook_path in Path(target_path).resolve().glob("*.xls*"):
+            exist_workbook = True
+            workbook_version = get_workbook_version(workbook_path)
+            branch_version = get_version_from_branch_name()
+            if workbook_version != "v" + branch_version:
+                logger.error(
+                    "Version mismatch: Workbook version '%s' != Branch version '%s'",
+                    workbook_version,
+                    branch_version,
+                )
+                sys.exit(1)
+        if not exist_workbook:
+            logger.warning("No Excel workbooks found in the target path.")
+            sys.exit(0)
+    except NotReleaseBranchError:
+        logger.info("Not a release branch")
+        sys.exit(0)
+    except InvalidSemVerError:
+        logger.exception("Invalid semantic version in branch name")
+        sys.exit(1)
+    logger.info("Version check passed.")
 
 
 if __name__ == "__main__":
