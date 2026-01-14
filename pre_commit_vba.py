@@ -304,6 +304,20 @@ class Utf8Converter:
         return code_root_folder
 
 
+def add_to_staging(settings: SettingsFoldersHandleExcel) -> None:
+    """Add files extracted to staging."""
+    process = subprocess.Popen(  # noqa: S603
+        ["git", "add", settings.common_folder],  # noqa: S607
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    try:
+        stdout_data, stderr_data = process.communicate(timeout=15)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        stdout_data, stderr_data = process.communicate()  # noqa: RUF059
+
+
 def get_version_from_branch_name() -> str:
     """Get version from branch name."""
     branch_name = get_current_branch_name()
@@ -421,6 +435,7 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913
         ExcelVbaExporter(folder_settings)
         ExcelCustomUiExtractor(folder_settings)
         Utf8Converter(folder_settings, options)
+        add_to_staging(folder_settings)
 
 
 @app.command()
