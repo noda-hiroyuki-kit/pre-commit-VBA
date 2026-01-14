@@ -3,6 +3,13 @@
 extract code files from excel workbook with codes.
 """
 
+# /// script
+# requires-python = ">=3.14"
+# dependencies = [
+#   "pywin32>=311",
+#   "typer>=0.20.0",
+# ]
+# ///
 import re
 import shutil
 import subprocess
