@@ -1,5 +1,6 @@
 """Check branch name tests for pre-commit-vba."""
 
+import re
 from pathlib import Path
 from unittest import mock
 
@@ -16,7 +17,8 @@ from pre_commit_vba import (
 def test_get_current_branch_name() -> None:
     """Test get current branch name."""
     sut = get_current_branch_name()
-    assert sut == "feature/add-match-subcommand"  # noqa: S101
+    result = re.match(r"(main|develop|feature|bugfix|release|hotfix|support)", sut)
+    assert result is not None  # noqa: S101
 
 
 def test_get_workbook_version() -> None:
