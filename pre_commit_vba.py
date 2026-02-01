@@ -22,7 +22,7 @@ from typing import Annotated
 from zipfile import ZipFile
 
 import typer
-from win32com.client import Dispatch
+from win32com.client import DispatchEx
 
 __version__ = "0.0.1"
 
@@ -158,9 +158,9 @@ class ExcelVbaExporter:
             ).file_name
             vb_comp.Export(Path(settings.export_folder, f"{vb_comp_file_name}"))
 
-    def __get_xl_app(self) -> Dispatch:
+    def __get_xl_app(self) -> DispatchEx:
         """Get Excel application."""
-        excel_app = Dispatch("Excel.Application")
+        excel_app = DispatchEx("Excel.Application")
         excel_app.Visible = True
         excel_app.DisplayAlerts = False
         return excel_app
@@ -371,7 +371,7 @@ def get_current_branch_name() -> str:
 
 def get_workbook_version(workbook_path: Path) -> str:
     """Get workbook version."""
-    app = Dispatch("Excel.Application")
+    app = DispatchEx("Excel.Application")
     app.Visible = False
     app.DisplayAlerts = False
     workbook = app.Workbooks.Open(workbook_path, ReadOnly=True)
@@ -427,6 +427,8 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913
         create_gitignore=create_gitignore,
     )
     for workbook_path in Path(target_path).resolve().glob("*.xls*"):
+        if workbook_path.name.startswith("~$"):
+            continue
         common_folder_settings = SettingsCommonFolder(
             workbook_path=workbook_path,
             folder_suffix=folder_suffix,

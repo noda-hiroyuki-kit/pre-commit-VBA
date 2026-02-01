@@ -2,6 +2,7 @@
 
 import logging
 import re
+import typing
 from collections.abc import Generator
 from logging import DEBUG
 from pathlib import Path
@@ -17,6 +18,7 @@ from pre_commit_vba import app
 if TYPE_CHECKING:
     from collections.abc import Generator
 
+from win32com.client import DispatchEx
 
 runner = CliRunner()
 
@@ -93,6 +95,20 @@ class TestExtractCommandExistenceFiles:
     """Test class for extract command."""
 
     @pytest.fixture(scope="class")
+    def prepare_pre_existing_excel(self) -> typing.tuple[DispatchEx, CliRunner]:
+        """Fixture to prepare pre-existing Excel workbook for testing."""
+        _excel_instance = DispatchEx("Excel.Application")
+        _excel_instance.Visible = False
+        _excel_instance.DisplayAlerts = False
+        _workbook = _excel_instance.Workbooks.Open(
+            Path(Path.cwd(), "tests", "test.xlsm"),
+            ReadOnly=True,
+        )
+        sut = self.sut()
+        yield _excel_instance, sut
+        _workbook.Close(SaveChanges=False)
+        _excel_instance.Quit()
+
     def sut(self) -> CliRunner:
         """Fixture for TestExtractCommandExistenceFiles."""
         return runner.invoke(
@@ -141,10 +157,27 @@ class TestExtractCommandExistenceFiles:
             f"{Path('code', 'folder_annotation', 'lower', 'lowerFolderQuotation.bas')}",
         ],
     )
-    def test_exists_files(self, sut: CliRunner, file: str) -> None:
+    def test_exists_file(
+        self,
+        prepare_pre_existing_excel: typing.tuple[DispatchEx, CliRunner],  # noqa: ARG002
+        file: str,
+    ) -> None:
         """Test that the extract command creates expected files and folders."""
-        assert sut.exit_code == 0  # noqa: S101
         assert Path(Path.cwd(), "tests", "test.VBA", file).exists()  # noqa: S101
+
+    def test_terminate_normal(
+        self, prepare_pre_existing_excel: typing.tuple[DispatchEx, CliRunner]
+    ) -> None:
+        """Test that the extract command terminates normally."""
+        _, sut = prepare_pre_existing_excel
+        assert sut.exit_code == 0  # noqa: S101
+
+    def test_exists_pre_existing_excel_instance(
+        self, prepare_pre_existing_excel: typing.tuple[DispatchEx, CliRunner]
+    ) -> None:
+        """Test that the pre-existing Excel instance is not None."""
+        excel_instance, _ = prepare_pre_existing_excel
+        assert excel_instance is not None  # noqa: S101
 
 
 class TestExtractCommandNegativeOptions:
