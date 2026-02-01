@@ -122,11 +122,23 @@ class TestExtractCommandExistenceFiles:
             f"{Path('export', 'ThisWorkbook.cls')}",
             f"{Path('export', 'CustomUI.bas')}",
             f"{Path('export', 'SampleTab.bas')}",
+            f"{Path('export', 'upperFolderQuotation.bas')}",
+            f"{Path('export', 'upperFolderParentheses.bas')}",
+            f"{Path('export', 'lowerFolderParentheses.bas')}",
+            f"{Path('export', 'lowerFolderQuotation.bas')}",
             f"{Path('customUI', 'customUI14.xml')}",
             f"{Path('code', 'excel document modules', 'ブック', 'ThisWorkbook.cls')}",
             f"{Path('code', 'excel document modules', 'シート', 'Sheet1.cls')}",
             f"{Path('code', 'customUI', 'CustomUI.bas')}",
             f"{Path('code', 'customUI', 'sample_tab', 'SampleTab.bas')}",
+            f"{Path('code', 'folder_annotation', 'upper', 'upperFolderQuotation.bas')}",
+            f"{
+                Path('code', 'folder_annotation', 'upper', 'upperFolderParentheses.bas')
+            }",
+            f"{
+                Path('code', 'folder_annotation', 'lower', 'lowerFolderParentheses.bas')
+            }",
+            f"{Path('code', 'folder_annotation', 'lower', 'lowerFolderQuotation.bas')}",
         ],
     )
     def test_exists_files(self, sut: CliRunner, file: str) -> None:

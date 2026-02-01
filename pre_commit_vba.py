@@ -305,9 +305,9 @@ class Utf8Converter:
         code_root_folder = self.__settings.code_folder
         if not self.__options.enable_folder_annotation():
             return code_root_folder
-        pattern = r"\'@Folder \"(.*)\""
+        pattern = r"\'@(F|f)older(\s|\()\"(.*)\"((.*)|\))(.*)\n"
         if match := re.search(pattern, text):
-            return Path(code_root_folder, *match.group(1).split("."))
+            return Path(code_root_folder, *match.group(3).split("."))
         return code_root_folder
 
 
