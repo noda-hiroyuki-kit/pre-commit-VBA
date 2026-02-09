@@ -290,6 +290,8 @@ class Utf8Converter:
 
     def __convert_to_utf8(self) -> None:
         for file_path in self.__settings.export_folder.glob("*.*"):
+            if self.__is_binary(file_path):
+                continue
             content = self.__format_line_breaks(
                 file_path.read_text(encoding="shift-jis")
             )
@@ -309,6 +311,14 @@ class Utf8Converter:
         if match := re.search(pattern, text):
             return Path(code_root_folder, *match.group(3).split("."))
         return code_root_folder
+
+    def __is_binary(self, file_path: Path, chunk_size: int = 1024) -> bool:
+        try:
+            with Path.open(file_path, "rb") as f:
+                chunk = f.read(chunk_size)
+                return b"\x00" in chunk
+        except OSError:
+            return False
 
 
 def add_to_staging(settings: SettingsFoldersHandleExcel) -> None:
