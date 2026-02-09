@@ -155,6 +155,16 @@ class TestExtractCommandExistenceFiles:
                 Path('code', 'folder_annotation', 'lower', 'lowerFolderParentheses.bas')
             }",
             f"{Path('code', 'folder_annotation', 'lower', 'lowerFolderQuotation.bas')}",
+            f"{Path('code', 'Tests', 'TestController.cls')}",
+            f"{Path('code', 'Tests', 'domain', 'model', 'TestProductCodeModule.bas')}",
+            f"{Path('code', 'domain', 'ErrorCode.cls')}",
+            f"{Path('code', 'domain', 'ValidationResult.cls')}",
+            f"{Path('code', 'domain', 'model', 'Product.cls')}",
+            f"{Path('code', 'domain', 'model', 'ProductCode.cls')}",
+            f"{Path('code', 'domain', 'model', 'ProductName.cls')}",
+            f"{Path('code', 'registerForm', 'RegisterProductForm.frm')}",
+            f"{Path('code', 'registerForm', 'ShowFormModule.bas')}",
+            f"{Path('code', 'registerForm', 'IForm.cls')}",
         ],
     )
     def test_exists_file(
