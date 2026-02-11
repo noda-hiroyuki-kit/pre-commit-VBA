@@ -264,6 +264,20 @@ def test_display_version_subcommand(subcommand: str) -> None:
 class TestCheckSubCommand:
     """Tests for check sub command."""
 
+    @pytest.fixture(scope="class")
+    def prepare_pre_existing_excel(self) -> Generator:
+        """Fixture to prepare pre-existing Excel workbook for testing."""
+        _excel_instance = DispatchEx("Excel.Application")
+        _excel_instance.Visible = False
+        _excel_instance.DisplayAlerts = False
+        _workbook = _excel_instance.Workbooks.Open(
+            Path(Path.cwd(), "tests", "test.xlsm"),
+            ReadOnly=True,
+        )
+        yield
+        _workbook.Close(SaveChanges=False)
+        _excel_instance.Quit()
+
     def test_not_exist_workbook_outs_no_found(
         self, caplog: Generator[pytest.LogCaptureFixture]
     ) -> None:
@@ -306,6 +320,22 @@ class TestCheckSubCommand:
         self, caplog: Generator[pytest.LogCaptureFixture]
     ) -> None:
         """Test check ok."""
+        caplog.set_level(logging.INFO)
+        with mock.patch.object(
+            pre_commit_vba,
+            "get_current_branch_name",
+            return_value="release/v0.0.1-alpha",
+        ):
+            sut = runner.invoke(app, ["check", "--target-path", "tests"])
+            assert sut.exit_code == 0  # noqa: S101
+            assert "Version check passed." in caplog.text  # noqa: S101
+
+    def test_branch_release_v_0_0_1_alpha_outs_version_check_passed_with_temp_xl_file(
+        self,
+        caplog: Generator[pytest.LogCaptureFixture],
+        prepare_pre_existing_excel: None,  # noqa: ARG002
+    ) -> None:
+        """Test check ok under the presence of temporary Excel files."""
         caplog.set_level(logging.INFO)
         with mock.patch.object(
             pre_commit_vba,
