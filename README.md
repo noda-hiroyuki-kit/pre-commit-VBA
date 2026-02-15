@@ -1,5 +1,6 @@
 # Pre-commit VBA
 
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENCE)
 
 ## 概要
@@ -110,10 +111,16 @@ $ check [OPTIONS]
 
 ## 参考情報
 
+### pre_commit_vba.py
+
 [Agent6-6-6/Excel-VBA-XML-Export-Pre-Commit-Hook](https://github.com/Agent6-6-6/Excel-VBA-XML-Export-Pre-Commit-Hook)
+
+[gitのbranch名,tag名をpythonで取得する](https://qiita.com/mynkit/items/73b20fb0ad124c0ea8e9)
+
+### tests/test.xlsm
 
 [git repository office custom ui editor](https://github.com/OfficeDev/office-custom-ui-editor)
 
 [Excel のリボンUIを業務アプリとして使う](https://qiita.com/tomochan154/items/3614b6f3ebc9ef947719)
 
-[gitのbranch名,tag名をpythonで取得する](https://qiita.com/mynkit/items/73b20fb0ad124c0ea8e9)
+[RubberDuckでテスト駆動開発したXLSMの配布時にコンパイラ動作を簡単切替 by @ShortArrow(さぼったろう)](https://qiita.com/ShortArrow/items/a16477a0926a68a88ead)
