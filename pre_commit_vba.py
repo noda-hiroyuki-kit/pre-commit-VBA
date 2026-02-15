@@ -7,7 +7,7 @@ extract code files from excel workbook with codes.
 # requires-python = ">=3.14"
 # dependencies = [
 #   "pywin32>=311",
-#   "typer>=0.20.0",
+#   "typer>=0.23.1",
 # ]
 # ///
 import re
@@ -22,9 +22,9 @@ from typing import Annotated
 from zipfile import ZipFile
 
 import typer
-from win32com.client import Dispatch
+from win32com.client import DispatchEx
 
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 
 class UndefineTypeError(Exception):
@@ -158,9 +158,9 @@ class ExcelVbaExporter:
             ).file_name
             vb_comp.Export(Path(settings.export_folder, f"{vb_comp_file_name}"))
 
-    def __get_xl_app(self) -> Dispatch:
+    def __get_xl_app(self) -> DispatchEx:
         """Get Excel application."""
-        excel_app = Dispatch("Excel.Application")
+        excel_app = DispatchEx("Excel.Application")
         excel_app.Visible = True
         excel_app.DisplayAlerts = False
         return excel_app
@@ -290,8 +290,13 @@ class Utf8Converter:
 
     def __convert_to_utf8(self) -> None:
         for file_path in self.__settings.export_folder.glob("*.*"):
-            content = self.__format_line_breaks(
+            if self.__is_binary(file_path):
+                continue
+            text_before_trailing_ws_removal = self.__format_line_breaks(
                 file_path.read_text(encoding="shift-jis")
+            )
+            content = self.__remove_trailing_white_space_in_vba_metadata_portion(
+                text_before_trailing_ws_removal
             )
             code_folder = self.__get_code_folder(content)
             code_folder.mkdir(parents=True, exist_ok=True)
@@ -301,14 +306,72 @@ class Utf8Converter:
     def __format_line_breaks(self, text: str) -> str:
         return text.replace("\r\n", "\n").replace("\r", "\n").rstrip("\n") + "\n"
 
+    def __remove_trailing_white_space_in_vba_metadata_portion(self, text: str) -> str:
+        remover = self._trailing_white_space_class_factory(text)
+        return remover.remove_trailing_white_space(text)
+
+    def _trailing_white_space_class_factory(
+        self, text: str
+    ) -> ITrailingWhiteSpaceRemover:
+        if re.search(r"^VERSION 5", text):
+            return FrxModuleTrailingWhiteSpaceRemover()
+        return OtherModuleTrailingWhiteSpaceRemover()
+
     def __get_code_folder(self, text: str) -> Path:
         code_root_folder = self.__settings.code_folder
         if not self.__options.enable_folder_annotation():
             return code_root_folder
-        pattern = r"\'@Folder \"(.*)\""
+        pattern = r"\'@(F|f)older(\s|\()\"(.*)\"((.*)|\))(.*)\n"
         if match := re.search(pattern, text):
-            return Path(code_root_folder, *match.group(1).split("."))
+            return Path(code_root_folder, *match.group(3).split("."))
         return code_root_folder
+
+    def __is_binary(self, file_path: Path, chunk_size: int = 1024) -> bool:
+        try:
+            with Path.open(file_path, "rb") as f:
+                chunk = f.read(chunk_size)
+                return b"\x00" in chunk
+        except OSError:
+            return False
+
+
+class ITrailingWhiteSpaceRemover(ABC):
+    """A placeholder class for TrailingWhiteSpaceRemover."""
+
+    @abstractmethod
+    def remove_trailing_white_space(self, text: str) -> str:
+        """Remove trailing white space in VBA metadata portion."""
+        raise NotImplementedError
+
+
+class FrxModuleTrailingWhiteSpaceRemover(ITrailingWhiteSpaceRemover):
+    """A placeholder class for FrxModuleTrailingWhiteSpaceRemover."""
+
+    def remove_trailing_white_space(self, text: str) -> str:
+        """Remove trailing white space in VBA metadata portion."""
+        content_split = text.split("\n")
+        pattern = (
+            r"^(VERSION 5|Begin|"
+            r"\s*(Caption|Client|OleObject|StartUp)|"
+            r"End|Attribute VB_)"
+        )
+        continue_flag = True
+        for content_index, content in enumerate(content_split):
+            if not continue_flag:
+                break
+            if re.search(pattern, content):
+                content_split[content_index] = content.rstrip()
+                continue
+            continue_flag = False
+        return "\n".join(content_split)
+
+
+class OtherModuleTrailingWhiteSpaceRemover(ITrailingWhiteSpaceRemover):
+    """A placeholder class for OtherModuleTrailingWhiteSpaceRemover."""
+
+    def remove_trailing_white_space(self, text: str) -> str:
+        """Remove trailing white space in VBA metadata portion."""
+        return text
 
 
 def add_to_staging(settings: SettingsFoldersHandleExcel) -> None:
@@ -371,7 +434,7 @@ def get_current_branch_name() -> str:
 
 def get_workbook_version(workbook_path: Path) -> str:
     """Get workbook version."""
-    app = Dispatch("Excel.Application")
+    app = DispatchEx("Excel.Application")
     app.Visible = False
     app.DisplayAlerts = False
     workbook = app.Workbooks.Open(workbook_path, ReadOnly=True)
@@ -427,6 +490,8 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913
         create_gitignore=create_gitignore,
     )
     for workbook_path in Path(target_path).resolve().glob("*.xls*"):
+        if workbook_path.name.startswith("~$"):
+            continue
         common_folder_settings = SettingsCommonFolder(
             workbook_path=workbook_path,
             folder_suffix=folder_suffix,
@@ -457,6 +522,8 @@ def check(
     try:
         exist_workbook: bool = False
         for workbook_path in Path(target_path).resolve().glob("*.xls*"):
+            if workbook_path.name.startswith("~$"):
+                continue
             exist_workbook = True
             workbook_version = get_workbook_version(workbook_path)
             branch_version = get_version_from_branch_name()
