@@ -2,6 +2,7 @@
 
 import logging
 import re
+import subprocess
 import typing
 from collections.abc import Generator
 from logging import DEBUG
@@ -21,6 +22,66 @@ if TYPE_CHECKING:
 from win32com.client import DispatchEx
 
 runner = CliRunner()
+
+
+class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
+    """Test class for code metadata portion in trailing whitespace check."""
+
+    @pytest.fixture(scope="class")
+    def set_up(self) -> typing.tuple[subprocess.Popen, bytes]:
+        """Set up for test."""
+        runner.invoke(
+            app,
+            [
+                "extract",
+                "--target-path",
+                "tests",
+                "--folder-suffix",
+                ".VBA",
+                "--export-folder",
+                "export",
+                "--custom-ui-folder",
+                "customUI",
+                "--code-folder",
+                "code",
+                "--enable-folder-annotation",
+                "--create-gitignore",
+            ],
+        )
+        process = subprocess.Popen(
+            [  # noqa: S607
+                "uv",
+                "run",
+                "pre-commit",
+                "run",
+                "trailing-whitespace",
+                "--files",
+                "tests/test.VBA/code/registerForm/RegisterProductForm.frm",
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        try:
+            stdout_data, _ = process.communicate(timeout=15)
+        except subprocess.TimeoutExpired:
+            process.kill()
+            stdout_data, _ = process.communicate()
+        return process, stdout_data
+
+    def test_process_return_code_is_zero(
+        self, set_up: typing.tuple[subprocess.Popen, bytes]
+    ) -> None:
+        """Test that the process return code is zero."""
+        process, _ = set_up
+        assert process.returncode == 0  # noqa: S101
+
+    def test_stdout_contains_passed_message(
+        self, set_up: typing.tuple[subprocess.Popen, bytes]
+    ) -> None:
+        """Test that the stdout contains 'Passed' message."""
+        _, stdout_data = set_up
+        pattern = r"trim trailing whitespace.*Passed"
+        assert re.search(pattern, stdout_data.decode("utf-8")) is not None  # noqa: S101
 
 
 class TestExtractCommandPositiveOptions:
