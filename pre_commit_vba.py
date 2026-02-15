@@ -292,8 +292,11 @@ class Utf8Converter:
         for file_path in self.__settings.export_folder.glob("*.*"):
             if self.__is_binary(file_path):
                 continue
-            content = self.__format_line_breaks(
+            text_before_trailing_ws_removal = self.__format_line_breaks(
                 file_path.read_text(encoding="shift-jis")
+            )
+            content = self.__remove_trailing_white_space_in_vba_metadata_portion(
+                text_before_trailing_ws_removal
             )
             code_folder = self.__get_code_folder(content)
             code_folder.mkdir(parents=True, exist_ok=True)
@@ -302,6 +305,17 @@ class Utf8Converter:
 
     def __format_line_breaks(self, text: str) -> str:
         return text.replace("\r\n", "\n").replace("\r", "\n").rstrip("\n") + "\n"
+
+    def __remove_trailing_white_space_in_vba_metadata_portion(self, text: str) -> str:
+        remover = self._trailing_white_space_class_factory(text)
+        return remover.remove_trailing_white_space(text)
+
+    def _trailing_white_space_class_factory(
+        self, text: str
+    ) -> ITrailingWhiteSpaceRemover:
+        if re.search(r"^VERSION 5", text):
+            return FrxModuleTrailingWhiteSpaceRemover()
+        return OtherModuleTrailingWhiteSpaceRemover()
 
     def __get_code_folder(self, text: str) -> Path:
         code_root_folder = self.__settings.code_folder
@@ -319,6 +333,45 @@ class Utf8Converter:
                 return b"\x00" in chunk
         except OSError:
             return False
+
+
+class ITrailingWhiteSpaceRemover(ABC):
+    """A placeholder class for TrailingWhiteSpaceRemover."""
+
+    @abstractmethod
+    def remove_trailing_white_space(self, text: str) -> str:
+        """Remove trailing white space in VBA metadata portion."""
+        raise NotImplementedError
+
+
+class FrxModuleTrailingWhiteSpaceRemover(ITrailingWhiteSpaceRemover):
+    """A placeholder class for FrxModuleTrailingWhiteSpaceRemover."""
+
+    def remove_trailing_white_space(self, text: str) -> str:
+        """Remove trailing white space in VBA metadata portion."""
+        content_split = text.split("\n")
+        pattern = (
+            r"^(VERSION 5|Begin|"
+            r"\s*(Caption|Client|OleObject|StartUp)|"
+            r"End|Attribute VB_)"
+        )
+        continue_flag = True
+        for content_index, content in enumerate(content_split):
+            if not continue_flag:
+                break
+            if re.search(pattern, content):
+                content_split[content_index] = content.rstrip()
+                continue
+            continue_flag = False
+        return "\n".join(content_split)
+
+
+class OtherModuleTrailingWhiteSpaceRemover(ITrailingWhiteSpaceRemover):
+    """A placeholder class for OtherModuleTrailingWhiteSpaceRemover."""
+
+    def remove_trailing_white_space(self, text: str) -> str:
+        """Remove trailing white space in VBA metadata portion."""
+        return text
 
 
 def add_to_staging(settings: SettingsFoldersHandleExcel) -> None:
