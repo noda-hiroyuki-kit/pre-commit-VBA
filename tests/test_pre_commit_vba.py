@@ -13,8 +13,8 @@ from unittest import mock
 import pytest
 from typer.testing import CliRunner
 
-import pre_commit_vba
-from pre_commit_vba import app
+from src.pre_commit_vba import pre_commit_vba
+from src.pre_commit_vba.pre_commit_vba import app
 
 if TYPE_CHECKING:
     from collections.abc import Generator
