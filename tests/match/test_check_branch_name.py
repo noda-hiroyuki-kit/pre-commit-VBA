@@ -6,8 +6,8 @@ from unittest import mock
 
 import pytest
 
-import pre_commit_vba
-from pre_commit_vba import (
+from src.pre_commit_vba import pre_commit_vba
+from src.pre_commit_vba.pre_commit_vba import (
     get_current_branch_name,
     get_version_from_branch_name,
     get_workbook_version,

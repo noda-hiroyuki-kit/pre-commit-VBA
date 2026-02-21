@@ -538,7 +538,7 @@ wheels = [
 [[package]]
 name = "pre-commit-vba"
 version = "0.0.2"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "pywin32" },
     { name = "typer" },
