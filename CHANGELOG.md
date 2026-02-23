@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add pre-commit hook (#18).  
+  pre-commitフックの追加.
+
 ## [0.0.2] - 2026-02-16
 
 ### Added
