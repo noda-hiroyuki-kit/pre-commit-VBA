@@ -7,7 +7,7 @@ extract code files from excel workbook with codes.
 # requires-python = ">=3.14"
 # dependencies = [
 #   "pywin32>=311",
-#   "typer>=0.23.1",
+#   "typer>=0.24.1",
 # ]
 # ///
 import re
@@ -24,7 +24,7 @@ from zipfile import ZipFile
 import typer
 from win32com.client import DispatchEx
 
-__version__ = "0.0.2"
+__version__ = "0.1.0"
 
 
 class UndefineTypeError(Exception):
@@ -161,7 +161,7 @@ class ExcelVbaExporter:
     def __get_xl_app(self) -> DispatchEx:
         """Get Excel application."""
         excel_app = DispatchEx("Excel.Application")
-        excel_app.Visible = True
+        excel_app.Visible = False
         excel_app.DisplayAlerts = False
         return excel_app
 

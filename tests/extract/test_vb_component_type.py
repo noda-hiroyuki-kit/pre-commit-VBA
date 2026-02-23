@@ -4,7 +4,7 @@ from dataclasses import FrozenInstanceError
 
 import pytest
 
-from pre_commit_vba import (
+from src.pre_commit_vba.pre_commit_vba import (
     ClassModule,
     SheetClassModule,
     StdModule,

@@ -86,6 +86,7 @@
         "rabbitmq",
         "ropeproject",
         "Rubberduck",
+        "Sabotaro",
         "Scrapy",
         "sdist",
         "shellingham",
@@ -101,6 +102,7 @@
         "vbext",
         "venv",
         "virtualenv",
-        "webassets"
+        "webassets",
+        "xlsb"
     ]
 }
