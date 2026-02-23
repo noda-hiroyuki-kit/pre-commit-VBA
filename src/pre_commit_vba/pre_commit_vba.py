@@ -161,7 +161,7 @@ class ExcelVbaExporter:
     def __get_xl_app(self) -> DispatchEx:
         """Get Excel application."""
         excel_app = DispatchEx("Excel.Application")
-        excel_app.Visible = True
+        excel_app.Visible = False
         excel_app.DisplayAlerts = False
         return excel_app
 
