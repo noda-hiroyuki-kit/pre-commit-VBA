@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/streetsidesoftware/cspell-cli
-  rev: v9.3.1
+  rev: v9.6.0
   hooks:
     - id: cspell # Spell check changed files
     - id: cspell # Spell check the commit message
@@ -29,13 +29,13 @@ repos:
     - id: mixed-line-ending
       args: ['--fix=lf']
 - repo: https://github.com/adrienverge/yamllint.git
-  rev: v1.37.1
+  rev: v1.38.0
   hooks:
     - id: yamllint
       args: [--strict, -d, " {rules: {indentation: {spaces: 2}}}"]
       files: ^mkdocs\.yml$
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.14.5
+  rev: v0.15.2
   hooks:
     # Run the linter.
     - id: ruff-check
@@ -43,6 +43,6 @@ repos:
     # Run the formatter.
     - id: ruff-format
 - repo: https://github.com/pre-commit/mirrors-mypy
-  rev: v1.18.2
+  rev: v1.19.1
   hooks:
     - id: mypy
