@@ -446,7 +446,7 @@ def get_workbook_version(workbook_path: Path) -> str:
     return version
 
 
-app = typer.Typer()
+app = typer.Typer(pretty_exceptions_show_locals=True, pretty_exceptions_short=False)
 basicConfig(level=INFO)
 logger = getLogger(__name__)
 constants = Constants()
