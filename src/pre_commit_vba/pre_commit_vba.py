@@ -24,7 +24,7 @@ from zipfile import ZipFile
 import typer
 from win32com.client import DispatchEx
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 
 class UndefineTypeError(Exception):
@@ -293,7 +293,7 @@ class Utf8Converter:
             if self.__is_binary(file_path):
                 continue
             text_before_trailing_ws_removal = self.__format_line_breaks(
-                file_path.read_text(encoding="shift-jis")
+                file_path.read_text(encoding="cp932")
             )
             content = self.__remove_trailing_white_space_in_vba_metadata_portion(
                 text_before_trailing_ws_removal
@@ -446,7 +446,7 @@ def get_workbook_version(workbook_path: Path) -> str:
     return version
 
 
-app = typer.Typer()
+app = typer.Typer(pretty_exceptions_show_locals=True, pretty_exceptions_short=False)
 basicConfig(level=INFO)
 logger = getLogger(__name__)
 constants = Constants()
