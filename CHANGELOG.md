@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-02-25
+
+### Fixed
+
+- Fix when the code contains circled numbers such as ①, it crashes with an error. (#24)  
+  コード内に①などの丸数字を含むとエラーで落ちるのを修正
+
 ## [0.1.0] - 2026-02-24
 
 ### Added
@@ -38,7 +45,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release as first version
 
-[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.1.0...HEAD
+[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.0.2...v0.1.0
 [0.0.2]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.0.1...v0.0.2
 [0.0.1]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/releases/tag/v0.0.1
