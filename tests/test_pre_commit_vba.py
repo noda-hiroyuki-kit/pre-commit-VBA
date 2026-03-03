@@ -343,11 +343,17 @@ class TestCheckSubCommand:
         self, caplog: Generator[pytest.LogCaptureFixture]
     ) -> None:
         """Test not exist workbook in target path."""
-        sut = runner.invoke(app, ["check"])
-        assert sut.exit_code == 0  # noqa: S101
-        assert (  # noqa: S101
-            "No Excel workbooks found in the target path." in caplog.text
-        )
+        caplog.set_level(logging.INFO)
+        with mock.patch.object(
+            pre_commit_vba,
+            "get_current_branch_name",
+            return_value="release/v0.0.1-alpha",
+        ):
+            sut = runner.invoke(app, ["check"])
+            assert sut.exit_code == 0  # noqa: S101
+            assert (  # noqa: S101
+                "No Excel workbooks found in the target path." in caplog.text
+            )
 
     def test_not_a_release_branch_outs_in_feature_branch(
         self, caplog: Generator[pytest.LogCaptureFixture]
