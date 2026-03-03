@@ -24,7 +24,7 @@ from zipfile import ZipFile
 import typer
 from win32com.client import DispatchEx
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 
 class UndefineTypeError(Exception):
@@ -520,13 +520,13 @@ def check(
 ) -> None:
     """Check between workbook version and repository name."""
     try:
+        branch_version = get_version_from_branch_name()
         exist_workbook: bool = False
         for workbook_path in Path(target_path).resolve().glob("*.xls*"):
             if workbook_path.name.startswith("~$"):
                 continue
             exist_workbook = True
             workbook_version = get_workbook_version(workbook_path)
-            branch_version = get_version_from_branch_name()
             if workbook_version != "v" + branch_version:
                 logger.error(
                     "Version mismatch: Workbook version '%s' != Branch version '%s'",
