@@ -412,3 +412,17 @@ class TestCheckSubCommand:
             sut = runner.invoke(app, ["check", "--target-path", "tests"])
             assert sut.exit_code == 0  # noqa: S101
             assert "Version check passed." in caplog.text  # noqa: S101
+
+    def test_branch_hotfix_v_0_0_1_alpha_outs_version_check_passed(
+        self, caplog: Generator[pytest.LogCaptureFixture]
+    ) -> None:
+        """Test check ok."""
+        caplog.set_level(logging.INFO)
+        with mock.patch.object(
+            pre_commit_vba,
+            "get_current_branch_name",
+            return_value="hotfix/v0.0.1-alpha",
+        ):
+            sut = runner.invoke(app, ["check", "--target-path", "tests"])
+            assert sut.exit_code == 0  # noqa: S101
+            assert "Version check passed." in caplog.text  # noqa: S101
