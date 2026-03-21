@@ -397,8 +397,8 @@ def get_version_from_branch_name() -> str:
 
 def check_valid_branch_name(branch_name: str) -> None:
     """Check valid branch name."""
-    branch_name_header = "release/v"
-    if not branch_name.startswith(branch_name_header):
+    branch_name_pattern = r"(release|hotfix)/v"
+    if not re.compile(branch_name_pattern).match(branch_name):
         raise NotReleaseBranchError(branch_name)
 
 
