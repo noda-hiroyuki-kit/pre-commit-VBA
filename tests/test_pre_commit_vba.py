@@ -355,7 +355,7 @@ class TestCheckSubCommand:
                 "No Excel workbooks found in the target path." in caplog.text
             )
 
-    def test_not_a_release_branch_outs_in_feature_branch(
+    def test_not_a_release_or_hotfix_branch_outs_in_feature_branch(
         self, caplog: Generator[pytest.LogCaptureFixture]
     ) -> None:
         """Test not release branch."""
@@ -367,7 +367,7 @@ class TestCheckSubCommand:
         ):
             sut = runner.invoke(app, ["check", "--target-path", "tests"])
             assert sut.exit_code == 0  # noqa: S101
-            assert "Not a release branch" in caplog.text  # noqa: S101
+            assert "Branch is not a release or hotfix branch" in caplog.text  # noqa: S101
 
     def test_branch_release_v_0_0_1_0123_outs_invalid_semantic_version(
         self, caplog: Generator[pytest.LogCaptureFixture]
@@ -408,6 +408,20 @@ class TestCheckSubCommand:
             pre_commit_vba,
             "get_current_branch_name",
             return_value="release/v0.0.1-alpha",
+        ):
+            sut = runner.invoke(app, ["check", "--target-path", "tests"])
+            assert sut.exit_code == 0  # noqa: S101
+            assert "Version check passed." in caplog.text  # noqa: S101
+
+    def test_branch_hotfix_v_0_0_1_alpha_outs_version_check_passed(
+        self, caplog: Generator[pytest.LogCaptureFixture]
+    ) -> None:
+        """Test check ok."""
+        caplog.set_level(logging.INFO)
+        with mock.patch.object(
+            pre_commit_vba,
+            "get_current_branch_name",
+            return_value="hotfix/v0.0.1-alpha",
         ):
             sut = runner.invoke(app, ["check", "--target-path", "tests"])
             assert sut.exit_code == 0  # noqa: S101
