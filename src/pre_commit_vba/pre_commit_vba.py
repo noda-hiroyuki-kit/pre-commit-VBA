@@ -538,7 +538,7 @@ def check(
             logger.warning("No Excel workbooks found in the target path.")
             sys.exit(0)
     except NotReleaseBranchError:
-        logger.info("Not a release branch")
+        logger.info("Branch is not a release or hotfix branch")
         sys.exit(0)
     except InvalidSemVerError:
         logger.exception("Invalid semantic version in branch name")
