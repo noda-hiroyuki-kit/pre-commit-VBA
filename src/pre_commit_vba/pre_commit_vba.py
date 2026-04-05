@@ -247,7 +247,6 @@ class ExcelCustomUiExtractor:
         self.__extract_custom_ui_files()
 
     def __extract_custom_ui_files(self) -> None:
-        self.__settings.custom_ui_folder.mkdir(parents=True, exist_ok=True)
         self.__extract_custom_ui_file("customUI/customUI14.xml")
         self.__extract_custom_ui_file("customUI/customUI.xml")
 
@@ -255,6 +254,7 @@ class ExcelCustomUiExtractor:
         try:
             with ZipFile(self.__settings.workbook_path, "r") as zip_ref:
                 file_data = zip_ref.read(full_item_name)
+            self.__settings.custom_ui_folder.mkdir(parents=True, exist_ok=True)
             with Path(self.__settings.custom_ui_folder, Path(full_item_name).name).open(
                 mode="wb"
             ) as xml_file:

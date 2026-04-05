@@ -45,3 +45,22 @@ class TestExcelCustomUiExtractor:
             Path.cwd(), "tests", "test.VBA", "customUI", "customUI14.xml"
         )
         assert Path.is_file(expected_file)  # noqa: S101
+
+    def test_custom_ui_folder_not_created_when_no_custom_ui_files(self) -> None:
+        """Test that custom_ui_folder is not created
+        when no custom UI files are present.
+        """  # noqa: D205
+        workbook_path = Path("tests/extract/no_custom_ui.xlsm")
+        common_folder = SettingsCommonFolder(workbook_path, ".VBA")
+        settings = SettingsFoldersHandleExcel(
+            settings_common_folder=common_folder,
+            export_folder="",
+            custom_ui_folder="customUI",
+            code_folder="",
+        )
+        if settings.common_folder.exists():
+            shutil.rmtree(settings.common_folder)
+
+        ExcelCustomUiExtractor(settings)
+
+        assert not settings.custom_ui_folder.exists()  # noqa: S101
