@@ -1,6 +1,6 @@
 [project]
 name = "pre-commit-vba"
-version = "0.1.3"
+version = "0.2.0"
 description = "Extracts VBA code from Excel files for managing VBA code in git and checks workbook version."
 readme = "README.md"
 requires-python = ">=3.14"
@@ -13,7 +13,7 @@ dependencies = [
 pre-commit-vba = "pre_commit_vba.pre_commit_vba:app"
 
 [build-system]
-requires = ["uv_build>=0.10.4,<0.11.0"]
+requires = ["uv_build>=0.11.6,<0.12"]
 build-backend = "uv_build"
 
 [dependency-groups]

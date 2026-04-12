@@ -2,6 +2,7 @@
 
 import logging
 import re
+import shutil
 import subprocess
 import typing
 from collections.abc import Generator
@@ -56,7 +57,7 @@ class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
                 "run",
                 "trailing-whitespace",
                 "--files",
-                "tests/test.VBA/code/registerForm/RegisterProductForm.frm",
+                "tests/test.xlsm.VBA/code/registerForm/RegisterProductForm.frm",
             ],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -234,7 +235,7 @@ class TestExtractCommandExistenceFiles:
         file: str,
     ) -> None:
         """Test that the extract command creates expected files and folders."""
-        assert Path(Path.cwd(), "tests", "test.VBA", file).exists()  # noqa: S101
+        assert Path(Path.cwd(), "tests", "test.xlsm.VBA", file).exists()  # noqa: S101
 
     def test_terminate_normal(
         self, prepare_pre_existing_excel: typing.tuple[DispatchEx, CliRunner]
@@ -249,6 +250,34 @@ class TestExtractCommandExistenceFiles:
         """Test that the pre-existing Excel instance is not None."""
         excel_instance, _ = prepare_pre_existing_excel
         assert excel_instance is not None  # noqa: S101
+
+
+def test_not_exists_test1_vba_folder() -> None:
+    """Test that the test1.VBA folder does not exist."""
+    if Path(Path.cwd(), "tests", "test1.VBA").exists():
+        shutil.rmtree(Path(Path.cwd(), "tests", "test1.VBA"))
+    runner.invoke(
+        app,
+        [
+            "extract",
+            "--target-path",
+            "tests",
+            "--folder-suffix",
+            ".VBA",
+            "--export-folder",
+            "export",
+            "--custom-ui-folder",
+            "customUI",
+            "--code-folder",
+            "code",
+            "--enable-folder-annotation",
+            "--create-gitignore",
+        ],
+    )
+    test_result = not Path(Path.cwd(), "tests", "test1.VBA").exists()
+    if Path(Path.cwd(), "tests", "test1.VBA").exists():
+        shutil.rmtree(Path(Path.cwd(), "tests", "test1.VBA"))
+    assert test_result  # noqa: S101
 
 
 class TestExtractCommandNegativeOptions:
@@ -355,7 +384,7 @@ class TestCheckSubCommand:
                 "No Excel workbooks found in the target path." in caplog.text
             )
 
-    def test_not_a_release_branch_outs_in_feature_branch(
+    def test_not_a_release_or_hotfix_branch_outs_in_feature_branch(
         self, caplog: Generator[pytest.LogCaptureFixture]
     ) -> None:
         """Test not release branch."""
@@ -367,7 +396,7 @@ class TestCheckSubCommand:
         ):
             sut = runner.invoke(app, ["check", "--target-path", "tests"])
             assert sut.exit_code == 0  # noqa: S101
-            assert "Not a release branch" in caplog.text  # noqa: S101
+            assert "Branch is not a release or hotfix branch" in caplog.text  # noqa: S101
 
     def test_branch_release_v_0_0_1_0123_outs_invalid_semantic_version(
         self, caplog: Generator[pytest.LogCaptureFixture]
@@ -408,6 +437,20 @@ class TestCheckSubCommand:
             pre_commit_vba,
             "get_current_branch_name",
             return_value="release/v0.0.1-alpha",
+        ):
+            sut = runner.invoke(app, ["check", "--target-path", "tests"])
+            assert sut.exit_code == 0  # noqa: S101
+            assert "Version check passed." in caplog.text  # noqa: S101
+
+    def test_branch_hotfix_v_0_0_1_alpha_outs_version_check_passed(
+        self, caplog: Generator[pytest.LogCaptureFixture]
+    ) -> None:
+        """Test check ok."""
+        caplog.set_level(logging.INFO)
+        with mock.patch.object(
+            pre_commit_vba,
+            "get_current_branch_name",
+            return_value="hotfix/v0.0.1-alpha",
         ):
             sut = runner.invoke(app, ["check", "--target-path", "tests"])
             assert sut.exit_code == 0  # noqa: S101

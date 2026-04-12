@@ -26,7 +26,7 @@ class TestExcelVbaExporter:
     def sut(self) -> Generator[ExcelVbaExporter]:
         """Act first this tests."""
         common_folder = SettingsCommonFolder(
-            Path(Path.cwd(), "tests", "test.xlsm"), ".VBA"
+            Path(Path.cwd(), "tests", "test.xlsm"), ".VBA", include_extension=True
         )
         settings = SettingsFoldersHandleExcel(
             settings_common_folder=common_folder,
@@ -42,11 +42,13 @@ class TestExcelVbaExporter:
     def test_exists_this_workbook_file(self, sut: ExcelVbaExporter) -> None:  # noqa: ARG002
         """Test that ThisWorkbook component file exists."""
         expected_file = Path(
-            Path.cwd(), "tests", "test.VBA", "export", "ThisWorkbook.cls"
+            Path.cwd(), "tests", "test.xlsm.VBA", "export", "ThisWorkbook.cls"
         )
         assert Path.is_file(expected_file)  # noqa: S101
 
     def test_exists_sheet1_file(self, sut: ExcelVbaExporter) -> None:  # noqa: ARG002
         """Test that ThisWorkbook component file exists."""
-        expected_file = Path(Path.cwd(), "tests", "test.VBA", "export", "sheet1.cls")
+        expected_file = Path(
+            Path.cwd(), "tests", "test.xlsm.VBA", "export", "sheet1.cls"
+        )
         assert Path.is_file(expected_file)  # noqa: S101
