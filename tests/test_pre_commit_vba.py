@@ -254,6 +254,8 @@ class TestExtractCommandExistenceFiles:
 
 def test_not_exists_test1_vba_folder() -> None:
     """Test that the test1.VBA folder does not exist."""
+    if Path(Path.cwd(), "tests", "test1.VBA").exists():
+        shutil.rmtree(Path(Path.cwd(), "tests", "test1.VBA"))
     runner.invoke(
         app,
         [

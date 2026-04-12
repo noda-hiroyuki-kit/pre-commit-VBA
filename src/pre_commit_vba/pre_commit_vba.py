@@ -142,6 +142,17 @@ class SettingsOptionsHandleExcel:
         return self.__create_gitignore
 
 
+def has_vba_code(workbook_path: Path) -> bool:
+    """Check if the Excel workbook contains VBA code."""
+    try:
+        with ZipFile(workbook_path, "r") as zip_ref:
+            zip_ref.getinfo("xl/vbaProject.bin")
+    except KeyError:
+        return False
+    else:
+        return True
+
+
 class ExcelVbaExporter:
     """A placeholder class for ExcelVbaExporter."""
 
@@ -492,6 +503,8 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913
     for workbook_path in Path(target_path).resolve().glob("*.xls*"):
         if workbook_path.name.startswith("~$"):
             continue
+        if not has_vba_code(workbook_path):
+            continue
         common_folder_settings = SettingsCommonFolder(
             workbook_path=workbook_path,
             folder_suffix=folder_suffix,
@@ -524,6 +537,8 @@ def check(
         exist_workbook: bool = False
         for workbook_path in Path(target_path).resolve().glob("*.xls*"):
             if workbook_path.name.startswith("~$"):
+                continue
+            if not has_vba_code(workbook_path):
                 continue
             exist_workbook = True
             workbook_version = get_workbook_version(workbook_path)
