@@ -13,7 +13,7 @@ dependencies = [
 pre-commit-vba = "pre_commit_vba.pre_commit_vba:app"
 
 [build-system]
-requires = ["uv_build>=0.10.4,<0.11.0"]
+requires = ["uv_build>=0.11.6,<0.12"]
 build-backend = "uv_build"
 
 [dependency-groups]
