@@ -57,7 +57,7 @@ class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
                 "run",
                 "trailing-whitespace",
                 "--files",
-                "tests/test.VBA/code/registerForm/RegisterProductForm.frm",
+                "tests/test.xlsm.VBA/code/registerForm/RegisterProductForm.frm",
             ],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -235,7 +235,7 @@ class TestExtractCommandExistenceFiles:
         file: str,
     ) -> None:
         """Test that the extract command creates expected files and folders."""
-        assert Path(Path.cwd(), "tests", "test.VBA", file).exists()  # noqa: S101
+        assert Path(Path.cwd(), "tests", "test.xlsm.VBA", file).exists()  # noqa: S101
 
     def test_terminate_normal(
         self, prepare_pre_existing_excel: typing.tuple[DispatchEx, CliRunner]

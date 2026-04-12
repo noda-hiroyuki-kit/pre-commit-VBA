@@ -19,7 +19,7 @@ from dataclasses import dataclass
 from logging import INFO, basicConfig, getLogger
 from pathlib import Path
 from typing import Annotated
-from zipfile import ZipFile
+from zipfile import BadZipFile, ZipFile
 
 import typer
 from win32com.client import DispatchEx
@@ -60,18 +60,34 @@ class SettingsCommonFolder:
         self,
         workbook_path: Path,
         folder_suffix: str,
+        *,
+        include_extension: bool = True,
     ) -> None:
-        """Initialize settings."""
+        """Initialize settings.
+
+        Args:
+            workbook_path: Path to the Excel workbook.
+            folder_suffix: Suffix for the folder (e.g., ".VBA").
+            include_extension:
+                If True, use full filename with extension(e.g., "test.xlsm.VBA").
+                If False, use basename only (e.g., "test.VBA").
+                Default is True (include extension).
+
+        """
         self.__workbook_path = workbook_path
         self.__folder_suffix = folder_suffix
+        self.__include_extension = include_extension
 
     @property
     def common_folder(self) -> Path:
         """Return common folder path."""
-        return Path(
-            self.__workbook_path.parent,
-            f"{self.__workbook_path.name.split('.')[0]}{self.__folder_suffix}",
-        )
+        if self.__include_extension:
+            folder_name = f"{self.__workbook_path.name}{self.__folder_suffix}"
+        else:
+            folder_name = (
+                f"{self.__workbook_path.name.split('.')[0]}{self.__folder_suffix}"
+            )
+        return Path(self.__workbook_path.parent, folder_name)
 
     @property
     def workbook_path(self) -> Path:
@@ -147,7 +163,7 @@ def has_vba_code(workbook_path: Path) -> bool:
     try:
         with ZipFile(workbook_path, "r") as zip_ref:
             zip_ref.getinfo("xl/vbaProject.bin")
-    except KeyError:
+    except KeyError, OSError, BadZipFile:
         return False
     else:
         return True
@@ -487,6 +503,9 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913
     create_gitignore: Annotated[
         bool, typer.Option("--create-gitignore/--not-create-gitignore")
     ] = True,
+    include_extension: Annotated[
+        bool, typer.Option("--include-extension/--exclude-extension")
+    ] = True,
 ) -> None:
     """Extract VBA code from Excel workbooks."""
     logger.debug("Target path: %s", str(Path(target_path).resolve()).lower())
@@ -496,6 +515,7 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913
     logger.debug("code-folder: %s", code_folder)
     logger.debug("enable-folder-annotation: %s", enable_folder_annotation)
     logger.debug("create-gitignore: %s", create_gitignore)
+    logger.debug("include-extension: %s", include_extension)
     options = SettingsOptionsHandleExcel(
         enable_folder_annotation=enable_folder_annotation,
         create_gitignore=create_gitignore,
@@ -508,6 +528,7 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913
         common_folder_settings = SettingsCommonFolder(
             workbook_path=workbook_path,
             folder_suffix=folder_suffix,
+            include_extension=include_extension,
         )
         folder_settings = SettingsFoldersHandleExcel(
             settings_common_folder=common_folder_settings,
