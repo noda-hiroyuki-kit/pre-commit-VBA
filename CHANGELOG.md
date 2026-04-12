@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Do not create `customUI` folder when customUI files are absent([#39])  
   customUI ファイルが存在しない場合に `customUI`フォルダを作成しないようにする.
 
+### Changed
+
+- Include file extension in extracted folder naming. ([#43])  
+  展開フォルダ名にファイル拡張子を含める
+
 ### Fixed
 
 - Fixed bug where non-macro Excel files were also being extracted. ([#40])  
@@ -78,6 +83,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.1.0]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.0.2...v0.1.0
 [0.0.2]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.0.1...v0.0.2
 [0.0.1]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/releases/tag/v0.0.1
+[#43]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/43
 [#40]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/40
 [#39]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/39
 [#36]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/36

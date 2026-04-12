@@ -28,7 +28,7 @@ class TestExcelVbaExporter:
     def sut(self) -> Generator[Utf8Converter]:
         """Act first this tests."""
         common_folder = SettingsCommonFolder(
-            Path(Path.cwd(), "tests", "test.xlsm"), ".VBA"
+            Path(Path.cwd(), "tests", "test.xlsm"), ".VBA", include_extension=True
         )
         settings = SettingsFoldersHandleExcel(
             settings_common_folder=common_folder,
@@ -51,7 +51,7 @@ class TestExcelVbaExporter:
         expected_file = Path(
             Path.cwd(),
             "tests",
-            "test.VBA",
+            "test.xlsm.VBA",
             "code",
             "excel document modules",
             "ブック",
@@ -64,7 +64,7 @@ class TestExcelVbaExporter:
         expected_file = Path(
             Path.cwd(),
             "tests",
-            "test.VBA",
+            "test.xlsm.VBA",
             "code",
             "excel document modules",
             "シート",
@@ -77,7 +77,7 @@ class TestExcelVbaExporter:
         expected_file = Path(
             Path.cwd(),
             "tests",
-            "test.VBA",
+            "test.xlsm.VBA",
             ".gitignore",
         )
         assert Path.is_file(expected_file)  # noqa: S101
