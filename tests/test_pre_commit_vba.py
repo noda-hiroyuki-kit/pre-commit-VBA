@@ -2,6 +2,7 @@
 
 import logging
 import re
+import shutil
 import subprocess
 import typing
 from collections.abc import Generator
@@ -249,6 +250,32 @@ class TestExtractCommandExistenceFiles:
         """Test that the pre-existing Excel instance is not None."""
         excel_instance, _ = prepare_pre_existing_excel
         assert excel_instance is not None  # noqa: S101
+
+
+def test_not_exists_test1_vba_folder() -> None:
+    """Test that the test1.VBA folder does not exist."""
+    runner.invoke(
+        app,
+        [
+            "extract",
+            "--target-path",
+            "tests",
+            "--folder-suffix",
+            ".VBA",
+            "--export-folder",
+            "export",
+            "--custom-ui-folder",
+            "customUI",
+            "--code-folder",
+            "code",
+            "--enable-folder-annotation",
+            "--create-gitignore",
+        ],
+    )
+    test_result = not Path(Path.cwd(), "tests", "test1.VBA").exists()
+    if Path(Path.cwd(), "tests", "test1.VBA").exists():
+        shutil.rmtree(Path(Path.cwd(), "tests", "test1.VBA"))
+    assert test_result  # noqa: S101
 
 
 class TestExtractCommandNegativeOptions:
