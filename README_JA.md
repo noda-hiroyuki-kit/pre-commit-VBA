@@ -123,7 +123,7 @@ uv run pre_commit_vba.py check
 
 #### コマンドラインについて
 
-以下は, コマンド(`uv run typer pre_commit_vba.py utils docs`)にて生成したドキュメント.
+以下は, コマンド(`uv run typer src\pre_commit_vba\pre_commit_vba.py utils docs`)にて生成したドキュメント.
 
 ---
 **Usage**:
@@ -162,7 +162,8 @@ $ extract [OPTIONS]
 * `--code-folder TEXT`: [default: code]
 * `--version`
 * `--enable-folder-annotation / --disable-folder-annotation`: [default: enable-folder-annotation]
-* `--create-gitignore / --not-create-gitignore`: [default: create-gitignore]
+* `--create-gitignore / --not-create-gitignore`: [default: create-gitignore]  
+* `--include-extension / --exclude-extension`: [default: include-extension]
 * `--help`: Show this message and exit.
 
 ## `check`
