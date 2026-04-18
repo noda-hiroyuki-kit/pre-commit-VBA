@@ -415,6 +415,23 @@ def add_to_staging(settings: SettingsFoldersHandleExcel) -> None:
         stdout_data, stderr_data = process.communicate()  # noqa: RUF059
 
 
+def get_staging_status() -> str:
+    """Return a snapshot of the current staged diff."""
+    process = subprocess.Popen(
+        ["git", "diff", "--cached", "--binary", "--no-ext-diff"],  # noqa: S607
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    try:
+        stdout_data, stderr_data = process.communicate(timeout=15)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        stdout_data, stderr_data = process.communicate()  # noqa: RUF059
+    if process.returncode != 0:
+        return ""
+    return stdout_data.decode("utf-8")
+
+
 def get_version_from_branch_name() -> str:
     """Get version from branch name."""
     branch_name = get_current_branch_name()
@@ -520,6 +537,7 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913
         enable_folder_annotation=enable_folder_annotation,
         create_gitignore=create_gitignore,
     )
+    staging_status_before = get_staging_status()
     for workbook_path in Path(target_path).resolve().glob("*.xls*"):
         if workbook_path.name.startswith("~$"):
             continue
@@ -542,6 +560,9 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913
         ExcelCustomUiExtractor(folder_settings)
         Utf8Converter(folder_settings, options)
         add_to_staging(folder_settings)
+    if staging_status_before != get_staging_status():
+        logger.error("Staging state changed during extract command.")
+        sys.exit(1)
 
 
 @app.command()
