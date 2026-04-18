@@ -53,7 +53,7 @@ class _DummyExcelVbaExporter:
 
 
 class _DummyExcelCustomUiExtractor:
-    def __init__(self, settings: pre_commit_vba.SettingsFoldersHandleExcel) -> None:
+    def __init__(self, _settings: pre_commit_vba.SettingsFoldersHandleExcel) -> None:
         pass
 
 
@@ -114,6 +114,56 @@ def test_get_staging_status_raises_error_when_git_diff_fails(
         "Failed to get staging status via 'git diff --cached'. stderr: mock stderr"
         in caplog.text
     )
+
+
+def test_add_to_staging_raises_error_when_git_add_fails(
+    monkeypatch: MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
+    """`add_to_staging` should raise and log stderr when git add fails."""
+
+    def _mock_popen(*_args: object, **_kwargs: object) -> _DummyProcess:
+        return _DummyProcess(returncode=1, stdout_data=b"", stderr_data=b"mock stderr")
+
+    monkeypatch.setattr(pre_commit_vba.subprocess, "Popen", _mock_popen)
+
+    common_settings = pre_commit_vba.SettingsCommonFolder(Path("test.xlsm"), ".VBA")
+    folder_settings = pre_commit_vba.SettingsFoldersHandleExcel(
+        settings_common_folder=common_settings,
+        export_folder="export",
+        custom_ui_folder="customUI",
+        code_folder="code",
+    )
+
+    with caplog.at_level("ERROR"), pytest.raises(pre_commit_vba.AddToStagingError):
+        pre_commit_vba.add_to_staging(folder_settings)
+
+    assert (  # noqa: S101
+        "Failed to add extracted files to staging via 'git add'. stderr: mock stderr"
+        in caplog.text
+    )
+
+
+def test_extract_returns_non_zero_when_add_to_staging_fails(
+    monkeypatch: MonkeyPatch, tmp_path: Path
+) -> None:
+    """Extract should fail fast when add_to_staging fails."""
+    _init_git_repo(tmp_path)
+    _patch_extract_dependencies(monkeypatch)
+
+    workbook_path = Path(tmp_path, "test.xlsm")
+    _create_workbook_with_vba(workbook_path)
+
+    def _raise_add_to_staging_error(
+        _settings: pre_commit_vba.SettingsFoldersHandleExcel,
+    ) -> None:
+        raise pre_commit_vba.AddToStagingError
+
+    monkeypatch.setattr(pre_commit_vba, "add_to_staging", _raise_add_to_staging_error)
+
+    monkeypatch.chdir(tmp_path)
+    result = runner.invoke(app, ["extract", "--target-path", str(tmp_path)])
+
+    assert result.exit_code != 0  # noqa: S101
 
 
 def test_extract_returns_non_zero_when_staging_status_retrieval_fails(

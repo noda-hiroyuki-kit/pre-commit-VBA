@@ -43,6 +43,10 @@ class StagingStatusError(Exception):
     """Raised when staging status cannot be retrieved."""
 
 
+class AddToStagingError(Exception):
+    """Raised when extracted files cannot be staged with git add."""
+
+
 @dataclass(frozen=True)
 class Constants:
     """Constants Class for win32com.
@@ -413,10 +417,17 @@ def add_to_staging(settings: SettingsFoldersHandleExcel) -> None:
         stderr=subprocess.PIPE,
     )
     try:
-        process.communicate(timeout=15)
+        _, stderr_data = process.communicate(timeout=15)
     except subprocess.TimeoutExpired:
         process.kill()
-        process.communicate()
+        _, stderr_data = process.communicate()
+    stderr_text = stderr_data.decode("utf-8", errors="replace").strip()
+    if process.returncode != 0:
+        logger.error(
+            "Failed to add extracted files to staging via 'git add'. stderr: %s",
+            stderr_text,
+        )
+        raise AddToStagingError
 
 
 def get_staging_status() -> str:
@@ -571,7 +582,10 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913
         ExcelVbaExporter(folder_settings)
         ExcelCustomUiExtractor(folder_settings)
         Utf8Converter(folder_settings, options)
-        add_to_staging(folder_settings)
+        try:
+            add_to_staging(folder_settings)
+        except AddToStagingError:
+            sys.exit(1)
     try:
         staging_status_after = get_staging_status()
     except StagingStatusError:
