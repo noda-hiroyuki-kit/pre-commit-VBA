@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 from zipfile import ZipFile
 
+import pytest
 from typer.testing import CliRunner
 
 if TYPE_CHECKING:
@@ -19,6 +20,22 @@ runner = CliRunner()
 
 
 MODULE_TEXT = 'Attribute VB_Name = "Module1"\n'
+
+
+class _DummyProcess:
+    def __init__(
+        self, *, returncode: int, stdout_data: bytes, stderr_data: bytes
+    ) -> None:
+        self.returncode = returncode
+        self._stdout_data = stdout_data
+        self._stderr_data = stderr_data
+
+    def communicate(self, timeout: int | None = None) -> tuple[bytes, bytes]:
+        _ = timeout
+        return self._stdout_data, self._stderr_data
+
+    def kill(self) -> None:
+        pass
 
 
 def _create_workbook_with_vba(workbook_path: Path) -> None:
@@ -78,6 +95,48 @@ def _patch_extract_dependencies(monkeypatch: MonkeyPatch) -> None:
         _DummyExcelCustomUiExtractor,
     )
     monkeypatch.setattr(pre_commit_vba, "Utf8Converter", _DummyUtf8Converter)
+
+
+def test_get_staging_status_raises_error_when_git_diff_fails(
+    monkeypatch: MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
+    """`get_staging_status` should raise and log stderr when git diff fails."""
+
+    def _mock_popen(*_args: object, **_kwargs: object) -> _DummyProcess:
+        return _DummyProcess(returncode=1, stdout_data=b"", stderr_data=b"mock stderr")
+
+    monkeypatch.setattr(pre_commit_vba.subprocess, "Popen", _mock_popen)
+
+    with caplog.at_level("ERROR"), pytest.raises(pre_commit_vba.StagingStatusError):
+        pre_commit_vba.get_staging_status()
+
+    assert (  # noqa: S101
+        "Failed to get staging status via 'git diff --cached'. stderr: mock stderr"
+        in caplog.text
+    )
+
+
+def test_extract_returns_non_zero_when_staging_status_retrieval_fails(
+    monkeypatch: MonkeyPatch, tmp_path: Path
+) -> None:
+    """Extract should fail fast when staging status cannot be retrieved."""
+    _init_git_repo(tmp_path)
+    _patch_extract_dependencies(monkeypatch)
+
+    workbook_path = Path(tmp_path, "test.xlsm")
+    _create_workbook_with_vba(workbook_path)
+
+    def _raise_staging_status_error() -> str:
+        raise pre_commit_vba.StagingStatusError
+
+    monkeypatch.setattr(
+        pre_commit_vba, "get_staging_status", _raise_staging_status_error
+    )
+
+    monkeypatch.chdir(tmp_path)
+    result = runner.invoke(app, ["extract", "--target-path", str(tmp_path)])
+
+    assert result.exit_code != 0  # noqa: S101
 
 
 def test_extract_returns_non_zero_when_staging_state_changes(
