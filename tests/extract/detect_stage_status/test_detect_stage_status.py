@@ -97,10 +97,26 @@ def _patch_extract_dependencies(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr(pre_commit_vba, "Utf8Converter", _DummyUtf8Converter)
 
 
-def test_get_staging_status_raises_error_when_git_diff_fails(
+def test_get_staging_status_uses_git_write_tree(monkeypatch: MonkeyPatch) -> None:
+    """`get_staging_status` should use git write-tree for a cheap index snapshot."""
+    popen_args: list[list[str]] = []
+
+    def _mock_popen(args: list[str], **_kwargs: object) -> _DummyProcess:
+        popen_args.append(args)
+        return _DummyProcess(returncode=0, stdout_data=b"tree-hash\n", stderr_data=b"")
+
+    monkeypatch.setattr(pre_commit_vba.subprocess, "Popen", _mock_popen)
+
+    result = pre_commit_vba.get_staging_status()
+
+    assert result == "tree-hash\n"  # noqa: S101
+    assert popen_args == [["git", "write-tree"]]  # noqa: S101
+
+
+def test_get_staging_status_raises_error_when_git_write_tree_fails(
     monkeypatch: MonkeyPatch, caplog: pytest.LogCaptureFixture
 ) -> None:
-    """`get_staging_status` should raise and log stderr when git diff fails."""
+    """`get_staging_status` should raise and log stderr when git write-tree fails."""
 
     def _mock_popen(*_args: object, **_kwargs: object) -> _DummyProcess:
         return _DummyProcess(returncode=1, stdout_data=b"", stderr_data=b"mock stderr")
@@ -111,7 +127,7 @@ def test_get_staging_status_raises_error_when_git_diff_fails(
         pre_commit_vba.get_staging_status()
 
     assert (  # noqa: S101
-        "Failed to get staging status via 'git diff --cached'. stderr: mock stderr"
+        "Failed to get staging status via 'git write-tree'. stderr: mock stderr"
         in caplog.text
     )
 

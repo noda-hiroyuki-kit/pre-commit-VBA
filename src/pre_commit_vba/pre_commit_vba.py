@@ -431,9 +431,9 @@ def add_to_staging(settings: SettingsFoldersHandleExcel) -> None:
 
 
 def get_staging_status() -> str:
-    """Return a snapshot of the current staged diff."""
+    """Return a snapshot of the current staged tree."""
     process = subprocess.Popen(
-        ["git", "diff", "--cached", "--binary", "--no-ext-diff"],  # noqa: S607
+        ["git", "write-tree"],  # noqa: S607
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
@@ -445,7 +445,7 @@ def get_staging_status() -> str:
     stderr_text = stderr_data.decode("utf-8", errors="replace").strip()
     if process.returncode != 0:
         logger.error(
-            "Failed to get staging status via 'git diff --cached'. stderr: %s",
+            "Failed to get staging status via 'git write-tree'. stderr: %s",
             stderr_text,
         )
         raise StagingStatusError
