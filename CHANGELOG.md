@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Detect staged changes introduced during `extract` execution and fail when staging state changes. ([#47])  
+  `extract`実行中にステージ状態の変化を検知し, ステージ状態が変わった場合は失敗するようにする.
+
 ## [0.2.0] - 2026-04-13
 
 ### Added
@@ -86,6 +91,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.1.0]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.0.2...v0.1.0
 [0.0.2]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.0.1...v0.0.2
 [0.0.1]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/releases/tag/v0.0.1
+[#47]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/47
 [#43]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/43
 [#40]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/40
 [#39]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/39
