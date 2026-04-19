@@ -24,7 +24,7 @@ from zipfile import BadZipFile, ZipFile
 import typer
 from win32com.client import DispatchEx
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 
 class UndefineTypeError(Exception):
@@ -37,6 +37,14 @@ class NotReleaseBranchError(Exception):
 
 class InvalidSemVerError(Exception):
     """Custom InvalidSemVer exception."""
+
+
+class StagingStatusError(Exception):
+    """Raised when staging status cannot be retrieved."""
+
+
+class AddToStagingError(Exception):
+    """Raised when extracted files cannot be staged with git add."""
 
 
 @dataclass(frozen=True)
@@ -409,10 +417,39 @@ def add_to_staging(settings: SettingsFoldersHandleExcel) -> None:
         stderr=subprocess.PIPE,
     )
     try:
+        _, stderr_data = process.communicate(timeout=15)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        _, stderr_data = process.communicate()
+    stderr_text = stderr_data.decode("utf-8", errors="replace").strip()
+    if process.returncode != 0:
+        logger.error(
+            "Failed to add extracted files to staging via 'git add'. stderr: %s",
+            stderr_text,
+        )
+        raise AddToStagingError
+
+
+def get_staging_status() -> str:
+    """Return a snapshot of the current staged tree."""
+    process = subprocess.Popen(
+        ["git", "write-tree"],  # noqa: S607
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    try:
         stdout_data, stderr_data = process.communicate(timeout=15)
     except subprocess.TimeoutExpired:
         process.kill()
-        stdout_data, stderr_data = process.communicate()  # noqa: RUF059
+        stdout_data, stderr_data = process.communicate()
+    stderr_text = stderr_data.decode("utf-8", errors="replace").strip()
+    if process.returncode != 0:
+        logger.error(
+            "Failed to get staging status via 'git write-tree'. stderr: %s",
+            stderr_text,
+        )
+        raise StagingStatusError
+    return stdout_data.decode("utf-8")
 
 
 def get_version_from_branch_name() -> str:
@@ -473,6 +510,16 @@ def get_workbook_version(workbook_path: Path) -> str:
     return version
 
 
+def has_rubberduck_addin_references(workbook_path: Path) -> bool:
+    """Check whether workbook includes Rubberduck reference metadata."""
+    try:
+        with ZipFile(workbook_path) as zip_ref:
+            project_bin = zip_ref.read("xl/vbaProject.bin")
+    except BadZipFile, KeyError, OSError:
+        return False
+    return bool(re.search(rb"rubberduck\.x\d+\.tlb", project_bin, re.IGNORECASE))
+
+
 app = typer.Typer(pretty_exceptions_show_locals=True, pretty_exceptions_short=False)
 basicConfig(level=INFO)
 logger = getLogger(__name__)
@@ -520,6 +567,10 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913
         enable_folder_annotation=enable_folder_annotation,
         create_gitignore=create_gitignore,
     )
+    try:
+        staging_status_before = get_staging_status()
+    except StagingStatusError:
+        sys.exit(1)
     for workbook_path in Path(target_path).resolve().glob("*.xls*"):
         if workbook_path.name.startswith("~$"):
             continue
@@ -541,7 +592,21 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913
         ExcelVbaExporter(folder_settings)
         ExcelCustomUiExtractor(folder_settings)
         Utf8Converter(folder_settings, options)
-        add_to_staging(folder_settings)
+        try:
+            add_to_staging(folder_settings)
+        except AddToStagingError:
+            sys.exit(1)
+    try:
+        staging_status_after = get_staging_status()
+    except StagingStatusError:
+        sys.exit(1)
+    if staging_status_before != staging_status_after:
+        logger.error(
+            "Staging state changed during extract command. Review staged changes with "
+            "'git diff --cached', re-stage any updated files if needed, and then "
+            "re-run the command."
+        )
+        sys.exit(1)
 
 
 @app.command()
@@ -562,6 +627,12 @@ def check(
             if not has_vba_code(workbook_path):
                 continue
             exist_workbook = True
+            if has_rubberduck_addin_references(workbook_path):
+                logger.error(
+                    "Rubberduck Addin reference detected: %s",
+                    workbook_path,
+                )
+                sys.exit(1)
             workbook_version = get_workbook_version(workbook_path)
             if workbook_version != "v" + branch_version:
                 logger.error(

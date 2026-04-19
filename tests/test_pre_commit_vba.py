@@ -417,10 +417,17 @@ class TestCheckSubCommand:
     ) -> None:
         """Test check ok."""
         caplog.set_level(logging.INFO)
-        with mock.patch.object(
-            pre_commit_vba,
-            "get_current_branch_name",
-            return_value="release/v0.0.1-alpha",
+        with (
+            mock.patch.object(
+                pre_commit_vba,
+                "get_current_branch_name",
+                return_value="release/v0.0.1-alpha",
+            ),
+            mock.patch.object(
+                pre_commit_vba,
+                "has_rubberduck_addin_references",
+                return_value=False,
+            ),
         ):
             sut = runner.invoke(app, ["check", "--target-path", "tests"])
             assert sut.exit_code == 0  # noqa: S101
@@ -433,10 +440,17 @@ class TestCheckSubCommand:
     ) -> None:
         """Test check ok under the presence of temporary Excel files."""
         caplog.set_level(logging.INFO)
-        with mock.patch.object(
-            pre_commit_vba,
-            "get_current_branch_name",
-            return_value="release/v0.0.1-alpha",
+        with (
+            mock.patch.object(
+                pre_commit_vba,
+                "get_current_branch_name",
+                return_value="release/v0.0.1-alpha",
+            ),
+            mock.patch.object(
+                pre_commit_vba,
+                "has_rubberduck_addin_references",
+                return_value=False,
+            ),
         ):
             sut = runner.invoke(app, ["check", "--target-path", "tests"])
             assert sut.exit_code == 0  # noqa: S101
@@ -447,10 +461,17 @@ class TestCheckSubCommand:
     ) -> None:
         """Test check ok."""
         caplog.set_level(logging.INFO)
-        with mock.patch.object(
-            pre_commit_vba,
-            "get_current_branch_name",
-            return_value="hotfix/v0.0.1-alpha",
+        with (
+            mock.patch.object(
+                pre_commit_vba,
+                "get_current_branch_name",
+                return_value="hotfix/v0.0.1-alpha",
+            ),
+            mock.patch.object(
+                pre_commit_vba,
+                "has_rubberduck_addin_references",
+                return_value=False,
+            ),
         ):
             sut = runner.invoke(app, ["check", "--target-path", "tests"])
             assert sut.exit_code == 0  # noqa: S101

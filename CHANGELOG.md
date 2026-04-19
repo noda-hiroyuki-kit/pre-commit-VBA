@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-04-20
+
+### Changed
+
+- Detect staged changes introduced during `extract` execution and fail when staging state changes. ([#47])  
+  `extract`実行中にステージ状態の変化を検知し, ステージ状態が変わった場合は失敗するようにする.
+- Detect Rubberduck Addin references in check and fail when a reference exists. ([#49])  
+  checkでRubberduck Addin参照を検知し, 参照がある場合は失敗するようにする.
+
 ## [0.2.0] - 2026-04-13
 
 ### Added
@@ -78,7 +87,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release as first version
 
-[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.2.0...HEAD
+[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.1.3...v0.2.0
 [0.1.3]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.1.1...v0.1.2
@@ -86,6 +96,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.1.0]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.0.2...v0.1.0
 [0.0.2]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.0.1...v0.0.2
 [0.0.1]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/releases/tag/v0.0.1
+[#49]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/49
+[#47]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/47
 [#43]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/43
 [#40]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/40
 [#39]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/39
