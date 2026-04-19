@@ -510,6 +510,16 @@ def get_workbook_version(workbook_path: Path) -> str:
     return version
 
 
+def has_rubberduck_addin_references(workbook_path: Path) -> bool:
+    """Check whether workbook includes Rubberduck reference metadata."""
+    try:
+        with ZipFile(workbook_path) as zip_ref:
+            project_bin = zip_ref.read("xl/vbaProject.bin")
+    except BadZipFile, KeyError:
+        return False
+    return bool(re.search(rb"rubberduck\.x\d+\.tlb", project_bin, re.IGNORECASE))
+
+
 app = typer.Typer(pretty_exceptions_show_locals=True, pretty_exceptions_short=False)
 basicConfig(level=INFO)
 logger = getLogger(__name__)
@@ -617,6 +627,12 @@ def check(
             if not has_vba_code(workbook_path):
                 continue
             exist_workbook = True
+            if has_rubberduck_addin_references(workbook_path):
+                logger.error(
+                    "Rubberduck Addin reference detected: %s",
+                    workbook_path,
+                )
+                sys.exit(1)
             workbook_version = get_workbook_version(workbook_path)
             if workbook_version != "v" + branch_version:
                 logger.error(
