@@ -98,6 +98,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.0.1]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/releases/tag/v0.0.1
 [#49]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/49
 [#47]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/47
+[#49]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/49
+[#47]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/47
 [#43]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/43
 [#40]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/40
 [#39]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/39
