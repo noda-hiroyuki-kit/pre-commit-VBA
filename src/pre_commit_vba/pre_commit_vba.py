@@ -515,7 +515,7 @@ def has_rubberduck_addin_references(workbook_path: Path) -> bool:
     try:
         with ZipFile(workbook_path) as zip_ref:
             project_bin = zip_ref.read("xl/vbaProject.bin")
-    except BadZipFile, KeyError:
+    except BadZipFile, KeyError, OSError:
         return False
     return bool(re.search(rb"rubberduck\.x\d+\.tlb", project_bin, re.IGNORECASE))
 
