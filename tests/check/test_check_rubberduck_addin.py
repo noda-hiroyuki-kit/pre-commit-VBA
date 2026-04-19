@@ -14,10 +14,17 @@ from src.pre_commit_vba.pre_commit_vba import (
 runner = CliRunner()
 
 RUBBERDUCK_WORKBOOK = Path(
-    Path.cwd(), "tests", "check", "WithRubberduckAddinReferences.xlsm"
+    Path.cwd(), "tests", "check", "withRubberduck", "WithRubberduckAddinReferences.xlsm"
 )
-NORMAL_WORKBOOK = Path(Path.cwd(), "tests", "test.xlsm")
-CHECK_DIR = Path("tests", "check")
+NORMAL_WORKBOOK = Path(
+    Path.cwd(),
+    "tests",
+    "check",
+    "withoutRubberduck",
+    "WithoutRubberduckAddinReferences.xlsm",
+)
+CHECK_DIR_WITH_RUBBERDUCK = Path("tests", "check", "withRubberduck")
+CHECK_DIR_WITHOUT_RUBBERDUCK = Path("tests", "check", "withoutRubberduck")
 
 
 class TestHasRubberduckAddinReferences:
@@ -50,15 +57,10 @@ class TestCheckCommandRubberduckAddin:
                 "get_workbook_version",
                 return_value="v0.0.1-alpha",
             ),
-            mock.patch.object(
-                pre_commit_vba,
-                "has_rubberduck_addin_references",
-                return_value=True,
-            ),
         ):
             result = runner.invoke(
                 app,
-                ["check", f"--target-path={CHECK_DIR}"],
+                ["check", f"--target-path={CHECK_DIR_WITH_RUBBERDUCK}"],
             )
         assert result.exit_code == 1  # noqa: S101
 
@@ -75,14 +77,9 @@ class TestCheckCommandRubberduckAddin:
                 "get_workbook_version",
                 return_value="v0.0.1-alpha",
             ),
-            mock.patch.object(
-                pre_commit_vba,
-                "has_rubberduck_addin_references",
-                return_value=False,
-            ),
         ):
             result = runner.invoke(
                 app,
-                ["check", f"--target-path={CHECK_DIR}"],
+                ["check", f"--target-path={CHECK_DIR_WITHOUT_RUBBERDUCK}"],
             )
         assert result.exit_code == 0  # noqa: S101
