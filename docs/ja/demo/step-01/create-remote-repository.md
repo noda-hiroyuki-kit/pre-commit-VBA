@@ -1,3 +1,6 @@
+---
+icon: lucide/cloud-upload
+---
 # リモート・リポジトリの作成
 
 1. githubの組織, 自分のprofileのページをブラウザで開く.
