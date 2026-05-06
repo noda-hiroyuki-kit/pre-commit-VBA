@@ -60,3 +60,31 @@ icon: lucide/git-pull-request
     ```powershell
     git pull
     ```
+
+4. ローカル リポジトリのブランチを確認する.
+    ```powershell
+    git branch
+    ```  
+    実行結果
+    ```powershell
+    PS %current directory%> git branch
+    * develop
+    feature/setup-repository
+    main
+    ```
+
+5. 不要な`feature/setup-repository`ブランチを削除する.
+    ```powershell
+    git branch -D feature/setup-repository
+    ```
+
+6. ローカル リポジトリの`feature/setup-repository`ブランチが削除できているか確認する.
+    ```powershell
+    git branch
+    ```  
+    実行結果
+    ```powershell
+    PS %current directory%> git branch
+    * develop
+    main
+    ```
