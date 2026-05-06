@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Update `yamllint` arguments and add `dictionaries` in `cspell.json` for runtime-referenced docs/configuration files.
+  実行時に参照されるドキュメント/設定ファイル向けに, `yamllint` の引数を見直し, `cspell.json` に `dictionaries` 設定を追加.
+
 ## [0.3.0] - 2026-04-20
 
 ### Changed
