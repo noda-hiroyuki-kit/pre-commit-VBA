@@ -1,7 +1,8 @@
 ---
 - id: extract-vba-code
   name: Extract VBA code from Excel files
-  description: Extracts VBA code from Excel files and saves it in a specified directory.
+  description:
+    - Extracts VBA code from Excel files and saves it in a specified directory.
   entry: pre-commit-vba
   args: [extract]
   language: python
@@ -10,7 +11,9 @@
   pass_filenames: false
 - id: check-excel-book-version
   name: Check Excel book version
-  description: Checks the version of Excel books to ensure compatibility with the current branch name.
+  description:
+    - Checks the version of Excel books to ensure compatibility
+      with the current branch name.
   entry: pre-commit-vba
   args: [check]
   language: python
