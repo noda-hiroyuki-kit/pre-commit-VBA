@@ -31,6 +31,9 @@ dev = [
     "tox>=4.32.0",
 ]
 
+[tool.uv]
+exclude-newer = "10 days"
+
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.
 exclude = [
