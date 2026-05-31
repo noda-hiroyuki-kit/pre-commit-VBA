@@ -23,8 +23,18 @@ NORMAL_WORKBOOK = Path(
     "withoutRubberduck",
     "WithoutRubberduckAddinReferences.xlsm",
 )
+WITHOUT_ACTIVE_RUBBERDUCK_WORKBOOK = Path(
+    Path.cwd(),
+    "tests",
+    "check",
+    "withoutActiveRubberduckReference",
+    "WithoutActiveRubberduckAddinReference.xlsm",
+)
 CHECK_DIR_WITH_RUBBERDUCK = Path("tests", "check", "withRubberduck")
 CHECK_DIR_WITHOUT_RUBBERDUCK = Path("tests", "check", "withoutRubberduck")
+CHECK_DIR_WITHOUT_ACTIVE_RUBBERDUCK = Path(
+    "tests", "check", "withoutActiveRubberduckReference"
+)
 
 
 class TestHasRubberduckAddinReferences:
@@ -38,6 +48,13 @@ class TestHasRubberduckAddinReferences:
     def test_returns_false_for_workbook_without_rubberduck_reference(self) -> None:
         """Test returns False when workbook has no Rubberduck Addin reference."""
         sut = has_rubberduck_addin_references(NORMAL_WORKBOOK)
+        assert sut is False  # noqa: S101
+
+    def test_returns_false_for_workbook_without_active_rubberduck_reference(
+        self,
+    ) -> None:
+        """Test returns False when workbook has no active Rubberduck Addin reference."""
+        sut = has_rubberduck_addin_references(WITHOUT_ACTIVE_RUBBERDUCK_WORKBOOK)
         assert sut is False  # noqa: S101
 
 
@@ -81,5 +98,25 @@ class TestCheckCommandRubberduckAddin:
             result = runner.invoke(
                 app,
                 ["check", f"--target-path={CHECK_DIR_WITHOUT_RUBBERDUCK}"],
+            )
+        assert result.exit_code == 0  # noqa: S101
+
+    def test_check_exits_zero_when_no_active_rubberduck_addin_referenced(self) -> None:
+        """Test check command exits 0 when no Rubberduck Addin reference is detected."""
+        with (
+            mock.patch.object(
+                pre_commit_vba,
+                "get_current_branch_name",
+                return_value="release/v0.0.1-alpha",
+            ),
+            mock.patch.object(
+                pre_commit_vba,
+                "get_workbook_version",
+                return_value="v0.0.1-alpha",
+            ),
+        ):
+            result = runner.invoke(
+                app,
+                ["check", f"--target-path={CHECK_DIR_WITHOUT_ACTIVE_RUBBERDUCK}"],
             )
         assert result.exit_code == 0  # noqa: S101
