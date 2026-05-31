@@ -82,7 +82,10 @@ class TestCheckCommandRubberduckAddin:
         assert result.exit_code == 1  # noqa: S101
 
     def test_check_exits_zero_when_no_rubberduck_addin_referenced(self) -> None:
-        """Test check command exits 0 when no Rubberduck Addin reference is detected."""
+        """Test check command exits 0 for inactive Rubberduck Addin.
+
+        This covers the workbook with no active reference.
+        """
         with (
             mock.patch.object(
                 pre_commit_vba,
@@ -102,7 +105,10 @@ class TestCheckCommandRubberduckAddin:
         assert result.exit_code == 0  # noqa: S101
 
     def test_check_exits_zero_when_no_active_rubberduck_addin_referenced(self) -> None:
-        """Test check command exits 0 when no Rubberduck Addin reference is detected."""
+        """Test check command exits 0 for inactive Rubberduck Addin.
+
+        This covers the workbook with no active reference.
+        """
         with (
             mock.patch.object(
                 pre_commit_vba,
