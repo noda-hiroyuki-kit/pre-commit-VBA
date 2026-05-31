@@ -7,7 +7,7 @@ extract code files from excel workbook with codes.
 # requires-python = ">=3.14"
 # dependencies = [
 #   "pywin32>=311",
-#   "typer>=0.24.1",
+#   "typer>=0.25.1",
 # ]
 # ///
 import re

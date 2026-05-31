@@ -595,7 +595,7 @@ wheels = [
 
 [[package]]
 name = "pre-commit-vba"
-version = "0.3.0"
+version = "0.3.1"
 source = { editable = "." }
 dependencies = [
     { name = "pywin32" },
@@ -620,7 +620,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "pywin32", specifier = ">=311" },
-    { name = "typer", specifier = ">=0.24.1" },
+    { name = "typer", specifier = ">=0.25.1" },
 ]
 
 [package.metadata.requires-dev]
