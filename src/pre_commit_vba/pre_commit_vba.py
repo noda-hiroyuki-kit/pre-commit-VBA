@@ -7,7 +7,7 @@ extract code files from excel workbook with codes.
 # requires-python = ">=3.14"
 # dependencies = [
 #   "pywin32>=311",
-#   "typer>=0.24.1",
+#   "typer>=0.25.1",
 # ]
 # ///
 import re
@@ -24,7 +24,7 @@ from zipfile import BadZipFile, ZipFile
 import typer
 from win32com.client import DispatchEx
 
-__version__ = "0.3.0"
+__version__ = "0.3.3"
 
 
 class UndefineTypeError(Exception):
@@ -511,13 +511,26 @@ def get_workbook_version(workbook_path: Path) -> str:
 
 
 def has_rubberduck_addin_references(workbook_path: Path) -> bool:
-    """Check whether workbook includes Rubberduck reference metadata."""
+    """Check whether workbook includes active Rubberduck reference metadata."""
     try:
         with ZipFile(workbook_path) as zip_ref:
             project_bin = zip_ref.read("xl/vbaProject.bin")
     except BadZipFile, KeyError, OSError:
         return False
-    return bool(re.search(rb"rubberduck\.x\d+\.tlb", project_bin, re.IGNORECASE))
+
+    arch_matches = re.findall(rb"rubberduck\.x(32|64)\.tlb", project_bin, re.IGNORECASE)
+    if not arch_matches:
+        return False
+
+    # Some modules may contain the detection regex as a source literal.
+    # Treat those as inactive references.
+    if b"rubberduck\\.x\\d+\\.tlb" in project_bin.lower():
+        return False
+
+    # Code modules can include multiple architecture fallback paths.
+    # Treat those as inactive references.
+    detected_arches = {match.lower() for match in arch_matches}
+    return len(detected_arches) == 1
 
 
 app = typer.Typer(pretty_exceptions_show_locals=True, pretty_exceptions_short=False)

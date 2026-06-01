@@ -12,6 +12,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update `yamllint` arguments and add `dictionaries` in `cspell.json` for runtime-referenced docs/configuration files.
   実行時に参照されるドキュメント/設定ファイル向けに, `yamllint` の引数を見直し, `cspell.json` に `dictionaries` 設定を追加.
 
+### Fixed
+
+- Fix YAML indentation in README examples for the `.pre-commit-config.yaml` snippets.
+  README の `.pre-commit-config.yaml` 例の YAML インデントを修正.
+
+## [0.3.3] - 2026-06-01
+
+### Changed
+
+- Raise the minimum `uv_build` requirement from 0.11.15 to 0.11.16 and refresh lockfile/tooling dependencies.
+  `uv_build` の最小要件を0.11.15から0.11.16へ引き上げ, lockfile/ツール依存関係を更新.
+
+## [0.3.2] - 2026-06-01
+
+### Added
+
+- Add Dependabot configuration for the uv ecosystem with weekly update checks.
+  uv エコシステム向けに、週次で更新確認する Dependabot 設定を追加.
+
+### Fixed
+
+- Fix runtime version constant from 0.3.0 to 0.3.2 after the v0.3.1 release.  
+  v0.3.1リリース後のランタイムバージョン定数を0.3.0から0.3.2に修正.
+- Prevent runtime version drift by verifying the hard-coded CLI version against pyproject.toml in tests.  
+  ハードコードしたCLIバージョンをテストで pyproject.toml と照合することで, ランタイムバージョンのずれを再発しないようにした.
+
+## [0.3.1] - 2026-05-31
+
+### Fixed
+
+- Refine Rubberduck Addin reference detection to avoid false positives from inactive/module-literal patterns and align detection with `Rubberduck.x32.tlb` / `Rubberduck.x64.tlb`. ([#55])  
+  非アクティブな参照やモジュール内のリテラルによる誤検知を避けるように Rubberduck Addin 参照検知を改善し, `Rubberduck.x32.tlb` / `Rubberduck.x64.tlb` に合わせて判定するようにした.
+
 ## [0.3.0] - 2026-04-20
 
 ### Changed
@@ -92,7 +125,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release as first version
 
-[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.0...HEAD
+[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.3...HEAD
+[0.3.3]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.2...v0.3.3
+[0.3.2]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.1...v0.3.2
+[0.3.1]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.1.3...v0.2.0
 [0.1.3]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.1.2...v0.1.3
@@ -101,6 +137,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.1.0]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.0.2...v0.1.0
 [0.0.2]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.0.1...v0.0.2
 [0.0.1]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/releases/tag/v0.0.1
+[#55]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/55
 [#49]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/49
 [#47]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/47
 [#43]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/43
