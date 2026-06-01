@@ -4,6 +4,7 @@ import logging
 import re
 import shutil
 import subprocess
+import tomllib
 import typing
 from collections.abc import Generator
 from logging import DEBUG
@@ -23,6 +24,13 @@ if TYPE_CHECKING:
 from win32com.client import DispatchEx
 
 runner = CliRunner()
+
+
+def _project_version() -> str:
+    """Read the project version from pyproject.toml."""
+    pyproject_path = Path(__file__).resolve().parents[1] / "pyproject.toml"
+    with pyproject_path.open("rb") as pyproject_file:
+        return str(tomllib.load(pyproject_file)["project"]["version"])
 
 
 class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
@@ -318,6 +326,11 @@ class TestExtractCommandNegativeOptions:
         assert "create-gitignore: False" in caplog.text  # noqa: S101
 
 
+def test_runtime_version_matches_pyproject() -> None:
+    """Test that the runtime version matches pyproject.toml."""
+    assert pre_commit_vba.__version__ == _project_version()  # noqa: S101
+
+
 @pytest.mark.parametrize(
     "subcommand",
     [
@@ -339,6 +352,7 @@ def test_display_version_subcommand(subcommand: str) -> None:
     pattern = r"pre-commit-vba version: (.*)"
     match = re.search(pattern, text)
     assert match is not None, "Version string not found in output"  # noqa: S101
+    assert match.group(1) == pre_commit_vba.__version__  # noqa: S101
     sem_ver_pattern = (
         r"^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)"
         r"\.(?P<patch>0|[1-9]\d*)"
