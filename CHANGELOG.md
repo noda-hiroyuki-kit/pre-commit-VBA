@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fix runtime version constant from 0.3.0 to 0.3.2 after the v0.3.1 release.  
   v0.3.1リリース後のランタイムバージョン定数を0.3.0から0.3.2に修正.
+- Prevent runtime version drift by verifying the hard-coded CLI version against pyproject.toml in tests.  
+  ハードコードしたCLIバージョンをテストで pyproject.toml と照合することで, ランタイムバージョンのずれを再発しないようにした.
 
 ## [0.3.1] - 2026-05-31
 
