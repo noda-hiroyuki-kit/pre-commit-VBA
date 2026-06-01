@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
+### Fixed
 
 - Fix YAML indentation in README examples for the `.pre-commit-config.yaml` snippets.
   README の `.pre-commit-config.yaml` 例の YAML インデントを修正.
