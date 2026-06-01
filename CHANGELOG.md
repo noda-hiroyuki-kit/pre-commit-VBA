@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.2] - 2026-06-01
+
+### Fixed
+
+- Fix runtime version constant from 0.3.0 to 0.3.2 after the v0.3.1 release.  
+  v0.3.1リリース後のランタイムバージョン定数を0.3.0から0.3.2に修正.
+
 ## [0.3.1] - 2026-05-31
 
 ### Fixed
@@ -93,7 +100,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release as first version
 
-[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.1...HEAD
+[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.2...HEAD
+[0.3.2]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.1.3...v0.2.0
