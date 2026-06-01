@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.2] - 2026-06-01
 
+### Added
+
+- Add Dependabot configuration for the uv ecosystem with weekly update checks.
+  uv エコシステム向けに、週次で更新確認する Dependabot 設定を追加.
+
 ### Fixed
 
 - Fix runtime version constant from 0.3.0 to 0.3.2 after the v0.3.1 release.  
@@ -22,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Refine Rubberduck Addin reference detection to avoid false positives from inactive/module-literal patterns and align detection with `Rubberduck.x32.tlb` / `Rubberduck.x64.tlb`. ([#55])  
   非アクティブな参照やモジュール内のリテラルによる誤検知を避けるように Rubberduck Addin 参照検知を改善し, `Rubberduck.x32.tlb` / `Rubberduck.x64.tlb` に合わせて判定するようにした.
+
 ## [0.3.0] - 2026-04-20
 
 ### Changed
