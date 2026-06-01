@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.3] - 2026-06-01
+
+### Changed
+
+- Raise the minimum `uv_build` requirement from 0.11.15 to 0.11.16 and refresh lockfile/tooling dependencies.
+  `uv_build` の最小要件を0.11.15から0.11.16へ引き上げ, lockfile/ツール依存関係を更新.
+
 ## [0.3.2] - 2026-06-01
 
 ### Added
@@ -108,7 +115,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release as first version
 
-[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.2...HEAD
+[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.3...HEAD
+[0.3.3]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.2.0...v0.3.0
