@@ -24,7 +24,7 @@ from zipfile import BadZipFile, ZipFile
 import typer
 from win32com.client import DispatchEx
 
-__version__ = "0.3.2"
+__version__ = "0.3.3"
 
 
 class UndefineTypeError(Exception):
