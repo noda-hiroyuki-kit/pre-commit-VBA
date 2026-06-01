@@ -29,8 +29,8 @@ runner = CliRunner()
 def _project_version() -> str:
     """Read the project version from pyproject.toml."""
     pyproject_path = Path(__file__).resolve().parents[1] / "pyproject.toml"
-    with pyproject_path.open("rb") as file:
-        return str(tomllib.load(file)["project"]["version"])
+    with pyproject_path.open("rb") as pyproject_file:
+        return str(tomllib.load(pyproject_file)["project"]["version"])
 
 
 class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
