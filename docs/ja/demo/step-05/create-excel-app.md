@@ -1,3 +1,6 @@
+---
+icon: lucide/sheet
+---
 # Excelのアプリを構築する.
 1. `develop`ブランチにおり, リモート リポジトリと同期できているかを確認する.
     ```powershell
