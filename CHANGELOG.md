@@ -155,3 +155,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#8]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/8
 [#6]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/6
 [#4]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/4
+
+[#59]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/59
