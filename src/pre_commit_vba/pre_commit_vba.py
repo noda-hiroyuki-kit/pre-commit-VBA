@@ -7,7 +7,7 @@ extract code files from excel workbook with codes.
 # requires-python = ">=3.14"
 # dependencies = [
 #   "pywin32>=311",
-#   "typer>=0.25.1",
+#   "typer>=0.26.2",
 # ]
 # ///
 import re
@@ -24,7 +24,7 @@ from zipfile import BadZipFile, ZipFile
 import typer
 from win32com.client import DispatchEx
 
-__version__ = "0.3.3"
+__version__ = "0.3.4"
 
 
 class UndefineTypeError(Exception):
