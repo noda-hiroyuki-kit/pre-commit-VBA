@@ -1,31 +1,31 @@
 [project]
 name = "pre-commit-vba"
-version = "0.3.4"
+version = "0.3.5"
 description = "Extracts VBA code from Excel files for managing VBA code in git and checks workbook version."
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-    "pywin32>=311",
-    "typer>=0.26.2",
+    "pywin32>=312",
+    "typer>=0.26.7",
 ]
 
 [project.scripts]
 pre-commit-vba = "pre_commit_vba.pre_commit_vba:app"
 
 [build-system]
-requires = ["uv_build>=0.11.17,<0.12"]
+requires = ["uv_build>=0.11.19,<0.12"]
 build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
-    "mypy>=1.18.2",
-    "pre-commit>=4.4.0",
-    "pre-commit-uv>=4.2.0",
-    "pytest>=9.0.1",
-    "pytest-cov>=7.0.0",
-    "pytest-randomly>=4.0.1",
-    "ruff>=0.14.5",
-    "tox>=4.32.0",
+    "mypy>=2.1.0",
+    "pre-commit>=4.6.0",
+    "pre-commit-uv>=4.2.1",
+    "pytest>=9.0.3",
+    "pytest-cov>=7.1.0",
+    "pytest-randomly>=4.1.0",
+    "ruff>=0.15.15",
+    "tox>=4.55.1",
     "zensical>=0.0.37",
 ]
 

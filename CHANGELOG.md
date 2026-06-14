@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.5] - 2026-06-14
+
+### Changed
+
+- Bump runtime dependencies to `pywin32>=312` and `typer>=0.26.7`, and refresh development dependency minimum versions.  
+  ランタイム依存関係を `pywin32>=312` と `typer>=0.26.7` に引き上げ, 開発依存関係の最小バージョンを更新.
+- Raise the minimum `uv_build` requirement from 0.11.17 to 0.11.19. ([#68])  
+  `uv_build` の最小要件を0.11.17から0.11.19へ引き上げ.
+
 ## [0.3.4] - 2026-06-07
 
 ### Changed
@@ -127,7 +136,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release as first version
 
-[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.4...HEAD
+[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.5...HEAD
+[0.3.5]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.4...v0.3.5
 [0.3.4]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.1...v0.3.2
@@ -157,3 +167,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#4]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/4
 
 [#59]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/59
+[#68]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/68
