@@ -1,5 +1,6 @@
 ---
 version: 2
+
 updates:
   - package-ecosystem: "uv"
     directory: "/"
@@ -8,3 +9,5 @@ updates:
     open-pull-requests-limit: 5
     labels:
       - "dependencies"
+    cooldown:
+      default-days: 10
