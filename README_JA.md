@@ -182,6 +182,11 @@ $ check [OPTIONS]
 * `--version`
 * `--help`: Show this message and exit.
 
+## コミュニティ
+
+[`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)を確認してください.
+
+
 ## 参考情報
 
 ### pre_commit_vba.py

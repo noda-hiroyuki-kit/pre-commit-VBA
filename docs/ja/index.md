@@ -18,7 +18,7 @@ Pythonのスクリプトとしても利用可能です.
 
 ```
   - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
-    rev: v0.3.4
+    rev: v0.3.5
     hooks:
       - id: extract-vba-code
       - id: check-excel-book-version
