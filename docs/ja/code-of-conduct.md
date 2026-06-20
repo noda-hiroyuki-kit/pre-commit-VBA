@@ -1,3 +1,7 @@
+---
+icon: octicons/code-of-conduct-16
+---
+
 # コントリビューター行動規範 3.0
 
 ## 私たちの誓い

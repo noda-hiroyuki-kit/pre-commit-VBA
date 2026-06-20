@@ -1,5 +1,5 @@
 ---
-icon: lucide/handshake
+icon: octicons/people-16
 ---
 # pre-commit-vbaへの貢献
 
