@@ -48,21 +48,23 @@ repo_name = "noda-hiroyuki-kit/pre-commit-VBA"
 #
 # Read more: https://zensical.org/docs/setup/navigation/
 nav = [
-   { "Home" = "index.md" },
-   { "日本語" = [
-    { "ホーム" = "ja/index.md" },
-    { "getting started" = "ja/getting-started.md"},
-    { "設定" = "ja/configuration.md"},
-    { "デモ" = [
-        "ja/demo/sample-usage.md",
-        "ja/demo/step-01/create-remote-repository.md",
-        "ja/demo/step-02/local-repository.md",
-        "ja/demo/step-03/pull-request.md",
-        "ja/demo/step-04/setup-dev-environment.md",
-        "ja/demo/step-05/create-excel-app.md",
-        "ja/demo/step-06/preparation-release.md"
-    ]},
-    { "貢献"="ja/contributing.md"}
+    { "Home" = "index.md" },
+    { "日本語" = [
+        { "ホーム" = "ja/index.md" },
+        { "getting started" = "ja/getting-started.md"},
+        { "オプションガイド" = "ja/options-guide.md"},
+        { "デモ" = [
+            "ja/demo/sample-usage.md",
+            "ja/demo/step-01/create-remote-repository.md",
+            "ja/demo/step-02/local-repository.md",
+            "ja/demo/step-03/pull-request.md",
+            "ja/demo/step-04/setup-dev-environment.md",
+            "ja/demo/step-05/create-excel-app.md",
+            "ja/demo/step-06/preparation-release.md"
+        ]},
+        { "貢献" = "ja/contributing.md"},
+        { "行動規範" = "ja/code-of-conduct.md"},
+        { "リファレンス" = "ja/reference.md"},
    ]},
    { "English" = [
         {"home" = "en/index.md"},
