@@ -104,6 +104,7 @@
         "venv",
         "virtualenv",
         "webassets",
-        "xlsb"
+        "xlsb",
+        "zensical"
     ]
 }
