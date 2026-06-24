@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.6] - 2026-06-25
+
+### Changed
+
+- Raise the minimum `uv_build` requirement from 0.11.19 to 0.11.21. ([#68])  
+  `uv_build` の最小要件を0.11.19から0.11.21へ引き上げ.
+- Switch document generation from MkDocs Material to Zensical.  
+  ドキュメント生成ツールを MkDocs Material から Zensical に変更.
+- Add Dependabot cooldown settings for dependency update pull requests.  
+  Dependabot の依存関係更新 PR に cooldown 設定を追加.
+
 ## [0.3.5] - 2026-06-14
 
 ### Changed
@@ -136,7 +147,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release as first version
 
-[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.5...HEAD
+[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.6...HEAD
+[0.3.6]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.5...v0.3.6
 [0.3.5]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.4...v0.3.5
 [0.3.4]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.2...v0.3.3

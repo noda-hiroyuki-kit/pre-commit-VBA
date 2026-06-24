@@ -1,10 +1,20 @@
 {
     "version": "0.2",
     "language": "en",
+    "dictionaries": [
+        "python",
+        "powershell"
+    ],
+    "ignorePaths": [
+        "**/*.svg",
+        "uv.lock"
+    ],
     "words": [
         "Abstra",
         "Addin",
         "addopts",
+        "arithmatex",
+        "autohide",
         "autouse",
         "backrefs",
         "betterem",
@@ -23,6 +33,7 @@
         "colorama",
         "Connor",
         "Conv",
+        "cooldown",
         "Cython",
         "dateutil",
         "direnv",
@@ -31,6 +42,7 @@
         "docstrings",
         "doctests",
         "EDITMSG",
+        "endmacro",
         "envrc",
         "filelock",
         "fontawesome",
@@ -42,10 +54,13 @@
         "inlinehilite",
         "ipynb",
         "ipython",
+        "javascripts",
         "kroki",
         "librt",
         "linenums",
         "logassert",
+        "lucide",
+        "magiclink",
         "makepy",
         "Marimo",
         "markupsafe",
@@ -91,19 +106,23 @@
         "Scrapy",
         "sdist",
         "shellingham",
+        "smartsymbols",
         "Spyder",
         "spyderproject",
         "spyproject",
         "Streamlit",
         "superfences",
+        "tasklist",
         "testpaths",
         "twemoji",
         "typer",
         "urllib",
         "vbext",
         "venv",
+        "viewports",
         "virtualenv",
         "webassets",
-        "xlsb"
+        "xlsb",
+        "zensical"
     ]
 }
