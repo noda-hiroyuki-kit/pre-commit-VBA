@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/streetsidesoftware/cspell-cli
-  rev: v10.0.0
+  rev: v10.0.1
   hooks:
     - id: cspell # Spell check changed files
     - id: cspell # Spell check the commit message
@@ -35,7 +35,7 @@ repos:
       args: [--strict, -d, " {rules: {indentation: {spaces: 2}}}"]
       files: ^mkdocs\.yml$
 - repo: https://github.com/astral-sh/ruff-pre-commit
-  rev: v0.15.14
+  rev: v0.15.17
   hooks:
     # Run the linter.
     - id: ruff-check
