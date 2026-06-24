@@ -1,17 +1,14 @@
-# Welcome to MkDocs
+# pre-commit-vba
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+`pre-commit-vba` is a Python tool that extracts VBA code from Excel workbooks to make it easier to manage with Git.
 
-## Commands
+## What you can do with this documentation
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+- Check how to use it: [Usage](usage.md)
+- Check configuration options: [Configuration](configuration.md)
+- Check how to contribute: [Contributing](contributing.md)
 
-## Project layout
+## Overview
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+This project aims to streamline source control for VBA projects.
+It is designed to run as a pre-commit hook so VBA code extraction and validation can be performed during commits.
