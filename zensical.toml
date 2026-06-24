@@ -305,8 +305,8 @@ toggle.name = "Switch to light mode"
 # ----------------------------------------------------------------------------
 [project.extra]
 alternate = [
-    { name = "ja - 日本語", link = "/ja/", lang = "ja" },
-    { name = "en - English", link = "/en/", lang = "en" },
+    { name = "ja - 日本語", link = "/pre-commit-VBA/ja/", lang = "ja" },
+    { name = "en - English", link = "/pre-commit-VBA/en/", lang = "en" },
 ]
 
 #[[project.extra.social]]
