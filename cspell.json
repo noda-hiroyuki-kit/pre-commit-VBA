@@ -6,7 +6,7 @@
         "powershell"
     ],
     "ignorePaths": [
-        "*.svg",
+        "**/*.svg",
         "uv.lock"
     ],
     "words": [
