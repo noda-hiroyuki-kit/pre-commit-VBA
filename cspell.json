@@ -1,8 +1,13 @@
 {
     "version": "0.2",
     "language": "en",
+    "dictionaries": [
+        "python",
+        "powershell"
+    ],
     "ignorePaths": [
-        "overrides/.icons/logo/logo.drawio.svg"
+        "*.svg",
+        "uv.lock"
     ],
     "words": [
         "Abstra",
