@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   ドキュメント生成ツールを MkDocs Material から Zensical に変更.
 - Add Dependabot cooldown settings for dependency update pull requests.  
   Dependabot の依存関係更新 PR に cooldown 設定を追加.
+- Bump minimum `pytest` requirement from 9.0.3 to 9.1.0.  
+  `pytest` の最小要件を 9.0.3 から 9.1.0 へ引き上げ.
 
 ## [0.3.5] - 2026-06-14
 
