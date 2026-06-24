@@ -28,6 +28,7 @@
         "colorama",
         "Connor",
         "Conv",
+        "cooldown",
         "Cython",
         "dateutil",
         "direnv",
