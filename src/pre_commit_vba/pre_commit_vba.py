@@ -268,12 +268,20 @@ class ExcelVbaExporter:
 
     def __del__(self) -> None:
         """Destructor to close workbook and quit app."""
-        try:
-            self.__workbook.Close(SaveChanges=False)
-            self.__app.Quit()
-        except Exception:
-            logger.exception("Error in destructor")
-            raise
+        workbook = getattr(self, "_ExcelVbaExporter__workbook", None)
+        app = getattr(self, "_ExcelVbaExporter__app", None)
+
+        if workbook is not None:
+            try:
+                workbook.Close(SaveChanges=False)
+            except Exception:
+                logger.exception("Error while closing workbook in destructor")
+
+        if app is not None:
+            try:
+                app.Quit()
+            except Exception:
+                logger.exception("Error while quitting Excel app in destructor")
 
 
 def vb_component_type_factory(module_name: str, type_id: int) -> IVbComponentType:
