@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Make `ExcelVbaExporter.__del__` defensive for partially initialized instances and avoid re-raising exceptions during cleanup.
+  `ExcelVbaExporter.__del__` を部分初期化インスタンスでも安全に動作するようにし, クリーンアップ時に例外を再送出しないようにした.
+- Handle pytest deprecation warnings in tests by updating test-side implementation details.
+  pytest の非推奨警告に対応するため, テスト実装の詳細を更新.
+
+
 ## [0.3.6] - 2026-06-25
 
 ### Changed
