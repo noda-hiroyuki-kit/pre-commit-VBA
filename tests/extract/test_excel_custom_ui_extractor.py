@@ -23,7 +23,8 @@ class TestExcelCustomUiExtractor:
     """Tests for ExcelCustomUiExtractor class."""
 
     @pytest.fixture(scope="class")
-    def sut(self) -> Generator[ExcelCustomUiExtractor]:
+    @classmethod
+    def sut(cls) -> Generator[ExcelCustomUiExtractor]:
         """Act first this tests."""
         common_folder = SettingsCommonFolder(
             Path(Path.cwd(), "tests", "test.xlsm"), ".VBA", include_extension=True

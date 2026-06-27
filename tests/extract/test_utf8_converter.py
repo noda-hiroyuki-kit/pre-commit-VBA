@@ -25,7 +25,8 @@ class TestExcelVbaExporter:
     """Tests for ExcelVbaExporter class."""
 
     @pytest.fixture(scope="class")
-    def sut(self) -> Generator[Utf8Converter]:
+    @classmethod
+    def sut(cls) -> Generator[Utf8Converter]:
         """Act first this tests."""
         common_folder = SettingsCommonFolder(
             Path(Path.cwd(), "tests", "test.xlsm"), ".VBA", include_extension=True

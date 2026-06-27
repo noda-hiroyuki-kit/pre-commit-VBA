@@ -16,6 +16,7 @@ import subprocess
 import sys
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Iterable
+from contextlib import suppress
 from dataclasses import dataclass
 from logging import INFO, basicConfig, getLogger
 from pathlib import Path
@@ -268,12 +269,27 @@ class ExcelVbaExporter:
 
     def __del__(self) -> None:
         """Destructor to close workbook and quit app."""
-        try:
-            self.__workbook.Close(SaveChanges=False)
-            self.__app.Quit()
-        except Exception:
-            logger.exception("Error in destructor")
-            raise
+        workbook = getattr(self, "_ExcelVbaExporter__workbook", None)
+        app = getattr(self, "_ExcelVbaExporter__app", None)
+
+        def _safe_log_exception(message: str) -> None:
+            logger_obj = globals().get("logger")
+            if logger_obj is None:
+                return
+            with suppress(Exception):
+                logger_obj.exception(message)
+
+        if workbook is not None:
+            try:
+                workbook.Close(SaveChanges=False)
+            except Exception:  # noqa: BLE001
+                _safe_log_exception("Error while closing workbook in destructor")
+
+        if app is not None:
+            try:
+                app.Quit()
+            except Exception:  # noqa: BLE001
+                _safe_log_exception("Error while quitting Excel app in destructor")
 
 
 def vb_component_type_factory(module_name: str, type_id: int) -> IVbComponentType:
