@@ -93,3 +93,27 @@ def test_destructor_swallows_close_and_quit_errors(
     # Prevent duplicate destructor logs when pytest later garbage-collects this object.
     delattr(exporter, "_ExcelVbaExporter__workbook")
     delattr(exporter, "_ExcelVbaExporter__app")
+
+
+def test_destructor_does_not_raise_when_logger_is_unavailable(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Test destructor does not fail when logger is unavailable during shutdown."""
+    exporter = ExcelVbaExporter.__new__(ExcelVbaExporter)
+    workbook = Mock()
+    app = Mock()
+    workbook.Close.side_effect = RuntimeError("close failed")
+    app.Quit.side_effect = RuntimeError("quit failed")
+    object.__setattr__(exporter, "_ExcelVbaExporter__workbook", workbook)
+    object.__setattr__(exporter, "_ExcelVbaExporter__app", app)
+
+    monkeypatch.setattr("src.pre_commit_vba.pre_commit_vba.logger", None)
+
+    exporter.__del__()
+
+    workbook.Close.assert_called_once_with(SaveChanges=False)
+    app.Quit.assert_called_once_with()
+
+    # Prevent duplicate destructor execution side effects on GC.
+    delattr(exporter, "_ExcelVbaExporter__workbook")
+    delattr(exporter, "_ExcelVbaExporter__app")
