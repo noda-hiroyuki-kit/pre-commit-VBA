@@ -27,7 +27,7 @@ site_author = "Noda Hiroyuki"
 # The site_url is the canonical URL for your site. When building online
 # documentation you should set this.
 # Read more: https://zensical.org/docs/setup/basics/#site_url
-#site_url = "https://github.com/noda-hiroyuki-kit/pre-commit-vba"
+site_url = "https://noda-hiroyuki-kit.github.io/pre-commit-VBA/"
 
 # The copyright notice appears in the page footer and can contain an HTML
 # fragment.
@@ -327,8 +327,8 @@ toggle.name = "Switch to light mode"
 # ----------------------------------------------------------------------------
 [project.extra]
 alternate = [
-    { name = "ja - 日本語", link = "/ja/", lang = "ja" },
-    { name = "en - English", link = "/en/", lang = "en" },
+    { name = "ja - 日本語", link = "/pre-commit-VBA/ja/", lang = "ja" },
+    { name = "en - English", link = "/pre-commit-VBA/en/", lang = "en" },
 ]
 
 #[[project.extra.social]]

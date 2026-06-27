@@ -15,16 +15,82 @@ import shutil
 import subprocess
 import sys
 from abc import ABC, abstractmethod
+from collections.abc import Callable, Iterable
+from contextlib import suppress
 from dataclasses import dataclass
 from logging import INFO, basicConfig, getLogger
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Protocol, cast
 from zipfile import BadZipFile, ZipFile
 
 import typer
-from win32com.client import DispatchEx
 
-__version__ = "0.3.5"
+try:
+    from win32com.client import DispatchEx
+except ModuleNotFoundError:
+    DispatchEx = None
+
+
+class WindowsOnlyImportError(RuntimeError):
+    """Raised when a Windows-only dependency is unavailable."""
+
+    def __init__(self) -> None:
+        """Initialize with a clear Windows-only import hint."""
+        message = (
+            "pre-commit-vba requires pywin32 (Windows only). "
+            "Install it on Windows or run this hook on a Windows runner."
+        )
+        super().__init__(message)
+
+
+class VbComponentProtocol(Protocol):
+    """Protocol for a VBA component inside a workbook project."""
+
+    Name: str
+    Type: int
+    Export: Callable[[Path], None]
+
+
+class VbProjectProtocol(Protocol):
+    """Protocol for the VBProject collection."""
+
+    VBComponents: Iterable[VbComponentProtocol]
+
+
+class WorkbookPropertiesProtocol(Protocol):
+    """Protocol for an opened Excel workbook."""
+
+    Close: Callable[..., None]
+    BuiltinDocumentProperties: Callable[[str], object]
+    VBProject: VbProjectProtocol
+
+
+class WorkbooksProtocol(Protocol):
+    """Protocol for the Excel workbooks collection."""
+
+    Open: Callable[..., WorkbookPropertiesProtocol]
+
+
+class ExcelApplicationProtocol(Protocol):
+    """Protocol for the Excel application object."""
+
+    Visible: bool
+    DisplayAlerts: bool
+    Workbooks: WorkbooksProtocol
+    Quit: Callable[[], None]
+
+
+DispatchExFactory = Callable[[str], ExcelApplicationProtocol]
+
+
+def get_dispatch_ex() -> DispatchExFactory:
+    """Return DispatchEx or raise a Windows-only import error."""
+    if DispatchEx is None:
+        raise WindowsOnlyImportError
+    return cast("DispatchExFactory", DispatchEx)
+
+
+__version__ = "0.3.6"
 
 
 class UndefineTypeError(Exception):
@@ -193,21 +259,37 @@ class ExcelVbaExporter:
             ).file_name
             vb_comp.Export(Path(settings.export_folder, f"{vb_comp_file_name}"))
 
-    def __get_xl_app(self) -> DispatchEx:
+    def __get_xl_app(self) -> ExcelApplicationProtocol:
         """Get Excel application."""
-        excel_app = DispatchEx("Excel.Application")
+        dispatch_ex = get_dispatch_ex()
+        excel_app = dispatch_ex("Excel.Application")
         excel_app.Visible = False
         excel_app.DisplayAlerts = False
         return excel_app
 
     def __del__(self) -> None:
         """Destructor to close workbook and quit app."""
-        try:
-            self.__workbook.Close(SaveChanges=False)
-            self.__app.Quit()
-        except Exception:
-            logger.exception("Error in destructor")
-            raise
+        workbook = getattr(self, "_ExcelVbaExporter__workbook", None)
+        app = getattr(self, "_ExcelVbaExporter__app", None)
+
+        def _safe_log_exception(message: str) -> None:
+            logger_obj = globals().get("logger")
+            if logger_obj is None:
+                return
+            with suppress(Exception):
+                logger_obj.exception(message)
+
+        if workbook is not None:
+            try:
+                workbook.Close(SaveChanges=False)
+            except Exception:  # noqa: BLE001
+                _safe_log_exception("Error while closing workbook in destructor")
+
+        if app is not None:
+            try:
+                app.Quit()
+            except Exception:  # noqa: BLE001
+                _safe_log_exception("Error while quitting Excel app in destructor")
 
 
 def vb_component_type_factory(module_name: str, type_id: int) -> IVbComponentType:
@@ -498,7 +580,8 @@ def get_current_branch_name() -> str:
 
 def get_workbook_version(workbook_path: Path) -> str:
     """Get workbook version."""
-    app = DispatchEx("Excel.Application")
+    dispatch_ex = get_dispatch_ex()
+    app = dispatch_ex("Excel.Application")
     app.Visible = False
     app.DisplayAlerts = False
     workbook = app.Workbooks.Open(workbook_path, ReadOnly=True)
