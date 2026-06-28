@@ -50,4 +50,8 @@ icon: lucide/sheet
 
 ## プルリクエストを作成し、`main`ブランチにマージ
 
-1.
+1. baseを`main`, compareを`release/v0.1.0`としたプルリクエストを作成する.
+
+2. レビューなどを実施し, `main`ブランチにマージする.
+
+    ![pullRequestMergeToMain](img/pullRequestMergeToMain.drawio.svg)
