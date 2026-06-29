@@ -37,7 +37,8 @@ class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
     """Test class for code metadata portion in trailing whitespace check."""
 
     @pytest.fixture(scope="class")
-    def set_up(self) -> typing.tuple[subprocess.Popen, bytes]:
+    @classmethod
+    def set_up(cls) -> typing.tuple[subprocess.Popen, bytes]:
         """Set up for test."""
         runner.invoke(
             app,
@@ -165,7 +166,8 @@ class TestExtractCommandExistenceFiles:
     """Test class for extract command."""
 
     @pytest.fixture(scope="class")
-    def prepare_pre_existing_excel(self) -> typing.tuple[DispatchEx, CliRunner]:
+    @classmethod
+    def prepare_pre_existing_excel(cls) -> typing.tuple[DispatchEx, CliRunner]:
         """Fixture to prepare pre-existing Excel workbook for testing."""
         _excel_instance = DispatchEx("Excel.Application")
         _excel_instance.Visible = False
@@ -174,12 +176,13 @@ class TestExtractCommandExistenceFiles:
             Path(Path.cwd(), "tests", "test.xlsm"),
             ReadOnly=True,
         )
-        sut = self.sut()
+        sut = cls.sut()
         yield _excel_instance, sut
         _workbook.Close(SaveChanges=False)
         _excel_instance.Quit()
 
-    def sut(self) -> CliRunner:
+    @classmethod
+    def sut(cls) -> CliRunner:
         """Fixture for TestExtractCommandExistenceFiles."""
         return runner.invoke(
             app,
@@ -369,7 +372,8 @@ class TestCheckSubCommand:
     """Tests for check sub command."""
 
     @pytest.fixture(scope="class")
-    def prepare_pre_existing_excel(self) -> Generator:
+    @classmethod
+    def prepare_pre_existing_excel(cls) -> Generator:
         """Fixture to prepare pre-existing Excel workbook for testing."""
         _excel_instance = DispatchEx("Excel.Application")
         _excel_instance.Visible = False
