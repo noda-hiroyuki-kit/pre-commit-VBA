@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Raise the minimum `uv_build` requirement from 0.11.21 to 0.11.22. ([#79])
   `uv_build` の最小要件を0.11.21から0.11.22へ引き上げ.
+- Bump minimum `ruff` requirement from 0.15.17 to 0.15.18. ([#80])
+  `ruff` の最小要件を 0.15.17 から 0.15.18 へ引き上げ.
 
 ### Fixed
 
@@ -199,3 +201,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#59]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/59
 [#68]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/68
 [#79]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/79
+[#80]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/80
