@@ -16,7 +16,6 @@ import subprocess
 import sys
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Iterable
-from contextlib import suppress
 from dataclasses import dataclass
 from logging import INFO, basicConfig, getLogger
 from pathlib import Path
@@ -276,8 +275,10 @@ class ExcelVbaExporter:
             logger_obj = globals().get("logger")
             if logger_obj is None:
                 return
-            with suppress(Exception):
+            try:
                 logger_obj.exception(message)
+            except Exception:  # noqa: BLE001
+                return
 
         if workbook is not None:
             try:
