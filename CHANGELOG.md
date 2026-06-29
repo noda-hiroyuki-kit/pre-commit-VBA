@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `uv_build` の最小要件を0.11.21から0.11.22へ引き上げ.
 - Bump minimum `ruff` requirement from 0.15.17 to 0.15.18. ([#80])  
   `ruff` の最小要件を 0.15.17 から 0.15.18 へ引き上げ.
+- Bump minimum `pytest` requirement from 9.1.0 to 9.1.1.  
+  `pytest` の最小要件を 9.1.0 から 9.1.1 へ引き上げ.
 
 ### Fixed
 
