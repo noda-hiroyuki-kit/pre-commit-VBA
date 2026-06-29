@@ -20,7 +20,7 @@ build-backend = "uv_build"
 dev = [
     "mypy>=2.1.0",
     "pre-commit>=4.6.0",
-    "pre-commit-uv>=4.2.1",
+    "pre-commit-uv>=4.2.2",
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
     "pytest-randomly>=4.1.0",
@@ -31,6 +31,9 @@ dev = [
 
 [tool.uv]
 exclude-newer = "10 days"
+
+[tool.uv.exclude-newer-package]
+pre-commit-uv = "2026-06-30T15:00:00Z"
 
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.
