@@ -11,16 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Raise the minimum `uv_build` requirement from 0.11.21 to 0.11.22. ([#79])
+- Raise the minimum `uv_build` requirement from 0.11.21 to 0.11.22. ([#79])  
   `uv_build` の最小要件を0.11.21から0.11.22へ引き上げ.
-- Bump minimum `ruff` requirement from 0.15.17 to 0.15.18. ([#80])
+- Bump minimum `ruff` requirement from 0.15.17 to 0.15.18. ([#80])  
   `ruff` の最小要件を 0.15.17 から 0.15.18 へ引き上げ.
 
 ### Fixed
 
-- Make `ExcelVbaExporter.__del__` defensive for partially initialized instances and avoid re-raising exceptions during cleanup.
+- Make `ExcelVbaExporter.__del__` defensive for partially initialized instances and avoid re-raising exceptions during cleanup.  
   `ExcelVbaExporter.__del__` を部分初期化インスタンスでも安全に動作するようにし, クリーンアップ時に例外を再送出しないようにした.
-- Handle pytest deprecation warnings in tests by updating test-side implementation details.
+- Handle pytest deprecation warnings in tests by updating test-side implementation details.  
   pytest の非推奨警告に対応するため, テスト実装の詳細を更新.
 
 
