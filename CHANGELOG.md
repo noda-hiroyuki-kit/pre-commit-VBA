@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.7] - 2026-06-30
+
+### Changed
+
+- Raise the minimum `uv_build` requirement from 0.11.21 to 0.11.22. ([#79])
+  `uv_build` の最小要件を0.11.21から0.11.22へ引き上げ.
+
 ### Fixed
 
 - Make `ExcelVbaExporter.__del__` defensive for partially initialized instances and avoid re-raising exceptions during cleanup.
@@ -157,7 +164,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release as first version
 
-[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.6...HEAD
+[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.7...HEAD
+[0.3.7]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.6...v0.3.7
 [0.3.6]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.5...v0.3.6
 [0.3.5]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.4...v0.3.5
 [0.3.4]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.3...v0.3.4
@@ -190,3 +198,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [#59]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/59
 [#68]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/68
+[#79]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/79
