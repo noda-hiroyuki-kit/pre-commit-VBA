@@ -16,6 +16,7 @@ import subprocess
 import sys
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Iterable
+from contextlib import suppress
 from dataclasses import dataclass
 from logging import INFO, basicConfig, getLogger
 from pathlib import Path
@@ -89,7 +90,7 @@ def get_dispatch_ex() -> DispatchExFactory:
     return cast("DispatchExFactory", DispatchEx)
 
 
-__version__ = "0.3.7"
+__version__ = "0.3.8"
 
 
 class UndefineTypeError(Exception):
@@ -275,10 +276,8 @@ class ExcelVbaExporter:
             logger_obj = globals().get("logger")
             if logger_obj is None:
                 return
-            try:
+            with suppress(Exception):
                 logger_obj.exception(message)
-            except Exception:  # noqa: BLE001
-                return
 
         if workbook is not None:
             try:
