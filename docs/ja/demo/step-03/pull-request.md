@@ -1,7 +1,7 @@
 ---
 icon: lucide/git-pull-request
 ---
-# `feature/setup-repository`ブランチを`develop`ブランチにマージ
+# リポジトリ基本ファイルを`develop`ブランチにマージ
 
 ## ブラウザでの操作
 
