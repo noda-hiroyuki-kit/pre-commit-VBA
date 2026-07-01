@@ -1,7 +1,7 @@
 ---
 icon: lucide/sheet
 ---
-# Excelブックのリリース準備
+# リリースの準備
 
 バージョン `v0.1.0`をリリースすることとして, 記述する.
 
@@ -19,11 +19,11 @@ icon: lucide/sheet
 
     !!!ブックのバージョン  
         この操作により, ブックのファイルプロパティのバージョン番号にバージョンが設定される.  
-        ![FileProperty](img/FileProperty.drawio.svg)
+        ![FileProperty](img/FileProperty.drawio.svg){width="300"}
 
 3. ブックのVisual Basic Editorの参照設定をリリース用に変更する.  
     Rubberduck AddInなどの標準でインストールされていないライブラリへの参照設定を外す.
-    ![VBE](img/VBE.drawio.svg)
+    ![VBE](img/VBE.drawio.svg){width="600"}
 
 4. ブックを保存し, コミットする.
     ```powershell
@@ -54,4 +54,4 @@ icon: lucide/sheet
 
 2. レビューなどを実施し, `main`ブランチにマージする.
 
-    ![pullRequestMergeToMain](img/pullRequestMergeToMain.drawio.svg)
+    ![pullRequestMergeToMain](img/pullRequestMergeToMain.drawio.svg){width="600"}
