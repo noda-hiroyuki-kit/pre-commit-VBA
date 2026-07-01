@@ -60,7 +60,8 @@ nav = [
             "ja/demo/step-03/pull-request.md",
             "ja/demo/step-04/setup-dev-environment.md",
             "ja/demo/step-05/create-excel-app.md",
-            "ja/demo/step-06/preparation-release.md"
+            "ja/demo/step-06/preparation-release.md",
+            "ja/demo/step-07/release-main-branch.md"
         ]},
         { "貢献" = "ja/contributing.md"},
         { "行動規範" = "ja/code-of-conduct.md"},
