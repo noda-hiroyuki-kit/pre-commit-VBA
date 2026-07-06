@@ -90,7 +90,7 @@ def get_dispatch_ex() -> DispatchExFactory:
     return cast("DispatchExFactory", DispatchEx)
 
 
-__version__ = "0.3.8"
+__version__ = "0.3.9"
 
 
 class UndefineTypeError(Exception):
