@@ -2,84 +2,83 @@
 icon: lucide/package-open
 ---
 
-# getting-started
+# Getting Started
 
 ## インストール方法
 
-いずれの方法も`mise`を利用した方法を記載しています.  
-[`mise`](https://mise.jdx.dev/getting-started.html)を参考に`mise`をインストールしてください.
-`uv`が利用できる場合は, `mise`は不要です.
+このページは `mise` 前提で説明します.  
+`uv` がある場合は `mise` は不要です.  
+`mise` は[公式手順](https://mise.jdx.dev/getting-started.html)で導入してください.
 
-### pre-commitで, pre-commit-hookとして使用
+### pre-commit フックとして使う
 
-1. `git`管理するマクロ付きブックのあるフォルダ(以下, vba_root_folderという)に移動する.
-2. `.pre-commit`をインストールする.
-    1. `uv`を`mise`を使ってインストールする.
-        ```
+1. ブックの管理フォルダへ移動します.  
+   このフォルダを `vba_root_folder` とします.
+2. `pre-commit` を導入します.
+    1. `mise` で `uv` を入れます.
+        ```console
         mise use uv@latest
         ```
-    2. `uv`を初期化する.
-        ```
+    2. `uv` を初期化します.
+        ```console
         uv init
         ```
-    3. `pre-commit`をインストールする.
-        ```
+    3. `pre-commit` を追加します.
+        ```console
         uv add pre-commit
         uv run pre-commit install
         ```
-    4. `.pre-commit-config.yaml`を作成し, 以下を記載する.
-        ```
+    4. `.pre-commit-config.yaml` を作成します.
+        ```yaml title=".pre-commit-config.yaml"
         ---
         repos:
-        - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
-          rev: v0.3.4
-          hooks:
-            - id: extract-vba-code
-            - id: check-excel-book-version
-
+          - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
+            rev: v0.3.9
+            hooks:
+              - id: extract-vba-code
+              - id: check-excel-book-version
         ```
-### `pre_commit_vba.py`をコマンドで走らせて使用
 
-1. `git`管理するマクロ付きブックのあるフォルダ(以下, vba_root_folderという)に移動する.
-2. `mise`で `uv`をインストールする.
+### `pre_commit_vba.py` を直接使う
+
+1. `vba_root_folder` へ移動します.
+2. `mise` で `uv` を入れます.
     ```console
     mise use uv@latest
     ```
-3. `uv`を初期化する.
-    ```
+3. `uv` を初期化します.
+    ```console
     uv init
     ```
-3. `src/pre_commit_vba`にある`pre_commit_vba.py`をvba_root_folderにコピーする.
+4. `pre_commit_vba.py` をコピーします.
 
 ## 使用方法
 
-### pre-commitで, pre-commit-hookとして使用
+### pre-commit フックとして使う
 
-1. 対象のマクロブックを`git`でステージングする.
-    ```
-    git add .
-    ```
-2. uvで`pre-commit`を動作させる.
-    ```
+1. マクロブック(例: sample-app.xlsm)をステージングします.
+    ```console
+    git add sample-app.xlsm
+    ```  
+2. `pre-commit` を実行します.
+    ```console
+    uv run pre-commit
+    ```  
+3. `pre-commit` を再実行します. (展開コードは前回実行時にステージングされます.)
+    ```console
     uv run pre-commit
     ```
-3. コードが展開されるので, コードをステージングし`git`で管理する.
-    ```
-    git add .
-    ```
 
-### `pre_commit_vba.py`をコマンドで走らせて使用
+### `pre_commit_vba.py` を直接使う
 
-#### ブックにあるコードを抽出する場合
+#### コード抽出
 
-vba_root_folderにて, 以下のコマンドを実行.
 ```console
 uv run pre_commit_vba.py extract
 ```
 
-#### releaseブランチ名とワークブックのバージョン情報を比較チェックする場合
+#### ブランチ名とバージョンとの照合
 
-vba_root_folderにて, 以下のコマンドを実行.
-```PowerShell
+```console
 uv run pre_commit_vba.py check
 ```

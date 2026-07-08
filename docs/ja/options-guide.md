@@ -1,18 +1,17 @@
 ---
 icon: lucide/sliders-horizontal
 ---
-
 # オプションガイド
 
-このページは, pre_commit_vba.py のオプションを利用者視点で説明するガイドです.  
+このページは, `pre-commit-vba` のオプションを説明するガイドです.  
 仕様一覧だけを見たい場合は [リファレンス](reference.md) を参照してください.
 
-## まず押さえる使い分け
+## コマンド
 
-- extract: VBAコードを取り出して, Gitで管理しやすい形にするコマンド
-- check: リリース前に「ブランチ名」と「Excelブックのバージョン」が一致しているかを確認するコマンド
+- `extract`: VBA コードを抽出します.
+- `check`: ブランチ名とブックのバージョンを照合します.
 
-## 規定値の一覧
+## 規定値
 
 ### extract
 
@@ -37,12 +36,12 @@ icon: lucide/sliders-horizontal
 
 ### --target-path
 
-- 何をする: Excelブックを探索する開始ディレクトリを指定します.
-- いつ使う: リポジトリのルート以外にブックを置いているとき.
+- 何をする: Excelブックを探索するフォルダを指定します.
+- いつ使う: リポジトリのルート以外にブックを置いているとき. (テストに利用するブックなど)
 - 規定値: .
 
 ```console
-uv run pre_commit_vba.py extract --target-path ./excel
+uv run pre_commit_vba.py extract --target-path ./tests
 ```
 
 ### --folder-suffix
@@ -52,13 +51,13 @@ uv run pre_commit_vba.py extract --target-path ./excel
 - 規定値: .VBA
 
 ```console
-uv run pre_commit_vba.py extract --folder-suffix .src
+uv run pre_commit_vba.py extract --folder-suffix src
 ```
 
 ### --export-folder
 
-- 何をする: COMエクスポートされた生ファイルの格納先名を変更します.
-- いつ使う: 中間成果物の保存先を明示的に分けたいとき.
+- 何をする: エクスポートされた生ファイルの格納先名を変更します.
+- いつ使う: 生ファイルの保存先を別名フォルダで管理したいとき.
 - 規定値: export
 
 ```console
@@ -77,7 +76,7 @@ uv run pre_commit_vba.py extract --custom-ui-folder ribbon
 
 ### --code-folder
 
-- 何をする: UTF-8に変換した最終コードの格納先名を変更します.
+- 何をする: git管理用の最終コードの格納先名を変更します.
 - いつ使う: 既存プロジェクトでコード配置先を合わせたいとき.
 - 規定値: code
 
@@ -89,8 +88,8 @@ uv run pre_commit_vba.py extract --code-folder src-vba
 
 - 何をする: VBA内の '@Folder("...") 注釈をサブフォルダ構造へ反映するかを切り替えます.
 - いつ使う:
-  - 有効化する: Rubberduckのフォルダ構成をそのまま再現したい.
-  - 無効化する: すべてのコードを1フォルダに平坦化したい.
+    - 有効化する: Rubberduckのフォルダ構成をそのまま再現したい.
+    - 無効化する: すべてのコードを1フォルダに平坦化したい.
 - 規定値: --enable-folder-annotation（有効）
 
 ```console
@@ -101,8 +100,11 @@ uv run pre_commit_vba.py extract --disable-folder-annotation
 
 - 何をする: 共通フォルダ直下に .gitignore を作るかどうかを切り替えます.
 - いつ使う:
-  - 作成する: 中間フォルダを誤って追跡しないようにしたい.
-  - 作成しない: 既存の .gitignore 運用に合わせたい.
+    - 作成する: エクスポートされた生ファイルは, git管理しない.
+    - 作成しない: 既存の .gitignore 運用に合わせたい. (非推奨)
+    !!!Note
+        GitHubでは, テキストをutf-8の文字コードとして管理する.  
+        コードに漢字などが含まれている場合は, 文字化けする.
 - 規定値: --create-gitignore（作成する）
 
 ```console
@@ -113,8 +115,8 @@ uv run pre_commit_vba.py extract --not-create-gitignore
 
 - 何をする: 出力フォルダ名に元ブックの拡張子を含めるかを切り替えます.
 - いつ使う:
-  - 含める: book.xlsm.VBA のようにブック種別を明示したい.
-  - 除外する: book.VBA のように短い名前にしたい.
+    - 含める: target-folderに `app.xlsm`, `app.xlam` のように拡張子のみが異なるブックが複数あるとき.
+    - 除外する: target-folderに拡張子ちがいのブックがないとき.
 - 規定値: --include-extension（含める）
 
 ```console
@@ -155,7 +157,7 @@ uv run pre_commit_vba.py check --version
 
 ## よくある使い方パターン
 
-### 1. 標準運用（迷ったらこれ）
+### 1. 標準運用
 
 ```console
 uv run pre_commit_vba.py extract
@@ -174,8 +176,8 @@ uv run pre_commit_vba.py extract --disable-folder-annotation --exclude-extension
 uv run pre_commit_vba.py extract --folder-suffix .vba --code-folder source
 ```
 
-## 運用上の注意
+## 注意
 
-- extract は実行中に staging 状態の整合性を検査します. 失敗時は git diff --cached で差分を確認してください.
-- check は release/v... または hotfix/v... ブランチで特に有効です.
-- 一時ファイル（~$ で始まるExcelファイル）は自動で対象外になります.
+- extract は実行前後の staging 状態の変化を検査します. 1回目は コード抽出によりstaging 状態が変化するためエラーになります.
+- check は release/v... または hotfix/v... ブランチでのみ有効です.
+- `~$` 始まる一時ファイルは, 処理対象外です.

@@ -3,46 +3,63 @@ icon: lucide/rocket
 ---
 # リリース
 
-## `main`ブランチをリリース
+## 目的
 
-1. リモートリポジトリで操作する. codeビューで, 右の`release`をクリック.
-    ![releaseOperation](img/releaseOperation.drawio.svg)  
-2. `Create a new release`のボタンをクリック.  
+`main` の内容を GitHub Release として公開します.
+
+## 手順 1: Release 画面を開く
+
+1. リポジトリの `Releases` を開きます.
+2. `Create a new release` をクリックします.
+
+??? info "操作画面"
+    ![releaseOperation](img/releaseOperation.drawio.svg)
     ![createNewRelease](img/createNewRelease.drawio.svg){width="600"}
 
-    !!! note "既にリリースしたものがある場合"
-         `Draft a new release`のボタンをクリック.  
-         ![draftNewRelease](img/draftNewRelease.drawio.svg){width="700"}
+??? info "既にリリースしたものがある場合"
+    `Draft a new release`のボタンをクリック.  
+    ![draftNewRelease](img/draftNewRelease.drawio.svg){width="700"}
 
-3. 'Select tag`をクリック.  
-    ![selectTag](img/selectTag.drawio.svg){width="380"}
-4. インプットボックスに`v0.1.0`と入力し, `Create new tag`をクリック.  
+## 手順 2: タグを作成
+
+1. `Select tag` をクリックします.
+2. `v0.1.0` を入力します.
+3. 新しいタグを作成します.
+
+??? info "操作画面"
+    ![selectTag](img/selectTag.drawio.svg){width="380"}  
     ![createNewTag](img/createNewTag.drawio.svg){width="300"}
-5. Release titleに`v0.1.0`と入力し, Release notesを記入し, `Publish release`をクリックする.  
-    ![releaseNotes](img/releaseNotes.drawio.svg){width="450"}
-6. `Publish release`をクリックする.  
+
+## 手順 3: リリース情報を入力
+
+1. Release title に `v0.1.0` を入れます.
+2. Release notes を入力します.
+3. `Publish release` をクリックします.
+4. `Publish release` をクリックします.
+
+
+??? info "操作画面"
+    ![releaseNotes](img/releaseNotes.drawio.svg){width="450"}  
     ![confirmToPublish](img/confirmToPublish.drawio.svg){width="270"}
 
-## 次の開発への移行
+## 手順 4: 次の開発へ戻す
 
-次の開発サイクルに入るため, `main`ブランチを`develop`ブランチにマージする.
+`main` から `develop` へ PR を作ります.  
+マージ後にローカルを同期します.
 
-1. baseを`develop`, compareを`main`としたプルリクエストを作成し, プルリクエストをマージする.
+```powershell
+git checkout develop
+git pull
+```
 
-2. マージ後, リモートの`main`ブランチと`develop`ブランチをローカルのものと同期する.
+!!! note "`develop` <- `main` で競合した場合"
+    1. `develop` を最新化します.
+    2. ローカルで競合を解消します.
+    3. 解消用ブランチを作成します.
+    4. ブランチをプッシュします.
+    5. `develop` 向け PR を作ってマージします.
 
-!!! note  "`develop`<-`main`のコンフリクトの解消"
-    `main`ブランチ, `develop`ブランチともプルリクエストを経由しないと変更できない保護設定をしている場合, コンフリクトを解消するには, 次のように対処する.
+## 確認ポイント
 
-    1. 現在のリモートの`develop`ブランチとローカルの`develop`ブランチをローカルで同期させる。
-        ```
-        git switch develop
-        git pull origin develop
-        ```
-    2. ローカルの`develop`ブランチでコンフリクトを解消する.
-    3. 例えば`chore/resolve-pr82-conflict-develop-sync`のような名前のブランチを作成.  
-    ```
-    git switch -c chore/resolve-pr82-conflict-develop-sync
-    ```
-    4. リモートにプッシュする.
-    5. baseを`develop` compareを`chore/resolve-pr82-conflict-develop-sync`としたプルリクエストを作成し, プルリクエストをマージする.
+- Release 一覧に `v0.1.0` が表示される.
+- `develop` に `main` の内容が戻る.

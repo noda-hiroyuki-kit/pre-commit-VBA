@@ -86,20 +86,14 @@ icon: octicons/code-of-conduct-16
 
 ## 帰属
 
-本行動規範は, Contributor Covenant バージョン 3.0 を基に作成されたものです. 原文は, 次の URL からいつでも確認することができます.  
-[https://www.contributor-covenant.org/version/3/0/](https://www.contributor-covenant.org/version/3/0/)
+本行動規範は, Contributor Covenant バージョン 3.0 を基に作成されたものです. 原文は, 次の URL からいつでも確認することができます. [https://www.contributor-covenant.org/version/3/0/](https://www.contributor-covenant.org/version/3/0/)
 
-Contributor Covenant は, Organization for Ethical Source によって維持管理されており, CC BY-SA 4.0 ライセンスの下で提供されています. このライセンスの詳細は, 次の URL を参照してください.  
-[https://creativecommons.org/licenses/by-sa/4.0/](https://creativecommons.org/licenses/by-sa/4.0/)
+Contributor Covenant は, Organization for Ethical Source によって維持管理されており, CC BY-SA 4.0 ライセンスの下で提供されています. このライセンスの詳細は, 次の URL を参照してください. [https://creativecommons.org/licenses/by-sa/4.0/](https://creativecommons.org/licenses/by-sa/4.0/)
 
-Contributor Covenant に関するよくある質問については, 次の FAQ を参照してください.  
-[https://www.contributor-covenant.org/faq](https://www.contributor-covenant.org/faq)
+Contributor Covenant に関するよくある質問については, 次の FAQ を参照してください. [https://www.contributor-covenant.org/faq](https://www.contributor-covenant.org/faq)
 
-翻訳版は, 次の URL で提供されています.  
-[https://www.contributor-covenant.org/translations](https://www.contributor-covenant.org/translations)
+翻訳版は, 次の URL で提供されています. [https://www.contributor-covenant.org/translations](https://www.contributor-covenant.org/translations)
 
-運営上の措置及びコミュニティガイドラインに関する追加資料は, 次の URL で確認することができます.  
-[https://www.contributor-covenant.org/resources](https://www.contributor-covenant.org/resources)
+運営上の措置及びコミュニティガイドラインに関する追加資料は, 次の URL で確認することができます. [https://www.contributor-covenant.org/resources](https://www.contributor-covenant.org/resources)
 
-段階的な対応基準は, Mozilla の行動規範チームの取り組みを参考にしています.  
-[https://github.com/mozilla/inclusion](https://github.com/mozilla/inclusion)
+段階的な対応基準は, Mozilla の行動規範チームの取り組みを参考にしています. [https://github.com/mozilla/inclusion](https://github.com/mozilla/inclusion)

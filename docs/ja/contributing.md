@@ -1,14 +1,14 @@
 ---
 icon: octicons/people-16
 ---
-# pre-commit-vbaへの貢献
+# pre-commit-vba への貢献
 
-このプロジェクトに貢献していただきありがとうございます.
-このプロジェクトはコード・非コード双方の貢献を歓迎します. バグ報告, ドキュメント改善, テスト, アイデア提案など, さまざまな形の貢献をお受けしています.
+貢献ありがとうございます.  
+コード・非コード双方の貢献を歓迎します.
 
 ## 貢献の方法
 
-以下のようなさまざまな方法で貢献できます.
+以下のようなさまざまな方法の貢献を歓迎します.
 
 - バグや予期しない動作を報告する
 - 使いやすさの改善案を提案する
@@ -18,33 +18,31 @@ icon: octicons/people-16
 
 ## 始める前に
 
-新しい Issue や PR を開く前に, 既存の議論を確認してください.
+既存の Issue と PR を確認してください.
 
 - Issues: https://github.com/noda-hiroyuki-kit/pre-commit-vba/issues
 - Pull Requests: https://github.com/noda-hiroyuki-kit/pre-commit-vba/pulls
 
-大きな変更の場合は, 先に Issue を開いてスコープと方向性について相談してください.
+大きな変更は先に Issue で相談してください.
 
-## 開発環境のセットアップ
+## 開発環境
 
-このプロジェクトは `uv` を使用し, Python 3.14 をターゲットにしています.
-
-1. リポジトリをクローンしてディレクトリに移動します.
-2. 依存関係をインストールします.
+このプロジェクトは `uv` を使います.  
+対象 Python は 3.14 です.
 
 ```powershell
 mise install
 uv sync
 ```
 
-## コード品質チェック
+## 品質チェック
 
-PR を開く前に, 以下のチェックを実行してください.
+PR 前に次を実行してください.
 
 ```powershell
-uvx ruff format
-uvx ruff check
-uvx mypy src/
+uv run ruff format
+uv run ruff check
+uv run mypy src/
 ```
 
 注意点：
@@ -54,17 +52,16 @@ uvx mypy src/
 - `uv.lock` を手動編集しないでください.
 - `.env` ファイルは変更しないでください.
 
-## テストの実行
-
-テストスイート全体を実行します.
+## テスト
 
 ```powershell
 uv run pytest
 uv run pytest tests/test_pre_commit_vba.py::TestExtractCommandExistenceFiles
 ```
 
-テストは `pytest` で記述され, `tests/` ディレクトリの `test_*.py` ファイルにあります.
-可能な限り, バグ修正と新しい機能にはテストを追加してください.
+- テストは `pytest` で書いてください.
+- `tests/test_*.py` に置いてください.
+- 新機能と修正にはテストを追加してください.
 
 ## バグ報告
 
@@ -72,12 +69,12 @@ uv run pytest tests/test_pre_commit_vba.py::TestExtractCommandExistenceFiles
 
 - https://github.com/noda-hiroyuki-kit/pre-commit-vba/issues/new?template=bug_report.md
 
-良いバグ報告には以下の情報を含めてください.
+報告には次を含めてください.
 
-- 環境情報（OS, Python バージョン, インストール方法）
+- 環境情報
 - 再現手順
-- 期待される動作と実際の動作
-- ワークブックサンプルやログ
+- 期待値と実際の結果
+- サンプルやログ
 
 ## 機能提案
 
@@ -85,37 +82,37 @@ uv run pytest tests/test_pre_commit_vba.py::TestExtractCommandExistenceFiles
 
 - https://github.com/noda-hiroyuki-kit/pre-commit-vba/issues/new?template=feature_request.md
 
-以下の内容を含めて説明してください.
+提案には次を含めてください.
 
 - 解決したい問題
 - 提案する動作
-- 検討した代替案
+- 代替案
 
 ## 変更の提出
 
-1. `main` ブランチから新しいブランチを作成します.
-2. 変更を実装します.
-3. フォーマッター, リンター, 型チェック, テストを実行します.
-4. PR を開き, 明確な説明, 動機, テスト実施内容を記載してください.
+1. `main` からブランチをつくってください.
+2. 変更を実装してください.
+3. 品質チェックとテストを実行してください.
+4. PR に説明と結果を記載してください.
 
-PR チェックリスト：
+チェックリスト:
 
-- [ ] 動作変更時にテストを追加・更新している
-- [ ] `ruff`, `mypy`, `pytest` がローカルで通過している
-- [ ] 必要に応じてドキュメントを更新している
+- [ ] テストを追加または更新した
+- [ ] `ruff` `mypy` `pytest` が通った
+- [ ] 必要な文書を更新した
 
-## コミット・ブランチ規約
+## 規約
 
 Conventional Commits を英語で使用してください.
 
-- `feat:` （機能追加）
-- `fix:` （バグ修正）
-- `docs:` （ドキュメント）
-- `refactor:` （リファクタリング）
-- `test:` （テスト）
-- `chore:` （その他）
+- `feat:`
+- `fix:`
+- `docs:`
+- `refactor:`
+- `test:`
+- `chore:`
 
-推奨ブランチ名：
+推奨ブランチ名:
 
 - `feature/<topic>`
 - `hotfix/v<semantic-version>`
@@ -123,13 +120,11 @@ Conventional Commits を英語で使用してください.
 
 ## 行動規範
 
-以下を読んで従ってください.
-
-- [`code-of-conduct`](code-of-conduct.md)
+- [code-of-conduct](code-of-conduct.md)
 
 ## 謝意
 
-すべての貢献に感謝します.
+すべての貢献に感謝します.  
 貢献者はリリースノート, リポジトリディスカッションでの謝辞, マージされたPRなどで認識される可能性があります.
 
 ## 困ったときは
@@ -138,4 +133,4 @@ Conventional Commits を英語で使用してください.
 
 - GitHub Issue で質問を開いてください.
 - ドキュメント改善や小さなバグ修正から始めてください.
-- PR ドラフトで質問してください.
+- Draft PR で質問してください.

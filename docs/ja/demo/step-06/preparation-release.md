@@ -3,55 +3,57 @@ icon: lucide/sheet
 ---
 # リリースの準備
 
-バージョン `v0.1.0`をリリースすることとして, 記述する.
+この手順は `v0.1.0` を例に説明します.
 
-## `release/v[セマンティック バージョニング]`ブランチでリリース準備
+## 目的
 
-1. `develop`ブランチより, `release/v0.1.0`ブランチを作成し、切り替える.
-    ```powershell
-    git switch -c release/v0.1.0
-    ```
-2. ブックのバージョンを設定する.  
-   VBEのイミディエイトウィンドウで,以下を実行する.
-   ```
-   ThisWorkbook.BuiltinDocumentProperties.Item("Document Version") = "v0.1.0"
-   ```
+`release` ブランチで公開前チェックを行います.
 
-    !!!ブックのバージョン  
-        この操作により, ブックのファイルプロパティのバージョン番号にバージョンが設定される.  
-        ![FileProperty](img/FileProperty.drawio.svg){width="300"}
+## 手順 1: リリースブランチを作る
 
-3. ブックのVisual Basic Editorの参照設定をリリース用に変更する.  
-    Rubberduck AddInなどの標準でインストールされていないライブラリへの参照設定を外す.
-    ![VBE](img/VBE.drawio.svg){width="600"}
+```console
+git switch develop
+git pull
+git switch -c release/v0.1.0
+```
 
-4. ブックを保存し, コミットする.
-    ```powershell
-    git commit -m "chore: prepare release v0.1.0"
-    ```
-    ```powershell
-    PS %current directory%>git commit -m "chore: prepare release v0.1.0"
-    Extract VBA code from Excel files........................................Passed
-    Check Excel book version.................................................Passed
-    cspell...................................................................Passed
-    trim trailing whitespace.................................................Passed
-    fix end of files.........................................................Passed
-    check toml...........................................(no files to check)Skipped
-    check xml............................................(no files to check)Skipped
-    detect destroyed symlinks................................................Passed
-    check json...........................................(no files to check)Skipped
-    mixed line ending........................................................Passed
-    yamllint.............................................(no files to check)Skipped
-    ```
+## 手順 2: ブック情報を更新
 
-5. プッシュする.
+1. VBE で Document Version を `v0.1.0` にします.
 
-6. `CHANGELOG.md`を作成している場合は, [変更履歴を記録する](https://keepachangelog.com/ja/1.1.0/)を参考に作成し, コミットして, プッシュする.
+    VBEのイミディエイトで以下を実行します.
+        ```
+        ThisWorkbook.BuiltinDocumentProperties.Item("Document Version")="v0.1.0"
+        ```
 
-## プルリクエストを作成し、`main`ブランチにマージ
+2. 不要な参照設定を外します.
+3. ブックを保存します.
 
-1. baseを`main`, compareを`release/v0.1.0`としたプルリクエストを作成する.
+## 手順 3: コミットしてプッシュ
 
-2. レビューなどを実施し, `main`ブランチにマージする.
+```powershell
+git add .
+git commit -m "chore: prepare release v0.1.0"
+git push -u origin release/v0.1.0
+```
 
+## 手順 4: 変更履歴を更新
+
+`CHANGELOG.md` を更新してコミットします.  
+必要なら追加でプッシュします.
+
+??? info "変更履歴を記録するのサイト"
+    [https://keepachangelog.com/ja/1.1.0/](https://keepachangelog.com/ja/1.1.0/)
+
+## 手順 5: `main` 向け PR を作る
+
+base は `main`, compare は `release/v0.1.0` を選びます.  
+PR を作成してマージします.
+
+??? info "作成したPRの画面"
     ![pullRequestMergeToMain](img/pullRequestMergeToMain.drawio.svg){width="600"}
+
+## 確認ポイント
+
+- `main` にリリース準備の変更が入る.
+- ブランチ名と Document Version が一致する.

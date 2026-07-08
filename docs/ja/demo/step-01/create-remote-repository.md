@@ -1,29 +1,39 @@
 ---
 icon: lucide/cloud-upload
 ---
-# リモート・リポジトリの作成
+# リモートリポジトリの作成
 
-1. githubの組織, 自分のprofileのページをブラウザで開く.
-2. メニューの`repository`をクリック.  
-    ![move to repository](img/move-to-repository.drawio.svg)
-3. `New`のボタンをクリック.  
-    ![repository-new-button](img/repository-new-button.drawio.svg)
-4. 以下の様に設定して, `Create repository`をクリックする.
+## 目的
 
-    - General
-        - Repository name: `pre-commit-vba-example`
-        - Description: `A demo project for the pre-commit-vba hook.`
-    - Configuration
-        - Choose visibility: `Private`
-        - Add README: `Off`
-        - Add .gitignore: `No.gitignore`
-        - Add license: `No license`
-    - Jumpstart your project with Copilot (optional)
-        - Prompt: 空欄
+GitHub に空のリポジトリを作成します.  
+この後の手順の土台になります.
 
-    ![Create a new repository](img/create-repository.drawio.svg)
+## 手順
 
-!!! note "Repository name"
+1. GitHub の組織またはプロフィールを開きます.
+2. `Repositories` をクリックします.  
+   ![move to repository](img/move-to-repository.drawio.svg)
+3. `New` をクリックします.  
+   ![repository-new-button](img/repository-new-button.drawio.svg)
+4. 次の値を入力します.
 
-    Repository name の下に入力した名前が設定可能かが表示される.  
-    ![validation check repo name](img/repo-name-validation-check.drawio.svg)
+    - Repository name: `pre-commit-vba-example`
+    - Description: `A demo project for pre-commit-vba`
+    - Visibility: `Private`
+    - Add README: `Off`
+    - Add .gitignore: `None`
+    - Add license: `None`
+
+5. `Create repository` をクリックします.  
+   ![Create a new repository](img/create-repository.drawio.svg){width="650"}
+
+## 確認ポイント
+
+- リポジトリトップが表示される.
+- 初期ファイルが 0 件で表示される.
+- URL が `pre-commit-vba-example` で終わる.
+
+## 補足
+
+同名リポジトリがある場合は作成できません.  
+その場合は名前を変更して再作成してください.

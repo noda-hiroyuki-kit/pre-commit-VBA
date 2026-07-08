@@ -50,9 +50,8 @@ repo_name = "noda-hiroyuki-kit/pre-commit-VBA"
 nav = [
     { "Home" = "index.md" },
     { "日本語" = [
-        { "ホーム" = "ja/index.md" },
-        { "getting started" = "ja/getting-started.md"},
-        { "オプションガイド" = "ja/options-guide.md"},
+        "ja/index.md",
+        "ja/getting-started.md",
         { "デモ" = [
             "ja/demo/sample-usage.md",
             "ja/demo/step-01/create-remote-repository.md",
@@ -63,15 +62,16 @@ nav = [
             "ja/demo/step-06/preparation-release.md",
             "ja/demo/step-07/release-main-branch.md"
         ]},
-        { "貢献" = "ja/contributing.md"},
-        { "行動規範" = "ja/code-of-conduct.md"},
-        { "リファレンス" = "ja/reference.md"},
+        "ja/options-guide.md",
+        "ja/reference.md",
+        "ja/contributing.md",
+        "ja/code-of-conduct.md",
    ]},
    { "English" = [
-        {"home" = "en/index.md"},
-        { "getting-started" = "en/getting-started.md"},
-        { "configuration" = "en/configuration.md"},
-        { "contributing" = "en/contributing.md"}
+        "en/index.md",
+        "en/getting-started.md",
+        "en/configuration.md",
+        "en/contributing.md"
    ]}
 ]
 

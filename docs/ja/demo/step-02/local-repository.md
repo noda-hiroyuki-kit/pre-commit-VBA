@@ -3,39 +3,31 @@ icon: lucide/folder-git-2
 ---
 # リポジトリの基本ファイル作成
 
-## ローカルリポジトリの作成
+## 目的
 
-1. ローカル リポジトリのURLをクリップボードにコピーする.  
-    ![remote repository url](img/repository-first.drawio.svg)
+ローカルリポジトリを作成します.  
+`main` / `develop` / `feature` を準備します.
 
-2. ローカルリポジトリを作成するフォルダで`git clone %コピーしたリポジトリURLを貼付%`を実行する.
+## 手順 1: クローンして移動
 
-3. 下のコマンドを実行し, リポジトリのフォルダに移動.  
-    ```powershell
+1. GitHub でリポジトリ URL をコピーします.  
+    ![remote repository url](img/repository-first.drawio.svg){width="700"}
+2. ターミナルで次を実行します.
+    ```console
+    git clone <コピーしたURL>
     cd pre-commit-vba-example
     ```
 
-## `main`ブランチを作成
+## 手順 2: `main` を準備
 
-1. 下のコマンドを実行し, 初めのコミットを行う.
-```powershell
+```console
 git commit -m "first commit" --allow-empty
-
-```
-
-2. 下のコマンドで, ブランチ名を`main`に変更する.
-```powershell
 git branch -M main
-```
-
-6. 下のコマンドで, リモートリポジトリにプッシュ.
-```powershell
 git push -u origin main
 ```
-
-!!!Note
+??? tip
     `git status`を実行すると以下の様に表示され, `main`ブランチにいて, リモートブランチと同期できていることが確認できる.
-    ```powershell
+    ```console
     PS %current working directory%> git status
     On branch main
     Your branch is up to date with 'origin/main'.
@@ -43,26 +35,15 @@ git push -u origin main
     nothing to commit, working tree clean
     ```
 
-## `develop`ブランチを作成
+## 手順 3: `develop` を準備
 
-7. 下のコマンドで, `develop`ブランチを作成.
-```powershell
-git branch develop
-```
-
-8. 下のコマンドで, `develop`ブランチへ移動.
-```powershell
-git checkout develop
-```
-
-9. 下のコマンドで, リモートリポジトリにプッシュ.
-```powershell
+```console
+git switch -c develop
 git push -u origin develop
 ```
-
-!!!Note
+??? tip
     `git status`を実行すると以下の様に表示され, `develop`ブランチにいて, リモートブランチと同期できていることが確認できる.
-    ```powershell
+    ```console
     PS %current working directory%> git status
     On branch develop
     Your branch is up to date with 'origin/develop'.
@@ -70,68 +51,55 @@ git push -u origin develop
     nothing to commit, working tree clean
     ```
 
+## 手順 4: 作業ブランチを準備
 
-## `feature/setup-repository`ブランチを作成
-
-
-1. 下のコマンドで, `feature/setup-repository`ブランチを作成.
-```powershell
-git branch feature/setup-repository
-```
-
-2. 下のコマンドで, `feature/setup-repository`ブランチへ移動.
-```powershell
-git checkout feature/setup-repository
-```
-
-3. 下のコマンドで, リモートリポジトリにプッシュ.
-```powershell
+```console
+git switch -c feature/setup-repository
 git push -u origin feature/setup-repository
 ```
 
-## `feature/setup-repository`ブランチにリポジトリの基本ファイルを作成
+## 手順 5: 基本ファイルを追加
 
-1. `README.md`を作成し, コミットする.
+1. `README.md` を作成します.
+
     ```markdown title="README.md"
     # pre-commit-vba-example
 
-    This repository is a demo for how to use [`pre-commit-vba`](https://github.com/noda-hiroyuki-kit/pre-commit-VBA).
-    ```
-    ```powershell
-    git add .
-    git commit -m "docs: add README with project description"
+    This repository is a demo project for pre-commit-vba.
     ```
 
-2. `.gitignore`を作成し, コミットする.
+2. `.gitignore` を作成します.
 
-    ``` title=".gitignore"
+    ```text title=".gitignore"
     ~$*
     ```
-    ```powershell
-    git add .
-    git commit -m "chore: add .gitignore"
-    ```
-    excelのワークブックを開くと, `~$`で始まるロックファイルが生成される.  
-    ワークブックを開いたままコミットなどを容易にするため, ロックファイルを無視する設定を追加する.
 
-3. `.github/ISSUE_TEMPLATE/feature_request.md`を作成し, コミットする.
-    ```markdown title=".github/ISSUE_TEMPLATE/feature_request.md"
-    --8<-- ".github/ISSUE_TEMPLATE/feature_request.md"
-    ```
-    ```powershell
-    git add .
-    git commit -m "chore: add GitHub issue template for feature requests"
-    ```
+3. 次のテンプレートを配置します.
+    - `.github/ISSUE_TEMPLATE/feature_request.md`  
+    - `.github/ISSUE_TEMPLATE/bug_report.md`
 
-4. `.github/ISSUE_TEMPLATE/bug_report.md`を作成し, コミットする.
-    ```markdown title=".github/ISSUE_TEMPLATE/bug_report.md"
-    --8<-- ".github/ISSUE_TEMPLATE/bug_report.md"
-    ```
-    ```powershell
+    ??? info "本リポジトリの`.github/ISSUE_TEMPLATE/feature_request.md`"
+
+        ```markdown title=".github/ISSUE_TEMPLATE/feature_request.md"
+        --8<-- ".github/ISSUE_TEMPLATE/feature_request.md"
+        ```
+
+    ??? info "本リポジトリの`.github/ISSUE_TEMPLATE/bug_report.md`"
+        ```markdown title=".github/ISSUE_TEMPLATE/bug_report.md"
+        --8<-- ".github/ISSUE_TEMPLATE/bug_report.md"
+        ```
+
+
+4. コミットしてプッシュします.
+
+    ```console
     git add .
-    git commit -m "chore: add GitHub issue template for bug reports"
-    ```
-5. 下のコマンドで, リモートリポジトリにプッシュ.
-    ```powershell
+    git commit -m "chore: add initial repository files"
     git push -u origin feature/setup-repository
     ```
+
+## 確認ポイント
+
+- `git status` が clean を示す.
+- GitHub 上に 3 ブランチが存在する.
+- `feature/setup-repository` に基本ファイルがある.
