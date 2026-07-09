@@ -70,8 +70,20 @@ nav = [
    { "English" = [
         "en/index.md",
         "en/getting-started.md",
-        "en/configuration.md",
-        "en/contributing.md"
+        { "demo" = [
+            "en/demo/sample-usage.md",
+            "en/demo/step-01/create-remote-repository.md",
+            "en/demo/step-02/local-repository.md",
+            "en/demo/step-03/pull-request.md",
+            "en/demo/step-04/setup-dev-environment.md",
+            "en/demo/step-05/create-excel-app.md",
+            "en/demo/step-06/preparation-release.md",
+            "en/demo/step-07/release-main-branch.md"
+        ]},
+        "en/options-guide.md",
+        "en/reference.md",
+        "en/contributing.md",
+        "en/code-of-conduct.md",
    ]}
 ]
 

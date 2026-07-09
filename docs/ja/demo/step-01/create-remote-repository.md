@@ -12,9 +12,9 @@ GitHub に空のリポジトリを作成します.
 
 1. GitHub の組織またはプロフィールを開きます.
 2. `Repositories` をクリックします.  
-   ![move to repository](img/move-to-repository.drawio.svg)
+   ![move to repository](../../../img/demo/step-01/move-to-repository.drawio.svg)
 3. `New` をクリックします.  
-   ![repository-new-button](img/repository-new-button.drawio.svg)
+   ![repository-new-button](../../../img/demo/step-01/repository-new-button.drawio.svg)
 4. 次の値を入力します.
 
     - Repository name: `pre-commit-vba-example`
@@ -25,7 +25,7 @@ GitHub に空のリポジトリを作成します.
     - Add license: `None`
 
 5. `Create repository` をクリックします.  
-   ![Create a new repository](img/create-repository.drawio.svg){width="650"}
+   ![Create a new repository](../../../img/demo/step-01/create-repository.drawio.svg){width="650"}
 
 ## 確認ポイント
 

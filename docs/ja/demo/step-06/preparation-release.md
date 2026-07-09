@@ -27,6 +27,10 @@ git switch -c release/v0.1.0
         ```
 
 2. 不要な参照設定を外します.
+
+    ??? info "参照設定"
+        ![VBE](img/VBE.drawio.svg){width="650"}
+
 3. ブックを保存します.
 
 ## 手順 3: コミットしてプッシュ

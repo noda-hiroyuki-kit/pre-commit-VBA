@@ -1,24 +1,24 @@
 ---
 icon: lucide/folder-git-2
 ---
-# リポジトリの基本ファイル作成
+# Create Basic Repository Files
 
-## 目的
+## Objective
 
-ローカルリポジトリを作成します.  
-`main` / `develop` / `feature` を準備します.
+Create a local repository.  
+Prepare `main` / `develop` / `feature` branches.
 
-## 手順 1: クローンして移動
+## Step 1: Clone and Move
 
-1. GitHub でリポジトリ URL をコピーします.  
+1. Copy the repository URL on GitHub.  
     ![remote repository url](../../../img/demo/step-02/repository-first.drawio.svg){width="700"}
-2. ターミナルで次を実行します.
+2. Run the following in a terminal.
     ```console
-    git clone <コピーしたURL>
+    git clone <copied-URL>
     cd pre-commit-vba-example
     ```
 
-## 手順 2: `main` を準備
+## Step 2: Prepare `main`
 
 ```console
 git commit -m "first commit" --allow-empty
@@ -26,7 +26,7 @@ git branch -M main
 git push -u origin main
 ```
 ??? tip
-    `git status`を実行すると以下の様に表示され, `main`ブランチにいて, リモートブランチと同期できていることが確認できる.
+    Running `git status` should show the following, which confirms that you are on the `main` branch and synced with the remote branch.
     ```console
     PS %current working directory%> git status
     On branch main
@@ -35,14 +35,14 @@ git push -u origin main
     nothing to commit, working tree clean
     ```
 
-## 手順 3: `develop` を準備
+## Step 3: Prepare `develop`
 
 ```console
 git switch -c develop
 git push -u origin develop
 ```
 ??? tip
-    `git status`を実行すると以下の様に表示され, `develop`ブランチにいて, リモートブランチと同期できていることが確認できる.
+    Running `git status` should show the following, which confirms that you are on the `develop` branch and synced with the remote branch.
     ```console
     PS %current working directory%> git status
     On branch develop
@@ -51,16 +51,16 @@ git push -u origin develop
     nothing to commit, working tree clean
     ```
 
-## 手順 4: 作業ブランチを準備
+## Step 4: Prepare a Working Branch
 
 ```console
 git switch -c feature/setup-repository
 git push -u origin feature/setup-repository
 ```
 
-## 手順 5: 基本ファイルを追加
+## Step 5: Add Basic Files
 
-1. `README.md` を作成します.
+1. Create `README.md`.
 
     ```markdown title="README.md"
     # pre-commit-vba-example
@@ -68,29 +68,29 @@ git push -u origin feature/setup-repository
     This repository is a demo project for pre-commit-vba.
     ```
 
-2. `.gitignore` を作成します.
+2. Create `.gitignore`.
 
     ```text title=".gitignore"
     ~$*
     ```
 
-3. 次のテンプレートを配置します.
+3. Place the following templates.
     - `.github/ISSUE_TEMPLATE/feature_request.md`  
     - `.github/ISSUE_TEMPLATE/bug_report.md`
 
-    ??? info "本リポジトリの`.github/ISSUE_TEMPLATE/feature_request.md`"
+    ??? info "`.github/ISSUE_TEMPLATE/feature_request.md` in this repository"
 
         ```markdown title=".github/ISSUE_TEMPLATE/feature_request.md"
         --8<-- ".github/ISSUE_TEMPLATE/feature_request.md"
         ```
 
-    ??? info "本リポジトリの`.github/ISSUE_TEMPLATE/bug_report.md`"
+    ??? info "`.github/ISSUE_TEMPLATE/bug_report.md` in this repository"
         ```markdown title=".github/ISSUE_TEMPLATE/bug_report.md"
         --8<-- ".github/ISSUE_TEMPLATE/bug_report.md"
         ```
 
 
-4. コミットしてプッシュします.
+4. Commit and push.
 
     ```console
     git add .
@@ -98,8 +98,8 @@ git push -u origin feature/setup-repository
     git push -u origin feature/setup-repository
     ```
 
-## 確認ポイント
+## Checkpoints
 
-- `git status` が clean を示す.
-- GitHub 上に 3 ブランチが存在する.
-- `feature/setup-repository` に基本ファイルがある.
+- `git status` shows a clean working tree.
+- Three branches exist on GitHub.
+- Basic files are present in `feature/setup-repository`.
