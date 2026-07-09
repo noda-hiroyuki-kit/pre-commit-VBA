@@ -41,6 +41,22 @@ git commit -m "chore: prepare release v0.1.0"
 git push -u origin release/v0.1.0
 ```
 
+<!-- termynal -->
+```
+$ git commit -m "chore: prepare release v0.1.0"
+Extract VBA code from Excel files........................................Passed
+Check Excel book version.................................................Passed
+cspell...................................................................Passed
+trim trailing whitespace.................................................Passed
+fix end of files.........................................................Passed
+check toml...........................................(no files to check)Skipped
+check xml............................................(no files to check)Skipped
+detect destroyed symlinks................................................Passed
+check json...........................................(no files to check)Skipped
+mixed line ending........................................................Passed
+yamllint.............................................(no files to check)Skipped
+```
+
 ## 手順 4: 変更履歴を更新
 
 `CHANGELOG.md` を更新してコミットします.  
