@@ -24,7 +24,7 @@ It is designed to run as a pre-commit hook so VBA code extraction and validation
     [zensical](https://zensical.org/)により, 本ページを生成している.  
     zensicalでは, 多言語切り替え機能が未対応である. 機能実装後, 対応を行う予定である.  
 
-    !!!Note
+    !!! Note
         zensical backlog as follows:  
         zensicalのバックログは, 以下のとおり:
 
