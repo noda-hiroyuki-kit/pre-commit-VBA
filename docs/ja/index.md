@@ -5,7 +5,7 @@ icon: lucide/house
 # pre-commit-vba
 
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/noda-hiroyuki-kit/pre-commit-vba-example/blob/main/LICENSE)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/noda-hiroyuki-kit/pre-commit-VBA/blob/main/LICENSE)
 
 `pre-commit-vba` は, Excel ブックから VBA コードを抽出して Git で管理しやすくするための Python ツールです.
 
