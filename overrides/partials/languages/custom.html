@@ -6,7 +6,7 @@
 {% macro override(key) %}{{ {
   "source.file.date.created": "作成日",
   "source.file.date.updated": "更新日"
-}.get(key, "") }}{% endmacro %}
+}[key] }}{% endmacro %}
 
 <!-- Re-export translations -->
 {% macro t(key) %}{{
