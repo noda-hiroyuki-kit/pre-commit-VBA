@@ -71,7 +71,7 @@ base は `main`, compare は `release/v0.1.0` を選びます.
 PR を作成してマージします.
 
 ??? info "作成したPRの画面"
-    ![pullRequestMergeToMain](img/pullRequestMergeToMain.drawio.svg){width="600"}
+    ![pullRequestMergeToMain](../../../img/demo/step-06/pullRequestMergeToMain.drawio.svg){width="600"}
 
 ## 確認ポイント
 
