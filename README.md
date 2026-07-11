@@ -5,6 +5,8 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENCE)
 
+[Document](https://noda-hiroyuki-kit.github.io/pre-commit-VBA/)
+
 ## Overview
 
 This is a pre-commit hook that extracts VBA code from Excel files to manage Excel VBA code with git.  
@@ -16,7 +18,7 @@ Add the following to your `.pre-commit-config.yaml`:
 
 ```
   - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
-    rev: v0.3.9
+    rev: v0.3.10
     hooks:
       - id: extract-vba-code
       - id: check-excel-book-version
@@ -66,12 +68,11 @@ If you can use `uv`, `mise` is not required.
         ```
         ---
         repos:
-        - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
-          rev: v0.3.9
-          hooks:
-            - id: extract-vba-code
-            - id: check-excel-book-version
-
+          - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
+            rev: v0.3.10
+            hooks:
+              - id: extract-vba-code
+              - id: check-excel-book-version
         ```
 ### Usage by running `pre_commit_vba.py` as a command
 
