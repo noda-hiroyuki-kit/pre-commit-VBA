@@ -33,9 +33,6 @@ dev = [
 [tool.uv]
 exclude-newer = "10 days"
 
-[tool.uv.exclude-newer-package]
-pre-commit-uv = "2026-06-30T15:00:00Z"
-
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.
 exclude = [
