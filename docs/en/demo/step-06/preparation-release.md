@@ -23,7 +23,7 @@ git switch -c release/v0.1.0
 
     Run the following in the VBE Immediate window.
         ```
-        ThisWorkbook.BuiltinDocumentProperties.Item("Document Version")="v0.1.0"
+        ThisWorkbook.BuiltinDocumentProperties("Document version")="v0.1.0"
         ```
 
 2. Remove unnecessary references.

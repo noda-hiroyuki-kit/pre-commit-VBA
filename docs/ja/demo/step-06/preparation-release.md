@@ -23,7 +23,7 @@ git switch -c release/v0.1.0
 
     VBEのイミディエイトで以下を実行します.
         ```
-        ThisWorkbook.BuiltinDocumentProperties.Item("Document Version")="v0.1.0"
+        ThisWorkbook.BuiltinDocumentProperties("Document version")="v0.1.0"
         ```
 
 2. 不要な参照設定を外します.
