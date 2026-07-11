@@ -181,6 +181,10 @@ $ check [OPTIONS]
 * `--version`
 * `--help`: Show this message and exit.
 
+## Community
+
+See [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
+
 ## References
 
 ### pre_commit_vba.py

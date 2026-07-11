@@ -47,10 +47,45 @@ repo_name = "noda-hiroyuki-kit/pre-commit-VBA"
 # can be defined using TOML syntax.
 #
 # Read more: https://zensical.org/docs/setup/navigation/
-# nav = [
-#   { "Get started" = "index.md" },
-#   { "Markdown in 5min" = "markdown.md" },
-# ]
+nav = [
+    { "Home" = "index.md" },
+    { "日本語" = [
+        "ja/index.md",
+        "ja/getting-started.md",
+        { "デモ" = [
+            "ja/demo/sample-usage.md",
+            "ja/demo/step-01/create-remote-repository.md",
+            "ja/demo/step-02/local-repository.md",
+            "ja/demo/step-03/pull-request.md",
+            "ja/demo/step-04/setup-dev-environment.md",
+            "ja/demo/step-05/create-excel-app.md",
+            "ja/demo/step-06/preparation-release.md",
+            "ja/demo/step-07/release-main-branch.md"
+        ]},
+        "ja/options-guide.md",
+        "ja/reference.md",
+        "ja/contributing.md",
+        "ja/code-of-conduct.md",
+   ]},
+   { "English" = [
+        "en/index.md",
+        "en/getting-started.md",
+        { "demo" = [
+            "en/demo/sample-usage.md",
+            "en/demo/step-01/create-remote-repository.md",
+            "en/demo/step-02/local-repository.md",
+            "en/demo/step-03/pull-request.md",
+            "en/demo/step-04/setup-dev-environment.md",
+            "en/demo/step-05/create-excel-app.md",
+            "en/demo/step-06/preparation-release.md",
+            "en/demo/step-07/release-main-branch.md"
+        ]},
+        "en/options-guide.md",
+        "en/reference.md",
+        "en/contributing.md",
+        "en/code-of-conduct.md",
+   ]}
+]
 
 # With the "extra_css" option you can add your own CSS styling to customize
 # your Zensical project according to your needs. You can add any number of
@@ -111,7 +146,7 @@ custom_dir = "overrides"
 # Read more:
 # - https://zensical.org/docs/setup/language/
 #
-language = "ja"
+language = "custom"
 
 # Zensical provides a number of feature toggles that change the behavior
 # of the documentation site.
@@ -125,13 +160,13 @@ features = [
     # will generate an edit button for the page. This works for common
     # repository hosting services.
     # https://zensical.org/docs/setup/repository/#content-actions
-    #"content.action.edit",
+    # "content.action.edit",
 
     # If you have a repository configured and turn on this feature, Zensical
     # will generate a button that allows the user to view the Markdown
     # code for the current page.
     # https://zensical.org/docs/setup/repository/#content-actions
-    #"content.action.view",
+    # "content.action.view",
 
     # Code annotations allow you to add an icon with a tooltip to your
     # code blocks to provide explanations at crucial points.
@@ -198,7 +233,7 @@ features = [
     # In order to provide a better user experience on slow connections when
     # using instant navigation, a progress indicator can be enabled.
     # https://zensical.org/docs/setup/navigation/#progress-indicator
-    #"navigation.instant.progress",
+    "navigation.instant.progress",
 
     # When navigation paths are activated, a breadcrumb navigation is rendered
     # above the title of each page
@@ -244,12 +279,12 @@ features = [
     # When anchor following for the table of contents is enabled, the sidebar
     # is automatically scrolled so that the active anchor is always visible.
     # https://zensical.org/docs/setup/navigation/#anchor-following
-    # "toc.follow",
+    "toc.follow",
 
     # When navigation integration for the table of contents is enabled, it is
     # always rendered as part of the navigation sidebar on the left.
     # https://zensical.org/docs/setup/navigation/#navigation-integration
-    #"toc.integrate",
+    "toc.integrate",
 ]
 
 # ----------------------------------------------------------------------------
@@ -337,6 +372,7 @@ generic = true
 [project.markdown_extensions.pymdownx.emoji]
 emoji_generator = "zensical.extensions.emoji.to_svg"
 emoji_index = "zensical.extensions.emoji.twemoji"
+options.custom_icons = ["overrides/.icons"]
 [project.markdown_extensions.pymdownx.highlight]
 anchor_linenums = true
 line_spans = "__span"
@@ -345,6 +381,7 @@ pygments_lang_class = true
 [project.markdown_extensions.pymdownx.keys]
 [project.markdown_extensions.pymdownx.magiclink]
 [project.markdown_extensions.pymdownx.mark]
+[project.markdown_extensions.pymdownx.snippets]
 [project.markdown_extensions.pymdownx.smartsymbols]
 [project.markdown_extensions.pymdownx.superfences]
 custom_fences = [
@@ -356,3 +393,9 @@ combine_header_slug = true
 [project.markdown_extensions.pymdownx.tasklist]
 custom_checkbox = true
 [project.markdown_extensions.pymdownx.tilde]
+[project.markdown_extensions.termynal]
+include_assets = true
+title = "PowerShell"
+buttons = "windows"
+prompt_literal_start = ["$"]
+# animate = true
