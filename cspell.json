@@ -10,7 +10,7 @@
         "uv.lock"
     ],
     "words": [
-        "Abstra",
+        "abstra",
         "Addin",
         "addopts",
         "arithmatex",
@@ -113,6 +113,7 @@
         "Streamlit",
         "superfences",
         "tasklist",
+        "termynal",
         "testpaths",
         "twemoji",
         "typer",

@@ -1,1 +1,5 @@
+---
+icon: lucide/settings
+---
+
 # Configuration

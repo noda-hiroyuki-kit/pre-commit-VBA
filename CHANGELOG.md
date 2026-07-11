@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add project documentation.  
+  プロジェクトドキュメントを追加.
+
+### Changed
+
+- Update docs workflow to use `uv` 0.11.24.  
+  ドキュメント用ワークフローで使用する `uv` を 0.11.24 に更新.
+
 ## [0.3.9] - 2026-07-06
 
 ### Changed
