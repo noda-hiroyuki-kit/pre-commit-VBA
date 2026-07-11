@@ -14,12 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Update docs workflow to use `uv` 0.11.24.  
-  ドキュメント用ワークフローで使用する `uv` を 0.11.24 に更新.
 - Normalize `.pre-commit-hooks.yaml` descriptions to scalar strings for manifest validation compatibility.  
   マニフェスト検証との互換性のため、`.pre-commit-hooks.yaml` の description をスカラー文字列に正規化.
 - Raise the minimum `uv_build` requirement from 0.11.24 to 0.11.26. ([#96])  
   `uv_build` の最小要件を0.11.24から0.11.26へ引き上げ.
+- Update docs workflow to use `uv` 0.11.26.  
+  ドキュメント用ワークフローで使用する `uv` を 0.11.26 に更新.
 
 ## [0.3.9] - 2026-07-06
 
