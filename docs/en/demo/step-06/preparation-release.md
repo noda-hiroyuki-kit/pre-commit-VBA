@@ -19,11 +19,11 @@ git switch -c release/v0.1.0
 
 ## Step 2: Update Workbook Information
 
-1. In the VBE, set Document Version to `v0.1.0`.
+1. In the VBE, set Document version to `v0.1.0`.
 
     Run the following in the VBE Immediate window.
         ```
-        ThisWorkbook.BuiltinDocumentProperties.Item("Document Version")="v0.1.0"
+        ThisWorkbook.BuiltinDocumentProperties.Item("Document version")="v0.1.0"
         ```
 
 2. Remove unnecessary references.
