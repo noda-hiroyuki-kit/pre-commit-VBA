@@ -19,11 +19,11 @@ git switch -c release/v0.1.0
 
 ## 手順 2: ブック情報を更新
 
-1. VBE で Document Version を `v0.1.0` にします.
+1. VBE で Document version を `v0.1.0` にします.
 
     VBEのイミディエイトで以下を実行します.
         ```
-        ThisWorkbook.BuiltinDocumentProperties("Document version")="v0.1.0"
+        ThisWorkbook.BuiltinDocumentProperties.Item("Document version")="v0.1.0"
         ```
 
 2. 不要な参照設定を外します.
