@@ -41,17 +41,17 @@ Integrate the changes from `feature/setup-repository` into `develop`.
         ```
         ![open a pull request](../../../img/demo/step-03/open-a-pull-request.drawio.svg)
 
-7. Review the content and click `Merge pull request`.
+8. Review the content and click `Merge pull request`.
 
     ??? info "Operation screen"
         ![merge pull request](../../../img/demo/step-03/merge-pull-request.drawio.svg){width="600"}
 
-8. Click `Confirm merge`.
+9. Click `Confirm merge`.
 
     ??? info "Operation screen"
         ![confirm merge](../../../img/demo/step-03/confirm-merge.drawio.svg){width="600"}
 
-9. Use `Delete branch` to remove the remote branch.
+10. Use `Delete branch` to remove the remote branch.
 
     ??? info "Operation screen"
         ![delete-branch](../../../img/demo/step-03/delete-branch.drawio.svg){width="600"}

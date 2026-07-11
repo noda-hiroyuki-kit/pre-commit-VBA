@@ -41,17 +41,17 @@ icon: lucide/git-pull-request
         ```
         ![open a pull request](img/open-a-pull-request.drawio.svg)
 
-7. 内容を確認して `Merge pull request` を押します.
+8. 内容を確認して `Merge pull request` を押します.
 
     ??? info "操作の画面"
         ![merge pull request](img/merge-pull-request.drawio.svg){width="600"}
 
-8. `Confirm merge` を押します.
+9. `Confirm merge` を押します.
 
     ??? info "操作の画面"
         ![confirm merge](img/confirm-merge.drawio.svg){width="600"}
 
-9. `Delete branch` でリモートブランチを削除します.
+10. `Delete branch` でリモートブランチを削除します.
 
     ??? info "操作の画面"
         ![delete-branch](img/delete-branch.drawio.svg){width="600"}
