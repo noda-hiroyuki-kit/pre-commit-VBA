@@ -1,19 +1,19 @@
 [project]
 name = "pre-commit-vba"
-version = "0.3.9"
+version = "0.3.10"
 description = "Extracts VBA code from Excel files for managing VBA code in git and checks workbook version."
 readme = "README.md"
 requires-python = ">=3.14,<3.15"
 dependencies = [
     "pywin32>=312;platform_system == 'Windows'",
-    "typer>=0.26.7",
+    "typer>=0.26.8",
 ]
 
 [project.scripts]
 pre-commit-vba = "pre_commit_vba.pre_commit_vba:app"
 
 [build-system]
-requires = ["uv_build>=0.11.24,<0.12"]
+requires = ["uv_build>=0.11.26,<0.12"]
 build-backend = "uv_build"
 
 [dependency-groups]
@@ -32,9 +32,6 @@ dev = [
 
 [tool.uv]
 exclude-newer = "10 days"
-
-[tool.uv.exclude-newer-package]
-pre-commit-uv = "2026-06-30T15:00:00Z"
 
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.

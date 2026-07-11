@@ -7,7 +7,7 @@ extract code files from excel workbook with codes.
 # requires-python = ">=3.14"
 # dependencies = [
 #   "pywin32>=312",
-#   "typer>=0.26.7",
+#   "typer>=0.26.8",
 # ]
 # ///
 import re
@@ -90,7 +90,7 @@ def get_dispatch_ex() -> DispatchExFactory:
     return cast("DispatchExFactory", DispatchEx)
 
 
-__version__ = "0.3.9"
+__version__ = "0.3.10"
 
 
 class UndefineTypeError(Exception):

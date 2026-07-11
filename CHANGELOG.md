@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.10] - 2026-07-12
+
 ### Added
 
 - Add project documentation.  
@@ -14,8 +16,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Update docs workflow to use `uv` 0.11.24.  
-  ドキュメント用ワークフローで使用する `uv` を 0.11.24 に更新.
+- Normalize `.pre-commit-hooks.yaml` descriptions to scalar strings for manifest validation compatibility.  
+  マニフェスト検証との互換性のため、`.pre-commit-hooks.yaml` の description をスカラー文字列に正規化.
+- Raise the minimum `typer` requirement from 0.26.7 to 0.26.8. ([#95])  
+  `typer` の最小要件を0.26.7から0.26.8へ引き上げ.
+- Raise the minimum `uv_build` requirement from 0.11.24 to 0.11.26. ([#96])  
+  `uv_build` の最小要件を0.11.24から0.11.26へ引き上げ.
+- Update docs workflow to use `uv` 0.11.26.  
+  ドキュメント用ワークフローで使用する `uv` を 0.11.26 に更新.
 
 ## [0.3.9] - 2026-07-06
 
@@ -198,7 +206,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release as first version
 
-[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.9...HEAD
+[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.10...HEAD
+[0.3.10]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.9...v0.3.10
 [0.3.9]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.8...v0.3.9
 [0.3.8]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.7...v0.3.8
 [0.3.7]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.6...v0.3.7
@@ -240,3 +249,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#87]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/87
 [#88]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/88
 [#89]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/89
+[#95]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/95
+[#96]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/96
