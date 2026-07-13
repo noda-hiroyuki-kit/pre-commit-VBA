@@ -399,3 +399,7 @@ title = "PowerShell"
 buttons = "windows"
 prompt_literal_start = ["$"]
 # animate = true
+[project.markdown_extensions.zensical.extensions.macros]
+module_name = "macros"
+on_error_fail = true
+on_undefined = "strict"

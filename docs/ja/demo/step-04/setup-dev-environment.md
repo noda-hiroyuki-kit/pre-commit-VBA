@@ -33,7 +33,7 @@ uv run pre-commit install
         ---
         repos:
           - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
-            rev: v0.3.10
+            rev: v{{project_version}}
             hooks:
               - id: extract-vba-code
               - id: check-excel-book-version
