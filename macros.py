@@ -13,7 +13,7 @@ class MacrosEnv(Protocol):
 
 def define_env(env: MacrosEnv) -> None:
     """Define variables and macros."""
-    pyproject = Path("pyproject.toml")
+    pyproject = Path(__file__).resolve().parent / "pyproject.toml"
     data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
 
     project = data.get("project")
