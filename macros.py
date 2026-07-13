@@ -6,11 +6,11 @@ from typing import Protocol
 
 
 class MissingProjectSectionError(RuntimeError):
-    """Raised when pyproject.toml does not contain a [project] section."""
+    """Raised when pyproject.toml is missing or has an invalid [project] table."""
 
     def __init__(self) -> None:
-        """Initialize with a clear missing-project-section message."""
-        super().__init__("[project] section is missing in pyproject.toml")
+        """Initialize with a clear missing-or-invalid-project-table message."""
+        super().__init__("pyproject.toml is missing a valid [project] table")
 
 
 class InvalidProjectVersionError(RuntimeError):
