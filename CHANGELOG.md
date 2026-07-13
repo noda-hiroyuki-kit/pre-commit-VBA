@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Sync documentation version display with pyproject.toml by loading [project].version through Zensical macros.  
-  Zensical の macros で [project].version を読み込み、ドキュメントのバージョン表示を pyproject.toml と同期。
+- Sync documentation version display with `pyproject.toml` by loading `[project].version` through Zensical macros.  
+  Zensical の macros で `[project].version` を読み込み、ドキュメントのバージョン表示を `pyproject.toml` と同期。
 
 ## [0.3.10] - 2026-07-12
 
