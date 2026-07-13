@@ -1,4 +1,4 @@
-"""Part of the mkdocs-macros-plugin project."""
+"""Zensical macros for syncing docs version with pyproject metadata."""
 
 import tomllib
 from pathlib import Path
