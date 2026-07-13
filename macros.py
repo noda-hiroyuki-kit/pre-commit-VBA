@@ -5,6 +5,22 @@ from pathlib import Path
 from typing import Protocol
 
 
+class MissingProjectSectionError(RuntimeError):
+    """Raised when pyproject.toml does not contain a [project] section."""
+
+    def __init__(self) -> None:
+        """Initialize with a clear missing-project-section message."""
+        super().__init__("[project] section is missing in pyproject.toml")
+
+
+class InvalidProjectVersionError(RuntimeError):
+    """Raised when [project].version is missing or not a string."""
+
+    def __init__(self) -> None:
+        """Initialize with a clear invalid-version message."""
+        super().__init__("[project].version must be a string in pyproject.toml")
+
+
 class MacrosEnv(Protocol):
     """Minimal interface required by define_env."""
 
@@ -18,12 +34,10 @@ def define_env(env: MacrosEnv) -> None:
 
     project = data.get("project")
     if not isinstance(project, dict):
-        msg = "[project] section is missing in pyproject.toml"
-        raise KeyError(msg)
+        raise MissingProjectSectionError
 
     version = project.get("version")
     if not isinstance(version, str):
-        msg = "[project].version must be a string in pyproject.toml"
-        raise TypeError(msg)
+        raise InvalidProjectVersionError
 
     env.variables["project_version"] = version
