@@ -27,8 +27,9 @@ git push -u origin main
 ```
 ??? tip
     Running `git status` should show the following, which confirms that you are on the `main` branch and synced with the remote branch.
+    <!-- termynal -->
     ```console
-    PS %current working directory%> git status
+    $ git status
     On branch main
     Your branch is up to date with 'origin/main'.
 
@@ -43,8 +44,9 @@ git push -u origin develop
 ```
 ??? tip
     Running `git status` should show the following, which confirms that you are on the `develop` branch and synced with the remote branch.
+    <!-- termynal -->
     ```console
-    PS %current working directory%> git status
+    $ git status
     On branch develop
     Your branch is up to date with 'origin/develop'.
 
