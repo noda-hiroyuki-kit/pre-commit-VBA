@@ -4,7 +4,7 @@ This skill defines how the Copilot coding agent should handle pull request revie
 
 ## Overview
 
-When a reviewer leaves a comment on a pull request, follow this skill to analyze the feedback, make appropriate changes, and reply with a clear explanation of what was done.
+When a reviewer leaves comments on a pull request, follow this skill to analyze each comment, propose a minimal fix, and proceed only after user approval.
 
 ## Trigger Conditions
 
@@ -12,31 +12,46 @@ When a reviewer leaves a comment on a pull request, follow this skill to analyze
 - A reviewer requests changes via a GitHub PR review.
 - A collaborator mentions `@copilot` in a PR comment asking for a fix or clarification.
 
+## Core Rule: One Comment at a Time with User Approval
+
+- Process review comments strictly one by one.
+- For each comment, first provide analysis and a proposed change.
+- Ask the user whether to adopt that review comment.
+- Implement changes only when the user explicitly approves.
+- If the user rejects a comment, do not implement it and move to the next comment.
+
 ## Step-by-Step Response Procedure
 
-### 1. Read and Understand the Review Comment
+### 1. Select One Review Comment
+
+- Pick a single unresolved review comment.
+- Copy the exact concern and referenced location.
+- Do not bundle multiple comments into one change.
+
+### 2. Read and Understand the Comment
 
 - Read the full comment carefully, including any referenced code lines.
 - Identify the exact concern: bug, style violation, missing test, documentation gap, or design question.
-- If the comment is ambiguous, reply asking for clarification before making any changes.
+- If the comment is ambiguous, ask for clarification before proposing code changes.
 
-### 2. Inspect the Relevant Code
+### 3. Inspect the Relevant Code
 
 - Open the files and line ranges referenced in the comment.
-- Understand the surrounding context (imports, class structure, callers, tests).
-- Check whether the issue also exists in related files.
+- Understand surrounding context (imports, class structure, callers, tests).
+- Check whether the same issue exists in related files.
 
-### 3. Plan the Fix
+### 4. Propose a Minimal Fix and Ask for Decision
 
-- Determine the minimal change that addresses the review concern without introducing unrelated modifications.
-- If the fix is non-trivial, outline the approach in a reply comment before implementing.
-- Do not make sweeping refactors unless explicitly requested by the reviewer.
+- Propose the smallest change that addresses the concern without unrelated modifications.
+- If the fix is non-trivial, include a short implementation outline.
+- Ask the user: adopt or reject this review comment.
+- Wait for explicit user approval before editing files.
 
-### 4. Implement the Fix
+### 5. Implement Only Approved Comments
 
 Follow the project conventions below:
 
-#### Language & Runtime
+#### Language and Runtime
 
 - Python 3.14
 - Managed with `uv`; **never** manually edit `uv.lock`
@@ -51,8 +66,8 @@ Follow the project conventions below:
 
 - Framework: `pytest`
 - Test files: `test_*.py` under `tests/`
-- Coverage target: ≥ 80%
-- Run the full test suite before committing: `uvx tox -e 314`
+- Coverage target: >= 80%
+- Run the full test suite before committing: `uv run pytest .`
 - Add or update tests whenever behavior changes.
 
 #### Commit Messages (Conventional Commits, English)
@@ -74,43 +89,62 @@ Follow the project conventions below:
 | `hotfix/v<semver>` | Critical bug fix on a release |
 | `release/v<semver>` | Release preparation |
 
-### 5. Validate Changes
+### 6. Validate Approved Changes
 
 Run all checks in order:
 
 ```powershell
-uvx ruff format
-uvx ruff check
-uvx mypy src/
-uvx tox -e 314
+uv run ruff format
+uv run ruff check
+uv run mypy src/
+uv run pytest .
+uv run pytest tests/test_pre_commit_vba.py::TestExtractCommandExistenceFiles
 ```
 
 All checks must pass before pushing.
 
-### 6. Commit and Push
+### 7. Commit and Push Approved Work
 
-- Use a Conventional Commits message that references the review concern.
+- Commit only changes for comments approved by the user.
+- Use a Conventional Commits message that references the approved review concern.
 - Example: `fix: handle empty workbook path in extract command`
 - Do **not** modify `.env` files or `uv.lock` manually.
 
-### 7. Reply to the Review Comment
+### 8. Prepare Review Reply for User Posting
 
-Post a reply that includes:
+- Do not post review comments directly from the agent.
+- The user will paste the final review response in the browser.
+- Provide the response text in English using one of the templates below.
 
-1. **What was changed** — a brief description of the fix.
-2. **Why** — the reasoning, referencing the reviewer's concern.
-3. **How to verify** — which tests or commands the reviewer can run to confirm the fix.
+Accepted template:
 
-Example reply:
+```markdown
+Accepted.
+Addressed in commit <COMMIT_ID>.
 
-> Fixed in commit `abc1234`. The empty-path guard was added to `extract_vba()` in `src/pre_commit_vba/pre_commit_vba.py`. You can verify with `uvx tox -e 314` — the new test `test_extract_empty_path` covers this case.
+<One concise sentence describing the implemented change and why it resolves the concern.>
+```
+
+Declined template:
+
+```markdown
+Declined.
+No code changes were made.
+
+<One concise sentence explaining the intentional design choice and why current behavior is acceptable for this repository.>
+```
+
+### 9. Repeat for the Next Comment
+
+- Move to the next unresolved comment.
+- Repeat from Step 1.
 
 ## Boundaries and Escalation
 
 - **Do not** make architectural or breaking changes without reviewer confirmation.
 - **Do not** modify production configuration files (e.g., `.env`, deployment settings) without explicit approval.
 - **Do not** merge or close a pull request autonomously.
-- If the fix requires changes across many files or touches critical logic, summarize the plan in a comment and wait for approval before proceeding.
+- If a fix requires many files or touches critical logic, summarize the plan and wait for user approval before implementation.
 
 ## Reference Files
 
