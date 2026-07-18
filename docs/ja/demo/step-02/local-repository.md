@@ -45,7 +45,7 @@ git push -u origin develop
 ??? tip
     `git status`を実行すると以下の様に表示され, `develop`ブランチにいて, リモートブランチと同期できていることが確認できる.
     <!-- termynal -->
-    ```
+    ```console
     $ git status
     On branch develop
     Your branch is up to date with 'origin/develop'.
