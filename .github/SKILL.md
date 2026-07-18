@@ -14,8 +14,8 @@ This file is the index for repository skills used by the Copilot coding agent.
 | Skill | File | Purpose |
 |---|---|---|
 | Review Comment Response | `.github/skills/review-response.md` | Handle pull request review comments and report fixes clearly |
-| Zensical Documentation Authoring | `.github/skills/zensical-docs.md` | Create and update Zensical-based documentation pages for this repository |
 | Skill Authoring Template | `.github/skills/TEMPLATE.md` | Base template for creating additional repository-specific skills |
+| Zensical Documentation Authoring | `.github/skills/zensical-docs.md` | Create and update Zensical-based documentation pages for this repository |
 
 ## Naming convention for new skills
 

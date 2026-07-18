@@ -56,7 +56,7 @@ This includes editing existing Markdown files under `docs/`, adding new pages, u
 #### Dynamic Content and Extensions
 
 - This docs site uses Zensical macros. Preserve macro usage such as `{{project_version}}` when relevant.
-- The site enables the `termynal` markdown extension. Use existing termynal patterns when documenting interactive command output.
+- The site enables the `Termynal` markdown extension. Use existing Termynal patterns when documenting interactive command output.
 - Do not remove or break existing extension-dependent markup unless the task explicitly requires it.
 
 ### 4. Keep Language Variants Consistent
@@ -77,17 +77,22 @@ This includes editing existing Markdown files under `docs/`, adding new pages, u
 
 ### 6. Validate the Documentation
 
-Run the relevant checks when the environment supports them:
+Run the documentation build when the environment supports it:
+
+```powershell
+uv run zensical build --clean
+```
+
+- For docs-only changes, prioritize confirming the docs build succeeds.
+- If the task also changes code samples, macros behavior, or docs-related configuration beyond page content, run the broader repository checks when available:
 
 ```powershell
 uvx ruff format
 uvx ruff check
 uvx mypy src/
 uvx tox -e 314
-uv run zensical build --clean
 ```
 
-- For docs-only changes, prioritize confirming the docs build succeeds.
 - If the environment does not have `uv` or `uvx`, record that limitation clearly in the final report.
 - Check for broken relative links, incorrect file paths, and mismatched navigation entries.
 
