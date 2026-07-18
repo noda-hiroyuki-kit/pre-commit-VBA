@@ -22,7 +22,7 @@ Describe what this skill is for and when to use it.
 ### 2. Inspect Relevant Context
 
 - Read related files, tests, and configuration.
-- Verify repository conventions in `AGENTS.md` and `CONTRIBUTING.md`.
+- Verify repository conventions in `AGENTS.md`, `CONTRIBUTING.md`, and docs contributor guidance, and prefer the command style already used in the target docs area for consistency.
 
 ### 3. Plan Minimal Changes
 
