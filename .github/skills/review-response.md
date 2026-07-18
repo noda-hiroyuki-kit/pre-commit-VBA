@@ -12,6 +12,24 @@ When a reviewer leaves comments on a pull request, follow this skill to analyze 
 - A reviewer requests changes via a GitHub PR review.
 - A collaborator mentions `@copilot` in a PR comment asking for a fix or clarification.
 
+## Reliable PR Context Retrieval (Start Here)
+
+At the beginning of review handling, fetch PR context using this fallback order.
+
+1. Try active PR tools first:
+   - `github-pull-request_currentActivePullRequest` with `refresh: true`
+   - `github-pull-request_pullRequestInViewport` as an additional check
+2. If active PR data is unavailable, fetch by PR number:
+   - `github-pull-request_issue_fetch` with `issueNumber: <PR_NUMBER>`
+3. If review-thread comments are still missing, fetch the PR web page:
+   - `fetch_webpage` on `https://github.com/<owner>/<repo>/pull/<PR_NUMBER>`
+   - Parse Copilot/reviewer comments from the returned content summary
+4. Only after unresolved comments are identified, start one-by-one handling.
+
+Notes:
+- `issue_fetch` may return empty `comments` even when review comments exist on the Files changed view.
+- In that case, treat webpage extraction as the source of truth for initial comment discovery.
+
 ## Core Rule: One Comment at a Time with User Approval
 
 - Process review comments strictly one by one.
