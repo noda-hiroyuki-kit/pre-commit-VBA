@@ -25,6 +25,9 @@ git switch -c release/v0.1.0
         ```
         ThisWorkbook.BuiltinDocumentProperties.Item("Document version")="v0.1.0"
         ```
+    ??? info "ファイル プロパティ"
+        VBEの操作により, ファイルのプロパティのバージョン番号に値がセットされる.  
+        ![file_property](img/FileProperty.drawio.svg){width="300"}
 
 2. 不要な参照設定を外します.
 

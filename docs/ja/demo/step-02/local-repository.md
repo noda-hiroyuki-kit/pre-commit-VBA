@@ -27,8 +27,9 @@ git push -u origin main
 ```
 ??? tip
     `git status`を実行すると以下の様に表示され, `main`ブランチにいて, リモートブランチと同期できていることが確認できる.
+    <!-- termynal -->
     ```console
-    PS %current working directory%> git status
+    $ git status
     On branch main
     Your branch is up to date with 'origin/main'.
 
@@ -43,8 +44,9 @@ git push -u origin develop
 ```
 ??? tip
     `git status`を実行すると以下の様に表示され, `develop`ブランチにいて, リモートブランチと同期できていることが確認できる.
+    <!-- termynal -->
     ```console
-    PS %current working directory%> git status
+    $ git status
     On branch develop
     Your branch is up to date with 'origin/develop'.
 
