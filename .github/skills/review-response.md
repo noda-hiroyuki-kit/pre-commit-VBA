@@ -58,9 +58,9 @@ Follow the project conventions below:
 
 #### Code Style
 
-- Format with Ruff: `uvx ruff format`
-- Lint with Ruff: `uvx ruff check`
-- Type-check with mypy: `uvx mypy src/`
+- Format with Ruff: `uv run ruff format`
+- Lint with Ruff: `uv run ruff check`
+- Type-check with mypy: `uv run mypy src/`
 
 #### Tests
 
