@@ -107,7 +107,7 @@ git commit -m "chore: set up development environment"
 git push -u origin feature/setup-dev-environment
 ```
 
-その後、GitHub で PR を作成して `develop` にマージします.  
+その後, GitHub で PR を作成して `develop` にマージします.  
 マージ後にローカルを同期します.
 
 ```console
