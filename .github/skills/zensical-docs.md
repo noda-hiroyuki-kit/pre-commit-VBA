@@ -60,6 +60,7 @@ When writing or editing Japanese documentation:
 - Use `. ` (ASCII period followed by a space) for sentence-ending periods (句点), not `。` or `．`.
 - Use `, ` (ASCII comma followed by a space) for commas within sentences (読点), not `、` or `，`.
 - Apply this rule consistently across all Japanese pages under `docs/ja/`.
+
 #### Dynamic Content and Extensions
 
 - This docs site uses Zensical macros. Preserve macro usage such as `{{project_version}}` when relevant.
@@ -94,10 +95,11 @@ uv run zensical build --clean
 - If the task also changes code samples, macros behavior, or docs-related configuration beyond page content, run the broader repository checks when available:
 
 ```powershell
-uvx ruff format
-uvx ruff check
-uvx mypy src/
-uvx tox -e 314
+uv run ruff format
+uv run ruff check
+uv run mypy src/
+uv run pytest .
+uv run pytest tests/test_pre_commit_vba.py::TestExtractCommandExistenceFiles
 ```
 
 - If the environment does not have `uv` or `uvx`, record that limitation clearly in the final report.
