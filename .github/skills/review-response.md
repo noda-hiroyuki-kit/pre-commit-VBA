@@ -51,7 +51,7 @@ Follow the project conventions below:
 
 - Framework: `pytest`
 - Test files: `test_*.py` under `tests/`
-- Coverage target: ≥ 80 %
+- Coverage target: ≥ 80%
 - Run the full test suite before committing: `uvx tox -e 314`
 - Add or update tests whenever behavior changes.
 
