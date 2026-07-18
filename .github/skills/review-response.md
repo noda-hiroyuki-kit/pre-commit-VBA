@@ -159,6 +159,8 @@ No code changes were made.
 - **Do not** make architectural or breaking changes without reviewer confirmation.
 - **Do not** modify production configuration files (e.g., `.env`, deployment settings) without explicit approval.
 - **Do not** merge or close a pull request autonomously.
+- Merges into `develop` and `main` require administrator privileges.
+- Wait for a repository administrator to perform the final merge into `develop` or `main`.
 - If a fix requires many files or touches critical logic, summarize the plan and wait for user approval before implementation.
 
 ## References
