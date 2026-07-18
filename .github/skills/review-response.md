@@ -146,7 +146,7 @@ No code changes were made.
 - **Do not** merge or close a pull request autonomously.
 - If a fix requires many files or touches critical logic, summarize the plan and wait for user approval before implementation.
 
-## Reference Files
+## References
 
 | File | Purpose |
 |------|---------|
