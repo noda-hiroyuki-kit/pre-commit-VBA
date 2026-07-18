@@ -114,6 +114,8 @@ All checks must pass before pushing.
 
 - Do not post review comments directly from the agent.
 - The user will paste the final review response in the browser.
+- Always return the suggested reply inside a fenced markdown code block.
+- Output only the reply text block (no preface or trailing explanation) so the user can paste it as-is.
 - Provide the response text in English using one of the templates below.
 
 Accepted template:
