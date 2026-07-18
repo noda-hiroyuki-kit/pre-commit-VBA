@@ -34,10 +34,10 @@ Describe what this skill is for and when to use it.
 Follow repository standards:
 
 - Python: 3.14
-- Format: `uvx ruff format`
-- Lint: `uvx ruff check`
-- Type check: `uvx mypy src/`
-- Tests: `uvx tox -e 314`
+- Format: `uv run ruff format`
+- Lint: `uv run ruff check`
+- Type check: `uv run mypy src/`
+- Tests: `uv run pytest .`, `uv run pytest tests/test_pre_commit_vba.py::TestExtractCommandExistenceFiles`
 
 ### 5. Validate
 
