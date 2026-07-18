@@ -53,6 +53,13 @@ This includes editing existing Markdown files under `docs/`, adding new pages, u
 - Use concrete examples when explaining commands or workflows.
 - Preserve existing code fence styles such as `console`, `powershell`, `yaml`, and titled fences where already used.
 
+#### Japanese Writing Style
+
+When writing or editing Japanese documentation:
+
+- Use `. ` (ASCII period followed by a space) for sentence-ending periods (句点), not `。` or `．`.
+- Use `, ` (ASCII comma followed by a space) for commas within sentences (読点), not `、` or `，`.
+- Apply this rule consistently across all Japanese pages under `docs/ja/`.
 #### Dynamic Content and Extensions
 
 - This docs site uses Zensical macros. Preserve macro usage such as `{{project_version}}` when relevant.
