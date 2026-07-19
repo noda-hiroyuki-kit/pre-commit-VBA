@@ -66,14 +66,16 @@ def _run_extract_issue107_with_cli_runner(
 
 def _get_excel_process_ids() -> set[int]:
     """Return running EXCEL.EXE process IDs."""
-    process = subprocess.run(
-        ["tasklist", "/FI", "IMAGENAME eq EXCEL.EXE", "/FO", "CSV", "/NH"],  # noqa: S607
-        check=False,
-        capture_output=True,
-    )
-    if process.returncode != 0 or process.stdout is None:
+    try:
+        process = subprocess.run(
+            ["tasklist", "/FI", "IMAGENAME eq EXCEL.EXE", "/FO", "CSV", "/NH"],  # noqa: S607
+            check=False,
+            capture_output=True,
+        )
+        if process.returncode != 0 or process.stdout is None:
+            return set()
+    except FileNotFoundError:
         return set()
-
     decoded_stdout = ""
     for encoding in (locale.getencoding(), "cp932", "utf-8"):
         with suppress(UnicodeDecodeError, LookupError):
