@@ -76,6 +76,8 @@ class ExcelApplicationProtocol(Protocol):
 
     Visible: bool
     DisplayAlerts: bool
+    EnableEvents: bool
+    AutomationSecurity: int
     Workbooks: WorkbooksProtocol
     Quit: Callable[[], None]
 
@@ -265,6 +267,9 @@ class ExcelVbaExporter:
         excel_app = dispatch_ex("Excel.Application")
         excel_app.Visible = False
         excel_app.DisplayAlerts = False
+        # Prevent Workbook_Open / Auto_Open execution while exporting code.
+        excel_app.EnableEvents = False
+        excel_app.AutomationSecurity = 3
         return excel_app
 
     def __del__(self) -> None:
@@ -630,7 +635,7 @@ def version_callback(value: bool) -> None:  # noqa: FBT001
 
 
 @app.command("extract")
-def extract_vba_code_from_workbooks(  # noqa: PLR0913
+def extract_vba_code_from_workbooks(  # noqa: PLR0913, C901
     *,
     target_path: Annotated[str, typer.Option()] = ".",
     folder_suffix: Annotated[str, typer.Option()] = ".VBA",
@@ -663,11 +668,15 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913
         enable_folder_annotation=enable_folder_annotation,
         create_gitignore=create_gitignore,
     )
-    try:
-        staging_status_before = get_staging_status()
-    except StagingStatusError:
-        sys.exit(1)
-    for workbook_path in Path(target_path).resolve().glob("*.xls*"):
+    resolved_target_path = Path(target_path).resolve()
+    check_staging_drift = resolved_target_path == Path.cwd().resolve()
+    staging_status_before = ""
+    if check_staging_drift:
+        try:
+            staging_status_before = get_staging_status()
+        except StagingStatusError:
+            sys.exit(1)
+    for workbook_path in resolved_target_path.glob("*.xls*"):
         if workbook_path.name.startswith("~$"):
             continue
         if not has_vba_code(workbook_path):
@@ -692,17 +701,18 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913
             add_to_staging(folder_settings)
         except AddToStagingError:
             sys.exit(1)
-    try:
-        staging_status_after = get_staging_status()
-    except StagingStatusError:
-        sys.exit(1)
-    if staging_status_before != staging_status_after:
-        logger.error(
-            "Staging state changed during extract command. Review staged changes with "
-            "'git diff --cached', re-stage any updated files if needed, and then "
-            "re-run the command."
-        )
-        sys.exit(1)
+    if check_staging_drift:
+        try:
+            staging_status_after = get_staging_status()
+        except StagingStatusError:
+            sys.exit(1)
+        if staging_status_before != staging_status_after:
+            logger.error(
+                "Staging state changed during extract command. "
+                "Review staged changes with 'git diff --cached', "
+                "re-stage any updated files if needed, and then re-run the command."
+            )
+            sys.exit(1)
 
 
 @app.command()
