@@ -1,12 +1,16 @@
 """Test module for pre-commit-vba script."""
 
+import csv
 import logging
+import multiprocessing
 import re
 import shutil
 import subprocess
+import tempfile
 import tomllib
 import typing
 from collections.abc import Generator
+from contextlib import suppress
 from logging import DEBUG
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -31,6 +35,64 @@ def _project_version() -> str:
     pyproject_path = Path(__file__).resolve().parents[1] / "pyproject.toml"
     with pyproject_path.open("rb") as pyproject_file:
         return str(tomllib.load(pyproject_file)["project"]["version"])
+
+
+def _run_extract_issue107_with_cli_runner(
+    target_path: str,
+    result_queue: multiprocessing.Queue,
+) -> None:
+    """Execute extract command through CliRunner and pass result to parent."""
+    result = runner.invoke(
+        app,
+        [
+            "extract",
+            "--target-path",
+            target_path,
+            "--folder-suffix",
+            ".VBA",
+            "--export-folder",
+            "export",
+            "--custom-ui-folder",
+            "customUI",
+            "--code-folder",
+            "code",
+            "--enable-folder-annotation",
+            "--create-gitignore",
+        ],
+    )
+    result_queue.put((result.exit_code, result.output))
+
+
+def _get_excel_process_ids() -> set[int]:
+    """Return running EXCEL.EXE process IDs."""
+    process = subprocess.run(
+        ["tasklist", "/FI", "IMAGENAME eq EXCEL.EXE", "/FO", "CSV", "/NH"],  # noqa: S607
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if process.returncode != 0:
+        return set()
+
+    process_ids: set[int] = set()
+    for line in process.stdout.splitlines():
+        if not line.strip() or line.startswith("INFO:"):
+            continue
+        row = next(csv.reader([line]), [])
+        with suppress(IndexError, ValueError):
+            process_ids.add(int(row[1]))
+    return process_ids
+
+
+def _terminate_excel_processes(process_ids: set[int]) -> None:
+    """Terminate specific EXCEL.EXE process IDs."""
+    for process_id in process_ids:
+        subprocess.run(  # noqa: S603
+            ["taskkill", "/PID", str(process_id), "/T", "/F"],  # noqa: S607
+            check=False,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
 
 
 class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
@@ -289,6 +351,66 @@ def test_not_exists_test1_vba_folder() -> None:
     if Path(Path.cwd(), "tests", "test1.VBA").exists():
         shutil.rmtree(Path(Path.cwd(), "tests", "test1.VBA"))
     assert test_result  # noqa: S101
+
+
+def test_extract_command_does_not_timeout_on_issue107_repro_workbook() -> None:
+    """Issue107: extract command should not block on Workbook_Open macro."""
+    repro_workbook = Path(
+        Path.cwd(),
+        "tests",
+        "fixtures",
+        "issue107",
+        "Issue107_Repro_WorkbookOpen_MsgBox.xlsm",
+    )
+    assert repro_workbook.exists()  # noqa: S101
+
+    temp_root = Path(tempfile.mkdtemp(prefix="issue107-", dir=Path.cwd() / "tests"))
+    target_workbook = Path(temp_root, repro_workbook.name)
+    extracted_this_workbook = Path(
+        temp_root,
+        f"{repro_workbook.name}.VBA",
+        "export",
+        "ThisWorkbook.cls",
+    )
+    git_path = shutil.which("git")
+    assert git_path is not None  # noqa: S101
+    excel_process_ids_before = _get_excel_process_ids()
+
+    process = None
+    result_queue = multiprocessing.Queue()
+    try:
+        shutil.copy2(repro_workbook, target_workbook)
+        process = multiprocessing.Process(
+            target=_run_extract_issue107_with_cli_runner,
+            args=(str(temp_root), result_queue),
+        )
+        process.start()
+        process.join(timeout=15)
+
+        if process.is_alive():
+            process.terminate()
+            process.join(timeout=5)
+            pytest.fail("extract command timed out for Issue107 repro workbook")
+
+        assert process.exitcode == 0  # noqa: S101
+        assert not result_queue.empty()  # noqa: S101
+        exit_code, output = result_queue.get()
+        assert exit_code == 0, output  # noqa: S101
+        assert extracted_this_workbook.is_file()  # noqa: S101
+    finally:
+        relative_temp_root = temp_root.relative_to(Path.cwd())
+        subprocess.run(  # noqa: S603
+            [git_path, "reset", "--quiet", "HEAD", "--", str(relative_temp_root)],
+            check=False,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            cwd=Path.cwd(),
+        )
+        if process is not None and process.is_alive():
+            process.terminate()
+            process.join(timeout=5)
+        _terminate_excel_processes(_get_excel_process_ids() - excel_process_ids_before)
+        shutil.rmtree(temp_root, ignore_errors=True)
 
 
 class TestExtractCommandNegativeOptions:
