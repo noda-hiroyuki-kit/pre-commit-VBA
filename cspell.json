@@ -73,6 +73,7 @@
         "msform",
         "mypy",
         "noclasses",
+        "noninteractive",
         "Noda",
         "nodeenv",
         "nosetests",

@@ -92,6 +92,18 @@ def get_dispatch_ex() -> DispatchExFactory:
     return cast("DispatchExFactory", DispatchEx)
 
 
+def get_noninteractive_excel_app() -> ExcelApplicationProtocol:
+    """Return a non-interactive Excel application instance."""
+    dispatch_ex = get_dispatch_ex()
+    excel_app = dispatch_ex("Excel.Application")
+    excel_app.Visible = False
+    excel_app.DisplayAlerts = False
+    # Prevent Workbook_Open / Auto_Open execution while opening workbooks.
+    excel_app.EnableEvents = False
+    excel_app.AutomationSecurity = constants.mso_automation_security_force_disable
+    return excel_app
+
+
 __version__ = "0.3.10"
 
 
@@ -264,14 +276,7 @@ class ExcelVbaExporter:
 
     def __get_xl_app(self) -> ExcelApplicationProtocol:
         """Get Excel application."""
-        dispatch_ex = get_dispatch_ex()
-        excel_app = dispatch_ex("Excel.Application")
-        excel_app.Visible = False
-        excel_app.DisplayAlerts = False
-        # Prevent Workbook_Open / Auto_Open execution while exporting code.
-        excel_app.EnableEvents = False
-        excel_app.AutomationSecurity = Constants().mso_automation_security_force_disable
-        return excel_app
+        return get_noninteractive_excel_app()
 
     def __del__(self) -> None:
         """Destructor to close workbook and quit app."""
@@ -586,10 +591,7 @@ def get_current_branch_name() -> str:
 
 def get_workbook_version(workbook_path: Path) -> str:
     """Get workbook version."""
-    dispatch_ex = get_dispatch_ex()
-    app = dispatch_ex("Excel.Application")
-    app.Visible = False
-    app.DisplayAlerts = False
+    app = get_noninteractive_excel_app()
     workbook = app.Workbooks.Open(workbook_path, ReadOnly=True)
     try:
         version = str(workbook.BuiltinDocumentProperties("Document version"))
