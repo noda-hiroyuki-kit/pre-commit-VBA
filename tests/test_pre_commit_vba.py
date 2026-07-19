@@ -4,6 +4,7 @@ import csv
 import locale
 import logging
 import multiprocessing
+import queue
 import re
 import shutil
 import subprocess
@@ -403,8 +404,10 @@ def test_extract_command_does_not_timeout_on_issue107_repro_workbook() -> None:
             pytest.fail("extract command timed out for Issue107 repro workbook")
 
         assert process.exitcode == 0  # noqa: S101
-        assert not result_queue.empty()  # noqa: S101
-        exit_code, output = result_queue.get()
+        try:
+            exit_code, output = result_queue.get(timeout=10)
+        except queue.Empty:
+            pytest.fail("extract command did not publish a result to the queue")
         assert exit_code == 0, output  # noqa: S101
         assert extracted_this_workbook.is_file()  # noqa: S101
     finally:
