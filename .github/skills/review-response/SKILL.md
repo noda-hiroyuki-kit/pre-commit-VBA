@@ -1,29 +1,32 @@
-# SKILL: Respond to Pull Request Review Comments
+---
+name: review-response
+description: Address pull request review comments in this repository one by one, with minimal approved fixes and explicit validation.
+license: MIT
+---
 
-This skill defines how the Copilot coding agent should handle pull request review comments in the `pre-commit-VBA` repository.
+# Respond to Pull Request Review Comments
 
-## Overview
-
-When a reviewer leaves comments on a pull request, follow this skill to analyze each comment, propose a minimal fix, and proceed only after user approval.
+Use this skill when a pull request review comment needs analysis, a proposed fix, or an implementation in this repository.
 
 ## Trigger Conditions
 
 - A review comment is posted on a pull request in this repository.
-- A reviewer requests changes via a GitHub PR review.
-- A collaborator mentions `@copilot` in a PR comment asking for a fix or clarification.
+- A reviewer requests changes via a GitHub pull request review.
+- A collaborator mentions `@copilot` in a pull request comment asking for a fix or clarification.
 
-## Reliable PR Context Retrieval (Start Here)
+## Reliable PR Context Retrieval
 
-At the beginning of review handling, fetch PR context using this fallback order.
+At the beginning of review handling, fetch pull request context using this fallback order.
 
-1. Try active PR context from the available GitHub integration first.
-2. If active PR data is unavailable, fetch by PR number using GitHub API data.
-3. If review-thread comments are still missing, fetch the PR web page as a last resort and parse reviewer comments from that content.
+1. Try active pull request context from the available GitHub integration first.
+2. If active pull request data is unavailable, fetch by pull request number using GitHub API data.
+3. If review-thread comments are still missing, fetch the pull request web page as a last resort and parse reviewer comments from that content.
 4. Only after unresolved comments are identified, start one-by-one handling.
 
 Notes:
+
 - API responses can omit review-thread comments depending on the endpoint or view.
-- If that happens, use the PR web page result as the source of truth for initial comment discovery.
+- If that happens, use the pull request web page result as the source of truth for initial comment discovery.
 
 ## Core Rule: One Comment at a Time with User Approval
 
@@ -50,24 +53,24 @@ Notes:
 ### 3. Inspect the Relevant Code
 
 - Open the files and line ranges referenced in the comment.
-- Understand surrounding context (imports, class structure, callers, tests).
+- Understand surrounding context such as imports, structure, callers, and tests.
 - Check whether the same issue exists in related files.
 
 ### 4. Propose a Minimal Fix and Ask for Decision
 
 - Propose the smallest change that addresses the concern without unrelated modifications.
 - If the fix is non-trivial, include a short implementation outline.
-- Ask the user: adopt or reject this review comment.
+- Ask the user to adopt or reject the review comment.
 - Wait for explicit user approval before editing files.
 
 ### 5. Implement Only Approved Comments
 
-Follow the project conventions below:
+Follow the project conventions below.
 
 #### Language and Runtime
 
 - Python 3.14
-- Managed with `uv`; **never** manually edit `uv.lock`
+- Managed with `uv`; never manually edit `uv.lock`
 
 #### Code Style
 
@@ -83,28 +86,25 @@ Follow the project conventions below:
 - Run the full test suite before committing: `uv run pytest .`
 - Add or update tests whenever behavior changes.
 
-#### Commit Messages (Conventional Commits, English)
+#### Commit Messages
 
-| Type | When to use |
-|------|-------------|
-| `feat:` | New feature |
-| `fix:` | Bug fix |
-| `docs:` | Documentation only |
-| `refactor:` | Code restructuring, no behavior change |
-| `test:` | Test-only changes |
-| `chore:` | Build, CI, tooling changes |
+- Use Conventional Commits in English.
+- `feat:` for new features.
+- `fix:` for bug fixes.
+- `docs:` for documentation-only changes.
+- `refactor:` for code restructuring without behavior changes.
+- `test:` for test-only changes.
+- `chore:` for build, CI, or tooling changes.
 
 #### Branch Naming
 
-| Pattern | Purpose |
-|---------|---------|
-| `feature/<topic>` | New feature or improvement |
-| `hotfix/v<semver>` | Critical bug fix on a release |
-| `release/v<semver>` | Release preparation |
+- `feature/<topic>` for new features or improvements.
+- `hotfix/v<semver>` for critical release fixes.
+- `release/v<semver>` for release preparation.
 
 ### 6. Validate Approved Changes
 
-Run all checks in order:
+Run all checks in order.
 
 ```powershell
 uv run ruff format
@@ -121,14 +121,14 @@ All checks must pass before pushing.
 - Commit only changes for comments approved by the user.
 - Use a Conventional Commits message that references the approved review concern.
 - Example: `fix: handle empty workbook path in extract command`
-- Do **not** modify `.env` files or `uv.lock` manually.
+- Do not modify `.env` files or `uv.lock` manually.
 
 ### 8. Prepare Review Reply for User Posting
 
 - Do not post review comments directly from the agent.
 - The user will paste the final review response in the browser.
-- Always return the suggested reply inside a fenced markdown code block.
-- Output only the reply text block (no preface or trailing explanation) so the user can paste it as-is.
+- Always return the suggested reply inside a fenced Markdown code block.
+- Output only the reply text block, with no preface or trailing explanation, so the user can paste it as-is.
 - Provide the response text in English using one of the templates below.
 
 Accepted template:
@@ -156,19 +156,17 @@ No code changes were made.
 
 ## Boundaries and Escalation
 
-- **Do not** make architectural or breaking changes without reviewer confirmation.
-- **Do not** modify production configuration files (e.g., `.env`, deployment settings) without explicit approval.
-- **Do not** merge or close a pull request autonomously.
+- Do not make architectural or breaking changes without reviewer confirmation.
+- Do not modify production configuration files such as `.env` or deployment settings without explicit approval.
+- Do not merge or close a pull request autonomously.
 - Merges into `develop` and `main` require administrator privileges.
 - Wait for a repository administrator to perform the final merge into `develop` or `main`.
 - If a fix requires many files or touches critical logic, summarize the plan and wait for user approval before implementation.
 
 ## References
 
-| File | Purpose |
-|------|---------|
-| `AGENTS.md` | Agent-specific project conventions |
-| `CONTRIBUTING.md` | General contribution guidelines |
-| `CODE_OF_CONDUCT.md` | Community standards |
-| `pyproject.toml` | Project metadata and dependencies |
-| `tests/` | Test suite |
+- AGENTS.md
+- CONTRIBUTING.md
+- CODE_OF_CONDUCT.md
+- pyproject.toml
+- tests/

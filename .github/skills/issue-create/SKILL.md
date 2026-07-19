@@ -1,10 +1,13 @@
-# SKILL: Create GitHub Issues
+---
+name: issue-create
+description: Create well-structured GitHub issues for this repository with duplicate checks, template alignment, and bilingual formatting.
+license: MIT
+---
 
-This skill defines how the Copilot coding agent should create GitHub issues in the pre-commit-VBA repository.
+# Create GitHub Issues
 
-## Overview
+Use this skill when the user asks to create a new issue in this repository.
 
-Use this skill when the user asks to create a new issue.
 The goal is to create a clear, actionable issue without duplicates and with correct metadata.
 Issue bodies must follow the repository issue template format.
 Issue bodies must be bilingual in this order:
@@ -32,7 +35,7 @@ Issue bodies must be bilingual in this order:
 - For bug issues, use `.github/ISSUE_TEMPLATE/bug_report.md`.
 - For feature issues, use `.github/ISSUE_TEMPLATE/feature_request.md`.
 - Keep section headings, order, and intent aligned with the selected template.
-- If user asks for another issue type and no matching template exists, confirm a fallback format before creating.
+- If the user asks for another issue type and no matching template exists, confirm a fallback format before creating.
 
 ### 3. Gather Required Inputs
 
@@ -48,7 +51,7 @@ Issue bodies must be bilingual in this order:
 
 ### 5. Select Metadata
 
-- List available issue types when repository supports issue types, then choose the best match.
+- List available issue types when the repository supports issue types, then choose the best match.
 - Choose labels that match scope and severity.
 - Apply assignees only when explicitly requested or clearly implied.
 - Do not set milestone unless the user asks.
@@ -66,7 +69,7 @@ Issue bodies must be bilingual in this order:
 
 ### 7. Bilingual Formatting Rules
 
-- Use one markdown body, not separate issues per language.
+- Use one Markdown body, not separate issues per language.
 - The separator must be exactly `---` on its own line.
 - For bug reports, follow issue #55 style:
   - Japanese: `**バグを記述してください**`, `**再現手順**`, `**期待されるふるまい**`, `**補足**`
@@ -80,13 +83,13 @@ Issue bodies must be bilingual in this order:
 ### 8. Create the Issue
 
 - Create the issue with title, body, and selected metadata.
-- Capture returned issue number and URL.
+- Capture the returned issue number and URL.
 - If creation fails, report the exact failure reason and retry once after fixing input.
 
 ### 9. Report Back
 
 - Share the created issue number, URL, and title.
-- Briefly summarize template used, labels, type, assignees, and next suggested action.
+- Briefly summarize the template used, labels, type, assignees, and next suggested action.
 
 ## Boundaries and Escalation
 
