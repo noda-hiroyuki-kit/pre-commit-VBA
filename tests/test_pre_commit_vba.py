@@ -1,6 +1,7 @@
 """Test module for pre-commit-vba script."""
 
 import csv
+import locale
 import logging
 import multiprocessing
 import re
@@ -69,13 +70,20 @@ def _get_excel_process_ids() -> set[int]:
         ["tasklist", "/FI", "IMAGENAME eq EXCEL.EXE", "/FO", "CSV", "/NH"],  # noqa: S607
         check=False,
         capture_output=True,
-        text=True,
     )
-    if process.returncode != 0:
+    if process.returncode != 0 or process.stdout is None:
         return set()
 
+    decoded_stdout = ""
+    for encoding in (locale.getencoding(), "cp932", "utf-8"):
+        with suppress(UnicodeDecodeError, LookupError):
+            decoded_stdout = process.stdout.decode(encoding)
+            break
+    if not decoded_stdout:
+        decoded_stdout = process.stdout.decode(errors="replace")
+
     process_ids: set[int] = set()
-    for line in process.stdout.splitlines():
+    for line in decoded_stdout.splitlines():
         if not line.strip() or line.startswith("INFO:"):
             continue
         row = next(csv.reader([line]), [])
