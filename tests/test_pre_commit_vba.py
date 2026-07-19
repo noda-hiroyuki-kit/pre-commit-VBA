@@ -119,12 +119,16 @@ def _get_excel_process_ids() -> set[int]:
 def _terminate_excel_processes(process_ids: set[int]) -> None:
     """Terminate specific EXCEL.EXE process IDs."""
     for process_id in process_ids:
-        subprocess.run(  # noqa: S603
-            ["taskkill", "/PID", str(process_id), "/T", "/F"],  # noqa: S607
-            check=False,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
+        try:
+            subprocess.run(  # noqa: S603
+                ["taskkill", "/PID", str(process_id), "/T", "/F"],  # noqa: S607
+                check=False,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+        except FileNotFoundError:
+            # taskkill unavailable (e.g., not on PATH)
+            return
 
 
 class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
