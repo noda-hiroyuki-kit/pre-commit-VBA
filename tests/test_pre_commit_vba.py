@@ -65,6 +65,27 @@ def _run_extract_issue107_with_cli_runner(
     result_queue.put((result.exit_code, result.output))
 
 
+def _run_check_issue107_with_cli_runner(
+    target_path: str,
+    result_queue: multiprocessing.Queue,
+) -> None:
+    """Execute check command through CliRunner and pass result to parent."""
+    with (
+        mock.patch.object(
+            pre_commit_vba,
+            "get_current_branch_name",
+            return_value="release/v0.0.1-alpha",
+        ),
+        mock.patch.object(
+            pre_commit_vba,
+            "has_rubberduck_addin_references",
+            return_value=False,
+        ),
+    ):
+        result = runner.invoke(app, ["check", "--target-path", target_path])
+    result_queue.put((result.exit_code, result.output))
+
+
 def _get_excel_process_ids() -> set[int]:
     """Return running EXCEL.EXE process IDs."""
     try:
@@ -410,6 +431,66 @@ def test_extract_command_does_not_timeout_on_issue107_repro_workbook() -> None:
         assert process.exitcode == 0, output  # noqa: S101
         assert exit_code == 0, output  # noqa: S101
         assert extracted_this_workbook.is_file()  # noqa: S101
+    finally:
+        relative_temp_root = temp_root.relative_to(Path.cwd())
+        subprocess.run(  # noqa: S603
+            [git_path, "reset", "--quiet", "HEAD", "--", str(relative_temp_root)],
+            check=False,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            cwd=Path.cwd(),
+        )
+        if process is not None and process.is_alive():
+            process.terminate()
+            process.join(timeout=5)
+        if not excel_process_ids_before:
+            _terminate_excel_processes(
+                _get_excel_process_ids() - excel_process_ids_before
+            )
+        shutil.rmtree(temp_root, ignore_errors=True)
+
+
+def test_check_command_does_not_timeout_on_issue107_repro_workbook() -> None:
+    """Issue107: check command should not block on Workbook_Open macro."""
+    repro_workbook = Path(
+        Path.cwd(),
+        "tests",
+        "fixtures",
+        "issue107",
+        "Issue107_Repro_WorkbookOpen_MsgBox.xlsm",
+    )
+    assert repro_workbook.exists()  # noqa: S101
+
+    temp_root = Path(
+        tempfile.mkdtemp(prefix="issue107-check-", dir=Path.cwd() / "tests")
+    )
+    target_workbook = Path(temp_root, repro_workbook.name)
+    git_path = shutil.which("git")
+    assert git_path is not None  # noqa: S101
+    excel_process_ids_before = _get_excel_process_ids()
+
+    process = None
+    result_queue = multiprocessing.Queue()
+    try:
+        shutil.copy2(repro_workbook, target_workbook)
+        process = multiprocessing.Process(
+            target=_run_check_issue107_with_cli_runner,
+            args=(str(temp_root), result_queue),
+        )
+        process.start()
+        process.join(timeout=15)
+
+        if process.is_alive():
+            process.terminate()
+            process.join(timeout=5)
+            pytest.fail("check command timed out for Issue107 repro workbook")
+
+        try:
+            exit_code, output = result_queue.get(timeout=10)
+        except queue.Empty:
+            pytest.fail("check command did not publish a result to the queue")
+        assert process.exitcode == 0, output  # noqa: S101
+        assert exit_code == 1, output  # noqa: S101
     finally:
         relative_temp_root = temp_root.relative_to(Path.cwd())
         subprocess.run(  # noqa: S603
