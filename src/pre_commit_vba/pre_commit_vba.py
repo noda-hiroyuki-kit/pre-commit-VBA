@@ -127,6 +127,7 @@ class Constants:
     vbext_ct_Document: int = 100  # from enum vbext_ComponentType  # noqa: N815
     vbext_ct_MSForm: int = 3  # from enum vbext_ComponentType  # noqa: N815
     vbext_ct_StdModule: int = 1  # from enum vbext_ComponentType  # noqa: N815
+    mso_automation_security_force_disable: int = 3  # from enum MsoAutomationSecurity
 
 
 class SettingsCommonFolder:
@@ -269,7 +270,7 @@ class ExcelVbaExporter:
         excel_app.DisplayAlerts = False
         # Prevent Workbook_Open / Auto_Open execution while exporting code.
         excel_app.EnableEvents = False
-        excel_app.AutomationSecurity = 3
+        excel_app.AutomationSecurity = Constants().mso_automation_security_force_disable
         return excel_app
 
     def __del__(self) -> None:
