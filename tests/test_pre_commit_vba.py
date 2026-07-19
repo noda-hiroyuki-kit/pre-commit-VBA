@@ -443,10 +443,9 @@ def test_extract_command_does_not_timeout_on_issue107_repro_workbook() -> None:
         if process is not None and process.is_alive():
             process.terminate()
             process.join(timeout=5)
-        if not excel_process_ids_before:
-            _terminate_excel_processes(
-                _get_excel_process_ids() - excel_process_ids_before
-            )
+        _terminate_excel_processes(_get_excel_process_ids() - excel_process_ids_before)
+        result_queue.close()
+        result_queue.join_thread()
         shutil.rmtree(temp_root, ignore_errors=True)
 
 
@@ -503,10 +502,9 @@ def test_check_command_does_not_timeout_on_issue107_repro_workbook() -> None:
         if process is not None and process.is_alive():
             process.terminate()
             process.join(timeout=5)
-        if not excel_process_ids_before:
-            _terminate_excel_processes(
-                _get_excel_process_ids() - excel_process_ids_before
-            )
+        _terminate_excel_processes(_get_excel_process_ids() - excel_process_ids_before)
+        result_queue.close()
+        result_queue.join_thread()
         shutil.rmtree(temp_root, ignore_errors=True)
 
 

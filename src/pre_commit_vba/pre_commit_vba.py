@@ -263,23 +263,27 @@ class ExcelVbaExporter:
 
     def __init__(self, settings: SettingsFoldersHandleExcel) -> None:
         """Initialize with file path."""
-        self.__app = self.__get_xl_app()
-        self.__workbook = self.__app.Workbooks.Open(
-            settings.workbook_path, ReadOnly=True
-        )
-        settings.export_folder.mkdir(parents=True, exist_ok=True)
-        for vb_comp in self.__workbook.VBProject.VBComponents:
-            vb_comp_file_name = vb_component_type_factory(
-                vb_comp.Name, vb_comp.Type
-            ).file_name
-            vb_comp.Export(Path(settings.export_folder, f"{vb_comp_file_name}"))
+        app = self.__get_xl_app()
+        workbook = None
+        try:
+            workbook = app.Workbooks.Open(settings.workbook_path, ReadOnly=True)
+            settings.export_folder.mkdir(parents=True, exist_ok=True)
+            for vb_comp in workbook.VBProject.VBComponents:
+                vb_comp_file_name = vb_component_type_factory(
+                    vb_comp.Name, vb_comp.Type
+                ).file_name
+                vb_comp.Export(Path(settings.export_folder, f"{vb_comp_file_name}"))
+        finally:
+            if workbook is not None:
+                workbook.Close(SaveChanges=False)
+            app.Quit()
 
     def __get_xl_app(self) -> ExcelApplicationProtocol:
         """Get Excel application."""
         return get_noninteractive_excel_app()
 
     def __del__(self) -> None:
-        """Destructor to close workbook and quit app."""
+        """Fallback cleanup for partially-initialized instances."""
         workbook = getattr(self, "_ExcelVbaExporter__workbook", None)
         app = getattr(self, "_ExcelVbaExporter__app", None)
 
