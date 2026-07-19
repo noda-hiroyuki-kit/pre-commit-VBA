@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Harmonize impact color usage in demo images across the documentation.  
   ドキュメント全体でデモ画像のインパクトカラーを統一.
 
+### Fixed
+
+- Prevent `Workbook_Open` / `Auto_Open` from executing during `extract` by disabling Excel events and macro automation while opening workbooks. ([#107])  
+  `extract` 実行時にワークブックを開く際、Excel のイベントとマクロ自動実行を無効化し、`Workbook_Open` / `Auto_Open` が実行されないように修正. ([#107])
+
 ## [0.3.10] - 2026-07-12
 
 ### Added
@@ -232,6 +237,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.1.0]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.0.2...v0.1.0
 [0.0.2]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.0.1...v0.0.2
 [0.0.1]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/releases/tag/v0.0.1
+[#107]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/107
 [#55]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/55
 [#49]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/49
 [#47]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/47
