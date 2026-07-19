@@ -596,11 +596,13 @@ def get_current_branch_name() -> str:
 def get_workbook_version(workbook_path: Path) -> str:
     """Get workbook version."""
     app = get_noninteractive_excel_app()
-    workbook = app.Workbooks.Open(workbook_path, ReadOnly=True)
+    workbook = None
     try:
+        workbook = app.Workbooks.Open(workbook_path, ReadOnly=True)
         version = str(workbook.BuiltinDocumentProperties("Document version"))
     finally:
-        workbook.Close(SaveChanges=False)
+        if workbook is not None:
+            workbook.Close(SaveChanges=False)
         app.Quit()
     return version
 
