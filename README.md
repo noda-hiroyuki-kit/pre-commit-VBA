@@ -18,7 +18,7 @@ Add the following to your `.pre-commit-config.yaml`:
 
 ```
   - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
-    rev: v0.3.10
+    rev: v0.3.11
     hooks:
       - id: extract-vba-code
       - id: check-excel-book-version
@@ -69,7 +69,7 @@ If you can use `uv`, `mise` is not required.
         ---
         repos:
           - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
-            rev: v0.3.10
+            rev: v0.3.11
             hooks:
               - id: extract-vba-code
               - id: check-excel-book-version

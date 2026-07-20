@@ -104,7 +104,7 @@ def get_noninteractive_excel_app() -> ExcelApplicationProtocol:
     return excel_app
 
 
-__version__ = "0.3.10"
+__version__ = "0.3.11"
 
 
 class UndefineTypeError(Exception):
@@ -275,36 +275,14 @@ class ExcelVbaExporter:
                 vb_comp.Export(Path(settings.export_folder, f"{vb_comp_file_name}"))
         finally:
             if workbook is not None:
-                workbook.Close(SaveChanges=False)
-            app.Quit()
+                with suppress(Exception):
+                    workbook.Close(SaveChanges=False)
+            with suppress(Exception):
+                app.Quit()
 
     def __get_xl_app(self) -> ExcelApplicationProtocol:
         """Get Excel application."""
         return get_noninteractive_excel_app()
-
-    def __del__(self) -> None:
-        """Fallback cleanup for partially-initialized instances."""
-        workbook = getattr(self, "_ExcelVbaExporter__workbook", None)
-        app = getattr(self, "_ExcelVbaExporter__app", None)
-
-        def _safe_log_exception(message: str) -> None:
-            logger_obj = globals().get("logger")
-            if logger_obj is None:
-                return
-            with suppress(Exception):
-                logger_obj.exception(message)
-
-        if workbook is not None:
-            try:
-                workbook.Close(SaveChanges=False)
-            except Exception:  # noqa: BLE001
-                _safe_log_exception("Error while closing workbook in destructor")
-
-        if app is not None:
-            try:
-                app.Quit()
-            except Exception:  # noqa: BLE001
-                _safe_log_exception("Error while quitting Excel app in destructor")
 
 
 def vb_component_type_factory(module_name: str, type_id: int) -> IVbComponentType:
@@ -602,8 +580,10 @@ def get_workbook_version(workbook_path: Path) -> str:
         version = str(workbook.BuiltinDocumentProperties("Document version"))
     finally:
         if workbook is not None:
-            workbook.Close(SaveChanges=False)
-        app.Quit()
+            with suppress(Exception):
+                workbook.Close(SaveChanges=False)
+        with suppress(Exception):
+            app.Quit()
     return version
 
 
