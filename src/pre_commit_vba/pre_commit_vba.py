@@ -25,10 +25,8 @@ from zipfile import BadZipFile, ZipFile
 import typer
 
 try:
-    from pywintypes import com_error
     from win32com.client import DispatchEx
 except ModuleNotFoundError:
-    com_error = OSError
     DispatchEx = None
 
 
