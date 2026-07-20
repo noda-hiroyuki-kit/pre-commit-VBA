@@ -16,7 +16,6 @@ import subprocess
 import sys
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Iterable
-from contextlib import suppress
 from dataclasses import dataclass
 from logging import INFO, basicConfig, getLogger
 from pathlib import Path
@@ -102,6 +101,20 @@ def get_noninteractive_excel_app() -> ExcelApplicationProtocol:
     excel_app.EnableEvents = False
     excel_app.AutomationSecurity = constants.mso_automation_security_force_disable
     return excel_app
+
+
+def cleanup_excel_resource(action: Callable[[], None], resource_name: str) -> None:
+    """Run Excel cleanup without masking the original failure cause.
+
+    Cleanup errors are logged at debug level so the command behavior stays the same
+    while still leaving a diagnostic trail for stray COM teardown failures.
+    """
+    try:
+        action()
+    except Exception:  # noqa: BLE001
+        logger.debug(
+            "Failed to clean up Excel resource: %s", resource_name, exc_info=True
+        )
 
 
 __version__ = "0.3.11"
@@ -275,10 +288,11 @@ class ExcelVbaExporter:
                 vb_comp.Export(Path(settings.export_folder, f"{vb_comp_file_name}"))
         finally:
             if workbook is not None:
-                with suppress(Exception):
-                    workbook.Close(SaveChanges=False)
-            with suppress(Exception):
-                app.Quit()
+                cleanup_excel_resource(
+                    lambda: workbook.Close(SaveChanges=False),
+                    "workbook",
+                )
+            cleanup_excel_resource(lambda: app.Quit(), "application")  # noqa: PLW0108
 
     def __get_xl_app(self) -> ExcelApplicationProtocol:
         """Get Excel application."""
@@ -580,10 +594,11 @@ def get_workbook_version(workbook_path: Path) -> str:
         version = str(workbook.BuiltinDocumentProperties("Document version"))
     finally:
         if workbook is not None:
-            with suppress(Exception):
-                workbook.Close(SaveChanges=False)
-        with suppress(Exception):
-            app.Quit()
+            cleanup_excel_resource(
+                lambda: workbook.Close(SaveChanges=False),
+                "workbook",
+            )
+        cleanup_excel_resource(lambda: app.Quit(), "application")  # noqa: PLW0108
     return version
 
 

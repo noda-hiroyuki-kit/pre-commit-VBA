@@ -131,6 +131,84 @@ def _terminate_excel_processes(process_ids: set[int]) -> None:
             return
 
 
+class TestExcelCleanupLogging:
+    """Tests for debug logging during Excel cleanup failures."""
+
+    def test_get_workbook_version_logs_cleanup_failures(self, caplog) -> None:  # noqa: ANN001
+        """Cleanup failures should be logged without masking version retrieval."""
+        caplog.set_level(logging.DEBUG)
+        workbook = mock.Mock()
+        workbook.BuiltinDocumentProperties.return_value = "0.3.11"
+        workbook.Close.side_effect = OSError("close failed")
+
+        excel_app = mock.Mock()
+        excel_app.Workbooks.Open.return_value = workbook
+        excel_app.Quit.side_effect = OSError("quit failed")
+
+        with mock.patch.object(
+            pre_commit_vba,
+            "get_noninteractive_excel_app",
+            return_value=excel_app,
+        ):
+            result = pre_commit_vba.get_workbook_version(Path("dummy.xlsm"))
+
+        assert result == "0.3.11"  # noqa: S101
+        assert "Failed to clean up Excel resource: workbook" in caplog.text  # noqa: S101
+        assert "Failed to clean up Excel resource: application" in caplog.text  # noqa: S101
+
+    def test_exporter_logs_cleanup_failures(self, tmp_path: Path, caplog) -> None:  # noqa: ANN001
+        """Exporter cleanup failures should be traceable at debug level."""
+        caplog.set_level(logging.DEBUG)
+        workbook = mock.Mock()
+        workbook.VBProject.VBComponents = []
+        workbook.Close.side_effect = OSError("close failed")
+
+        excel_app = mock.Mock()
+        excel_app.Workbooks.Open.return_value = workbook
+        excel_app.Quit.side_effect = OSError("quit failed")
+
+        settings = pre_commit_vba.SettingsFoldersHandleExcel(
+            pre_commit_vba.SettingsCommonFolder(tmp_path / "dummy.xlsm", ".VBA"),
+            "export",
+            "customUI",
+            "code",
+        )
+
+        with mock.patch.object(
+            pre_commit_vba,
+            "get_noninteractive_excel_app",
+            return_value=excel_app,
+        ):
+            pre_commit_vba.ExcelVbaExporter(settings)
+
+        assert "Failed to clean up Excel resource: workbook" in caplog.text  # noqa: S101
+        assert "Failed to clean up Excel resource: application" in caplog.text  # noqa: S101
+
+    def test_get_workbook_version_swallows_non_com_cleanup_errors(
+        self, caplog: pytest.LogCaptureFixture
+    ) -> None:
+        """Non-COM cleanup errors should not alter command outcome."""
+        caplog.set_level(logging.DEBUG)
+        workbook = mock.Mock()
+        workbook.BuiltinDocumentProperties.return_value = "0.3.11"
+        workbook.Close.side_effect = AttributeError("close failed")
+
+        excel_app = mock.Mock()
+        excel_app.Workbooks.Open.return_value = workbook
+        excel_app.Quit.side_effect = TypeError("quit failed")
+
+        with mock.patch.object(
+            pre_commit_vba,
+            "get_noninteractive_excel_app",
+            return_value=excel_app,
+        ):
+            result = pre_commit_vba.get_workbook_version(Path("dummy.xlsm"))
+
+        assert result == "0.3.11"  # noqa: S101
+        assert "Failed to clean up Excel resource: workbook" in caplog.text  # noqa: S101
+        assert "Failed to clean up Excel resource: application" in caplog.text  # noqa: S101
+
+
 class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
     """Test class for code metadata portion in trailing whitespace check."""
 
