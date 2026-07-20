@@ -17,8 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `mypy` の最小要件を 2.1.0 から 2.2.0 へ引き上げ.
 - Bump minimum `tox` requirement from 4.56.1 to 4.56.4. ([#111])  
   `tox` の最小要件を 4.56.1 から 4.56.4 へ引き上げ.
-- Update pre-commit hooks to ruff v0.15.21 and mypy v2.2.0. ([#112])  
-  pre-commit フックを ruff v0.15.21 と mypy v2.2.0 に更新.
+- Update pre-commit hooks to `ruff` v0.15.21 and `mypy` v2.2.0. ([#112])  
+  pre-commit フックを `ruff` v0.15.21 と `mypy` v2.2.0 に更新.
 - Raise the minimum `uv_build` requirement from 0.11.26 to 0.11.28. ([#113])  
   `uv_build` の最小要件を0.11.26から0.11.28へ引き上げ.
 - Bump minimum `zensical` requirement from 0.0.46 to 0.0.50. ([#114])  
