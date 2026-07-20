@@ -437,7 +437,7 @@ dev = [
     { name = "pytest", specifier = ">=9.1.1" },
     { name = "pytest-cov", specifier = ">=7.1.0" },
     { name = "pytest-randomly", specifier = ">=4.1.0" },
-    { name = "ruff", specifier = ">=0.15.20" },
+    { name = "ruff", specifier = ">=0.15.21" },
     { name = "termynal", specifier = ">=0.14.0" },
     { name = "tox", specifier = ">=4.56.4" },
     { name = "zensical", specifier = ">=0.0.50" },
