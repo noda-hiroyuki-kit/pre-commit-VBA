@@ -275,8 +275,10 @@ class ExcelVbaExporter:
                 vb_comp.Export(Path(settings.export_folder, f"{vb_comp_file_name}"))
         finally:
             if workbook is not None:
-                workbook.Close(SaveChanges=False)
-            app.Quit()
+                with suppress(Exception):
+                    workbook.Close(SaveChanges=False)
+            with suppress(Exception):
+                app.Quit()
 
     def __get_xl_app(self) -> ExcelApplicationProtocol:
         """Get Excel application."""
@@ -602,8 +604,10 @@ def get_workbook_version(workbook_path: Path) -> str:
         version = str(workbook.BuiltinDocumentProperties("Document version"))
     finally:
         if workbook is not None:
-            workbook.Close(SaveChanges=False)
-        app.Quit()
+            with suppress(Exception):
+                workbook.Close(SaveChanges=False)
+        with suppress(Exception):
+            app.Quit()
     return version
 
 
