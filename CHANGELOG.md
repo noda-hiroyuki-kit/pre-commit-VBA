@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Zensical の macros で `[project].version` を読み込み、ドキュメントのバージョン表示を `pyproject.toml` と同期。
 - Harmonize impact color usage in demo images across the documentation.  
   ドキュメント全体でデモ画像のインパクトカラーを統一.
+- Raise the minimum `uv_build` requirement from 0.11.26 to 0.11.28. ([#113])  
+  `uv_build` の最小要件を0.11.26から0.11.28へ引き上げ.
+- Update docs workflow to use `uv` 0.11.28.  
+  ドキュメント用ワークフローで使用する `uv` を 0.11.28 に更新.
 
 ### Fixed
 
@@ -264,3 +268,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#89]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/89
 [#95]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/95
 [#96]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/96
+[#113]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/113
