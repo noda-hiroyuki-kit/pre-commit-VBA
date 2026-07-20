@@ -27,7 +27,7 @@ dev = [
     "ruff>=0.15.20",
     "termynal>=0.14.0",
     "tox>=4.56.1",
-    "zensical>=0.0.46",
+    "zensical>=0.0.50",
 ]
 
 [tool.uv]
