@@ -598,7 +598,7 @@ def get_workbook_version(workbook_path: Path) -> str:
                 lambda: workbook.Close(SaveChanges=False),
                 "workbook",
             )
-        cleanup_excel_resource(app.Quit, "application")
+        cleanup_excel_resource(lambda: app.Quit(), "application")  # noqa: PLW0108
     return version
 
 
