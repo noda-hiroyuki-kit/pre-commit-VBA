@@ -13,21 +13,21 @@ dependencies = [
 pre-commit-vba = "pre_commit_vba.pre_commit_vba:app"
 
 [build-system]
-requires = ["uv_build>=0.11.26,<0.12"]
+requires = ["uv_build>=0.11.28,<0.12"]
 build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
-    "mypy>=2.1.0",
+    "mypy>=2.2.0",
     "pre-commit>=4.6.0",
     "pre-commit-uv>=4.2.2",
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
     "pytest-randomly>=4.1.0",
-    "ruff>=0.15.20",
+    "ruff>=0.15.21",
     "termynal>=0.14.0",
-    "tox>=4.56.1",
-    "zensical>=0.0.46",
+    "tox>=4.56.4",
+    "zensical>=0.0.50",
 ]
 
 [tool.uv]
