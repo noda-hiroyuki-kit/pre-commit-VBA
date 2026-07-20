@@ -184,6 +184,30 @@ class TestExcelCleanupLogging:
         assert "Failed to clean up Excel resource: workbook" in caplog.text  # noqa: S101
         assert "Failed to clean up Excel resource: application" in caplog.text  # noqa: S101
 
+    def test_get_workbook_version_swallows_non_com_cleanup_errors(
+        self, caplog: pytest.LogCaptureFixture
+    ) -> None:
+        """Non-COM cleanup errors should not alter command outcome."""
+        caplog.set_level(logging.DEBUG)
+        workbook = mock.Mock()
+        workbook.BuiltinDocumentProperties.return_value = "0.3.11"
+        workbook.Close.side_effect = AttributeError("close failed")
+
+        excel_app = mock.Mock()
+        excel_app.Workbooks.Open.return_value = workbook
+        excel_app.Quit.side_effect = TypeError("quit failed")
+
+        with mock.patch.object(
+            pre_commit_vba,
+            "get_noninteractive_excel_app",
+            return_value=excel_app,
+        ):
+            result = pre_commit_vba.get_workbook_version(Path("dummy.xlsm"))
+
+        assert result == "0.3.11"  # noqa: S101
+        assert "Failed to clean up Excel resource: workbook" in caplog.text  # noqa: S101
+        assert "Failed to clean up Excel resource: application" in caplog.text  # noqa: S101
+
 
 class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
     """Test class for code metadata portion in trailing whitespace check."""

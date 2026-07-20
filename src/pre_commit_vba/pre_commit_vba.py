@@ -113,7 +113,7 @@ def cleanup_excel_resource(action: Callable[[], None], resource_name: str) -> No
     """
     try:
         action()
-    except com_error, OSError:
+    except Exception:  # noqa: BLE001
         logger.debug(
             "Failed to clean up Excel resource: %s", resource_name, exc_info=True
         )
