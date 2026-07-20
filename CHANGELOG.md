@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `uv_build` の最小要件を 0.11.26 から 0.11.28 へ引き上げ.
 - Bump minimum `zensical` requirement from 0.0.46 to 0.0.50. ([#114])  
   `zensical` の最小要件を 0.0.46 から 0.0.50 へ引き上げ.
-- Update pre-commit hooks to `ruff` v0.15.21 and `mypy` v2.2.0.
+- Update pre-commit hooks to `ruff` v0.15.21 and `mypy` v2.2.0.  
   pre-commit フックを `ruff` v0.15.21 と `mypy` v2.2.0 に更新.
 - Update docs workflow to use `uv` 0.11.28.  
   ドキュメント用ワークフローで使用する `uv` を 0.11.28 に更新.
