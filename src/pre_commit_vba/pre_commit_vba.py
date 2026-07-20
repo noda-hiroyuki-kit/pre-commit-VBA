@@ -292,7 +292,7 @@ class ExcelVbaExporter:
                     lambda: workbook.Close(SaveChanges=False),
                     "workbook",
                 )
-            cleanup_excel_resource(app.Quit, "application")
+            cleanup_excel_resource(lambda: app.Quit(), "application")  # noqa: PLW0108
 
     def __get_xl_app(self) -> ExcelApplicationProtocol:
         """Get Excel application."""
