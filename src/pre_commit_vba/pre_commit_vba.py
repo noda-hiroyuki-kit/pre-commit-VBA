@@ -76,6 +76,8 @@ class ExcelApplicationProtocol(Protocol):
 
     Visible: bool
     DisplayAlerts: bool
+    EnableEvents: bool
+    AutomationSecurity: int
     Workbooks: WorkbooksProtocol
     Quit: Callable[[], None]
 
@@ -90,7 +92,19 @@ def get_dispatch_ex() -> DispatchExFactory:
     return cast("DispatchExFactory", DispatchEx)
 
 
-__version__ = "0.3.10"
+def get_noninteractive_excel_app() -> ExcelApplicationProtocol:
+    """Return a non-interactive Excel application instance."""
+    dispatch_ex = get_dispatch_ex()
+    excel_app = dispatch_ex("Excel.Application")
+    excel_app.Visible = False
+    excel_app.DisplayAlerts = False
+    # Prevent Workbook_Open / Auto_Open execution while opening workbooks.
+    excel_app.EnableEvents = False
+    excel_app.AutomationSecurity = constants.mso_automation_security_force_disable
+    return excel_app
+
+
+__version__ = "0.3.11"
 
 
 class UndefineTypeError(Exception):
@@ -125,6 +139,7 @@ class Constants:
     vbext_ct_Document: int = 100  # from enum vbext_ComponentType  # noqa: N815
     vbext_ct_MSForm: int = 3  # from enum vbext_ComponentType  # noqa: N815
     vbext_ct_StdModule: int = 1  # from enum vbext_ComponentType  # noqa: N815
+    mso_automation_security_force_disable: int = 3  # from enum MsoAutomationSecurity
 
 
 class SettingsCommonFolder:
@@ -248,48 +263,26 @@ class ExcelVbaExporter:
 
     def __init__(self, settings: SettingsFoldersHandleExcel) -> None:
         """Initialize with file path."""
-        self.__app = self.__get_xl_app()
-        self.__workbook = self.__app.Workbooks.Open(
-            settings.workbook_path, ReadOnly=True
-        )
-        settings.export_folder.mkdir(parents=True, exist_ok=True)
-        for vb_comp in self.__workbook.VBProject.VBComponents:
-            vb_comp_file_name = vb_component_type_factory(
-                vb_comp.Name, vb_comp.Type
-            ).file_name
-            vb_comp.Export(Path(settings.export_folder, f"{vb_comp_file_name}"))
+        app = self.__get_xl_app()
+        workbook = None
+        try:
+            workbook = app.Workbooks.Open(settings.workbook_path, ReadOnly=True)
+            settings.export_folder.mkdir(parents=True, exist_ok=True)
+            for vb_comp in workbook.VBProject.VBComponents:
+                vb_comp_file_name = vb_component_type_factory(
+                    vb_comp.Name, vb_comp.Type
+                ).file_name
+                vb_comp.Export(Path(settings.export_folder, f"{vb_comp_file_name}"))
+        finally:
+            if workbook is not None:
+                with suppress(Exception):
+                    workbook.Close(SaveChanges=False)
+            with suppress(Exception):
+                app.Quit()
 
     def __get_xl_app(self) -> ExcelApplicationProtocol:
         """Get Excel application."""
-        dispatch_ex = get_dispatch_ex()
-        excel_app = dispatch_ex("Excel.Application")
-        excel_app.Visible = False
-        excel_app.DisplayAlerts = False
-        return excel_app
-
-    def __del__(self) -> None:
-        """Destructor to close workbook and quit app."""
-        workbook = getattr(self, "_ExcelVbaExporter__workbook", None)
-        app = getattr(self, "_ExcelVbaExporter__app", None)
-
-        def _safe_log_exception(message: str) -> None:
-            logger_obj = globals().get("logger")
-            if logger_obj is None:
-                return
-            with suppress(Exception):
-                logger_obj.exception(message)
-
-        if workbook is not None:
-            try:
-                workbook.Close(SaveChanges=False)
-            except Exception:  # noqa: BLE001
-                _safe_log_exception("Error while closing workbook in destructor")
-
-        if app is not None:
-            try:
-                app.Quit()
-            except Exception:  # noqa: BLE001
-                _safe_log_exception("Error while quitting Excel app in destructor")
+        return get_noninteractive_excel_app()
 
 
 def vb_component_type_factory(module_name: str, type_id: int) -> IVbComponentType:
@@ -580,16 +573,17 @@ def get_current_branch_name() -> str:
 
 def get_workbook_version(workbook_path: Path) -> str:
     """Get workbook version."""
-    dispatch_ex = get_dispatch_ex()
-    app = dispatch_ex("Excel.Application")
-    app.Visible = False
-    app.DisplayAlerts = False
-    workbook = app.Workbooks.Open(workbook_path, ReadOnly=True)
+    app = get_noninteractive_excel_app()
+    workbook = None
     try:
+        workbook = app.Workbooks.Open(workbook_path, ReadOnly=True)
         version = str(workbook.BuiltinDocumentProperties("Document version"))
     finally:
-        workbook.Close(SaveChanges=False)
-        app.Quit()
+        if workbook is not None:
+            with suppress(Exception):
+                workbook.Close(SaveChanges=False)
+        with suppress(Exception):
+            app.Quit()
     return version
 
 
@@ -630,7 +624,7 @@ def version_callback(value: bool) -> None:  # noqa: FBT001
 
 
 @app.command("extract")
-def extract_vba_code_from_workbooks(  # noqa: PLR0913
+def extract_vba_code_from_workbooks(  # noqa: PLR0913, C901
     *,
     target_path: Annotated[str, typer.Option()] = ".",
     folder_suffix: Annotated[str, typer.Option()] = ".VBA",
@@ -663,11 +657,15 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913
         enable_folder_annotation=enable_folder_annotation,
         create_gitignore=create_gitignore,
     )
-    try:
-        staging_status_before = get_staging_status()
-    except StagingStatusError:
-        sys.exit(1)
-    for workbook_path in Path(target_path).resolve().glob("*.xls*"):
+    resolved_target_path = Path(target_path).resolve()
+    check_staging_drift = resolved_target_path == Path.cwd().resolve()
+    staging_status_before = ""
+    if check_staging_drift:
+        try:
+            staging_status_before = get_staging_status()
+        except StagingStatusError:
+            sys.exit(1)
+    for workbook_path in resolved_target_path.glob("*.xls*"):
         if workbook_path.name.startswith("~$"):
             continue
         if not has_vba_code(workbook_path):
@@ -692,17 +690,18 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913
             add_to_staging(folder_settings)
         except AddToStagingError:
             sys.exit(1)
-    try:
-        staging_status_after = get_staging_status()
-    except StagingStatusError:
-        sys.exit(1)
-    if staging_status_before != staging_status_after:
-        logger.error(
-            "Staging state changed during extract command. Review staged changes with "
-            "'git diff --cached', re-stage any updated files if needed, and then "
-            "re-run the command."
-        )
-        sys.exit(1)
+    if check_staging_drift:
+        try:
+            staging_status_after = get_staging_status()
+        except StagingStatusError:
+            sys.exit(1)
+        if staging_status_before != staging_status_after:
+            logger.error(
+                "Staging state changed during extract command. "
+                "Review staged changes with 'git diff --cached', "
+                "re-stage any updated files if needed, and then re-run the command."
+            )
+            sys.exit(1)
 
 
 @app.command()

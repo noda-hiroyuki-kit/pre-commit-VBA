@@ -1,6 +1,6 @@
 [project]
 name = "pre-commit-vba"
-version = "0.3.10"
+version = "0.3.11"
 description = "Extracts VBA code from Excel files for managing VBA code in git and checks workbook version."
 readme = "README.md"
 requires-python = ">=3.14,<3.15"
@@ -27,7 +27,7 @@ dev = [
     "ruff>=0.15.21",
     "termynal>=0.14.0",
     "tox>=4.56.4",
-    "zensical>=0.0.46",
+    "zensical>=0.0.50",
 ]
 
 [tool.uv]

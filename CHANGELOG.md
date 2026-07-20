@@ -7,12 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.11] - 2026-07-20
+
 ### Changed
 
 - Sync documentation version display with `pyproject.toml` by loading `[project].version` through Zensical macros.  
   Zensical の macros で `[project].version` を読み込み、ドキュメントのバージョン表示を `pyproject.toml` と同期。
 - Harmonize impact color usage in demo images across the documentation.  
   ドキュメント全体でデモ画像のインパクトカラーを統一.
+- Raise the minimum `mypy` requirement from 2.1.0 to 2.2.0. ([#110])  
+  `mypy` の最小要件を 2.1.0 から 2.2.0 へ引き上げ.
+- Bump minimum `tox` requirement from 4.56.1 to 4.56.4. ([#111])  
+  `tox` の最小要件を 4.56.1 から 4.56.4 へ引き上げ.
+- Bump minimum `ruff` requirement from 0.15.20 to 0.15.21. ([#112])  
+  `ruff` の最小要件を 0.15.20 から 0.15.21 へ引き上げ.
+- Raise the minimum `uv_build` requirement from 0.11.26 to 0.11.28. ([#113])  
+  `uv_build` の最小要件を 0.11.26 から 0.11.28 へ引き上げ.
+- Bump minimum `zensical` requirement from 0.0.46 to 0.0.50. ([#114])  
+  `zensical` の最小要件を 0.0.46 から 0.0.50 へ引き上げ.
+- Update pre-commit hooks to `ruff` v0.15.21 and `mypy` v2.2.0.  
+  pre-commit フックを `ruff` v0.15.21 と `mypy` v2.2.0 に更新.
+- Update docs workflow to use `uv` 0.11.28.  
+  ドキュメント用ワークフローで使用する `uv` を 0.11.28 に更新.
+
+### Fixed
+
+- Prevent `Workbook_Open` / `Auto_Open` from executing during `extract` by disabling Excel events and macro automation while opening workbooks. ([#107])  
+  `extract` 実行時にワークブックを開く際、Excel のイベントとマクロ自動実行を無効化し、`Workbook_Open` / `Auto_Open` が実行されないように修正. ([#107])
 
 ## [0.3.10] - 2026-07-12
 
@@ -213,7 +234,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release as first version
 
-[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.10...HEAD
+[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.11...HEAD
+[0.3.11]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.10...v0.3.11
 [0.3.10]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.9...v0.3.10
 [0.3.9]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.8...v0.3.9
 [0.3.8]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.7...v0.3.8
@@ -232,6 +254,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.1.0]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.0.2...v0.1.0
 [0.0.2]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.0.1...v0.0.2
 [0.0.1]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/releases/tag/v0.0.1
+[#107]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/107
 [#55]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/55
 [#49]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/49
 [#47]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/47
@@ -258,3 +281,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#89]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/89
 [#95]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/95
 [#96]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/96
+[#110]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/110
+[#111]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/111
+[#112]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/112
+[#113]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/113
+[#114]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/114

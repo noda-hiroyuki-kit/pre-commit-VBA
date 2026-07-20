@@ -1,10 +1,13 @@
-# SKILL: Create and Update Zensical Documentation
+---
+name: zensical-docs
+description: Create or update Zensical documentation pages for this repository, including navigation and bilingual documentation alignment when needed.
+license: MIT
+---
 
-This skill defines how the Copilot coding agent should create or update Zensical documentation in the `pre-commit-VBA` repository.
-
-## Overview
+# Create and Update Zensical Documentation
 
 Use this skill when the task is to add, revise, or reorganize documentation pages built with Zensical.
+
 This includes editing existing Markdown files under `docs/`, adding new pages, updating navigation in `zensical.toml`, and keeping English and Japanese documentation aligned when appropriate.
 
 ## Trigger Conditions
@@ -57,14 +60,14 @@ This includes editing existing Markdown files under `docs/`, adding new pages, u
 
 When writing or editing Japanese documentation:
 
-- Use `. ` (ASCII period followed by a space) for sentence-ending periods (句点), not `。` or `．`.
-- Use `, ` (ASCII comma followed by a space) for commas within sentences (読点), not `、` or `，`.
+- Use `. ` for sentence-ending periods, not `。` or `．`.
+- Use `, ` for commas within sentences, not `、` or `，`.
 - Apply this rule consistently across all Japanese pages under `docs/ja/`.
 
 #### Dynamic Content and Extensions
 
 - This docs site uses Zensical macros. Preserve macro usage such as `{{project_version}}` when relevant.
-- The site enables the `Termynal` markdown extension. Use existing Termynal patterns when documenting interactive command output.
+- The site enables the `Termynal` Markdown extension. Use existing Termynal patterns when documenting interactive command output.
 - Do not remove or break existing extension-dependent markup unless the task explicitly requires it.
 
 ### 4. Keep Language Variants Consistent
@@ -85,7 +88,7 @@ When writing or editing Japanese documentation:
 
 ### 6. Validate the Documentation
 
-Run the documentation build when the environment supports it:
+Run the documentation build when the environment supports it.
 
 ```powershell
 uv run zensical build --clean
@@ -122,10 +125,10 @@ uv run pytest tests/test_pre_commit_vba.py::TestExtractCommandExistenceFiles
 
 ## References
 
-- `AGENTS.md`
-- `CONTRIBUTING.md`
-- `docs/index.md`
-- `docs/en/`
-- `docs/ja/`
-- `zensical.toml`
-- `.github/workflows/docs.yml`
+- AGENTS.md
+- CONTRIBUTING.md
+- docs/index.md
+- docs/en/
+- docs/ja/
+- zensical.toml
+- .github/workflows/docs.yml
