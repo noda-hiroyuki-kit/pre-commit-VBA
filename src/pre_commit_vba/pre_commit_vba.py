@@ -625,6 +625,21 @@ def has_rubberduck_addin_references(workbook_path: Path) -> bool:
     return len(detected_arches) == 1
 
 
+def configure_log_stream_encoding() -> None:
+    """Force UTF-8 log stream on Windows to avoid mojibake in consumers."""
+    stderr = getattr(sys, "stderr", None)
+    if stderr is None:
+        return
+    reconfigure = getattr(stderr, "reconfigure", None)
+    if not callable(reconfigure):
+        return
+    try:
+        reconfigure(encoding="utf-8", errors="replace")
+    except LookupError, OSError, ValueError:
+        return
+
+
+configure_log_stream_encoding()
 app = typer.Typer(pretty_exceptions_show_locals=True, pretty_exceptions_short=False)
 basicConfig(level=INFO)
 logger = getLogger(__name__)
