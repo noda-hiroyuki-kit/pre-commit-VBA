@@ -84,17 +84,31 @@ class TestExcelCustomUiExtractor:
         if settings.common_folder.exists():
             shutil.rmtree(settings.common_folder)
 
-        caplog.set_level(logging.INFO)
-        ExcelCustomUiExtractor(settings)
+        try:
+            caplog.set_level(logging.INFO)
+            ExcelCustomUiExtractor(settings)
 
-        assert "customUI14.xml does not exists in Issue121_日本語.xlsm" in caplog.text  # noqa: S101
-        assert "customUI.xml does not exists in Issue121_日本語.xlsm" in caplog.text  # noqa: S101
+            expected_log_14 = "customUI14.xml does not exists in Issue121_日本語.xlsm"
+            expected_log = "customUI.xml does not exists in Issue121_日本語.xlsm"
+            assert expected_log_14 in caplog.text  # noqa: S101
+            assert expected_log in caplog.text  # noqa: S101
+        finally:
+            if settings.common_folder.exists():
+                shutil.rmtree(settings.common_folder)
 
     @pytest.mark.skipif(
         sys.platform != "win32", reason="Windows specific encoding behavior"
     )
     def test_japanese_filename_is_readable_by_utf8_consumers(self) -> None:
         """Issue121: UTF-8 consumers should read Japanese filename without mojibake."""
+        workbook_path = Path("tests/fixtures/issue121/Issue121_日本語.xlsm")
+        common_folder = SettingsCommonFolder(workbook_path, ".VBA")
+        settings = SettingsFoldersHandleExcel(
+            settings_common_folder=common_folder,
+            export_folder="",
+            custom_ui_folder="customUI",
+            code_folder="",
+        )
         script = textwrap.dedent(
             """
             from pathlib import Path
@@ -123,14 +137,21 @@ class TestExcelCustomUiExtractor:
         env["PYTHONUTF8"] = "0"
         env["PYTHONIOENCODING"] = "cp932"
 
-        process = subprocess.run(  # noqa: S603
-            [sys.executable, "-c", script],
-            check=False,
-            capture_output=True,
-            cwd=Path.cwd(),
-            env=env,
-        )
+        if settings.common_folder.exists():
+            shutil.rmtree(settings.common_folder)
 
-        expected_log = "customUI14.xml does not exists in Issue121_日本語.xlsm"
-        utf8_decoded = process.stderr.decode("utf-8", errors="replace")
-        assert expected_log in utf8_decoded  # noqa: S101
+        try:
+            process = subprocess.run(  # noqa: S603
+                [sys.executable, "-c", script],
+                check=False,
+                capture_output=True,
+                cwd=Path.cwd(),
+                env=env,
+            )
+
+            expected_log = "customUI14.xml does not exists in Issue121_日本語.xlsm"
+            utf8_decoded = process.stderr.decode("utf-8", errors="replace")
+            assert expected_log in utf8_decoded  # noqa: S101
+        finally:
+            if settings.common_folder.exists():
+                shutil.rmtree(settings.common_folder)
