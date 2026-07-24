@@ -71,7 +71,9 @@ class TestExcelCustomUiExtractor:
 
         assert not settings.custom_ui_folder.exists()  # noqa: S101
 
-    def test_logs_japanese_workbook_filename_without_mojibake(self, caplog) -> None:  # noqa: ANN001
+    def test_logs_japanese_workbook_filename_without_mojibake(
+        self, caplog: pytest.LogCaptureFixture
+    ) -> None:
         """Issue121: log output should keep Japanese workbook filename."""
         workbook_path = Path("tests/fixtures/issue121/Issue121_日本語.xlsm")
         common_folder = SettingsCommonFolder(workbook_path, ".VBA")
