@@ -151,9 +151,11 @@ class TestExcelCustomUiExtractor:
                 env=env,
             )
 
+            stderr_utf8 = process.stderr.decode("utf-8", errors="replace")
+            assert process.returncode == 0, stderr_utf8  # noqa: S101
+
             expected_log = "customUI14.xml does not exists in Issue121_日本語.xlsm"
-            utf8_decoded = process.stderr.decode("utf-8", errors="replace")
-            assert expected_log in utf8_decoded  # noqa: S101
+            assert expected_log in stderr_utf8  # noqa: S101
         finally:
             if settings.common_folder.exists():
                 shutil.rmtree(settings.common_folder)
