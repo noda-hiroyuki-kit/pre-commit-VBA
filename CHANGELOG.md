@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Log Excel workbook/application cleanup failures at debug level so COM teardown issues remain traceable without masking the original command outcome.  
   Excel ワークブック/アプリケーションのクリーンアップ失敗を debug レベルで記録し, 元のコマンド結果を覆い隠さずに COM 終了処理の問題を追跡できるように修正.
+- Force UTF-8 for command log output stream on Windows so Japanese workbook filenames do not become mojibake in consumers decoding logs as UTF-8. ([#121])  
+  Windows でコマンドのログ出力ストリームを UTF-8 に固定し, UTF-8 としてログを読む側で日本語ワークブック名が文字化けしないように修正. ([#121])
 
 ## [0.3.11] - 2026-07-20
 
@@ -259,6 +261,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.1.0]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.0.2...v0.1.0
 [0.0.2]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.0.1...v0.0.2
 [0.0.1]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/releases/tag/v0.0.1
+[#121]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/121
 [#107]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/107
 [#55]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/55
 [#49]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/49
