@@ -626,7 +626,7 @@ def has_rubberduck_addin_references(workbook_path: Path) -> bool:
 
 
 def configure_log_stream_encoding() -> None:
-    """Force UTF-8 log stream on Windows to avoid mojibake in consumers."""
+    """Force UTF-8 encoding for sys.stderr on Windows to avoid mojibake in consumers."""
     if sys.platform != "win32":
         return
     stderr = getattr(sys, "stderr", None)
