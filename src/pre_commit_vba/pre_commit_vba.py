@@ -7,7 +7,7 @@ extract code files from excel workbook with codes.
 # requires-python = ">=3.14"
 # dependencies = [
 #   "pywin32>=312",
-#   "typer>=0.26.8",
+#   "typer>=0.27.0",
 # ]
 # ///
 import re
@@ -16,7 +16,6 @@ import subprocess
 import sys
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Iterable
-from contextlib import suppress
 from dataclasses import dataclass
 from logging import INFO, basicConfig, getLogger
 from pathlib import Path
@@ -104,7 +103,21 @@ def get_noninteractive_excel_app() -> ExcelApplicationProtocol:
     return excel_app
 
 
-__version__ = "0.3.11"
+def cleanup_excel_resource(action: Callable[[], None], resource_name: str) -> None:
+    """Run Excel cleanup without masking the original failure cause.
+
+    Cleanup errors are logged at debug level so the command behavior stays the same
+    while still leaving a diagnostic trail for stray COM teardown failures.
+    """
+    try:
+        action()
+    except Exception:  # noqa: BLE001
+        logger.debug(
+            "Failed to clean up Excel resource: %s", resource_name, exc_info=True
+        )
+
+
+__version__ = "0.3.12"
 
 
 class UndefineTypeError(Exception):
@@ -275,10 +288,11 @@ class ExcelVbaExporter:
                 vb_comp.Export(Path(settings.export_folder, f"{vb_comp_file_name}"))
         finally:
             if workbook is not None:
-                with suppress(Exception):
-                    workbook.Close(SaveChanges=False)
-            with suppress(Exception):
-                app.Quit()
+                cleanup_excel_resource(
+                    lambda: workbook.Close(SaveChanges=False),
+                    "workbook",
+                )
+            cleanup_excel_resource(app.Quit, "application")
 
     def __get_xl_app(self) -> ExcelApplicationProtocol:
         """Get Excel application."""
@@ -580,10 +594,11 @@ def get_workbook_version(workbook_path: Path) -> str:
         version = str(workbook.BuiltinDocumentProperties("Document version"))
     finally:
         if workbook is not None:
-            with suppress(Exception):
-                workbook.Close(SaveChanges=False)
-        with suppress(Exception):
-            app.Quit()
+            cleanup_excel_resource(
+                lambda: workbook.Close(SaveChanges=False),
+                "workbook",
+            )
+        cleanup_excel_resource(app.Quit, "application")
     return version
 
 
@@ -610,6 +625,26 @@ def has_rubberduck_addin_references(workbook_path: Path) -> bool:
     return len(detected_arches) == 1
 
 
+def configure_log_stream_encoding() -> None:
+    """Force UTF-8 encoding for non-interactive stderr on Windows."""
+    if sys.platform != "win32":
+        return
+    stderr = getattr(sys, "stderr", None)
+    if stderr is None:
+        return
+    isatty = getattr(stderr, "isatty", None)
+    if callable(isatty) and isatty():
+        return
+    reconfigure = getattr(stderr, "reconfigure", None)
+    if not callable(reconfigure):
+        return
+    try:
+        reconfigure(encoding="utf-8", errors="replace")
+    except LookupError, OSError, ValueError:
+        return
+
+
+configure_log_stream_encoding()
 app = typer.Typer(pretty_exceptions_show_locals=True, pretty_exceptions_short=False)
 basicConfig(level=INFO)
 logger = getLogger(__name__)

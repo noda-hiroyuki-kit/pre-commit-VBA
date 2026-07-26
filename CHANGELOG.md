@@ -7,12 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.12] - 2026-07-26
+
+### Fixed
+
+- Log Excel workbook/application cleanup failures at debug level so COM teardown issues remain traceable without masking the original command outcome.  
+  Excel ワークブック/アプリケーションのクリーンアップ失敗を debug レベルで記録し, 元のコマンド結果を覆い隠さずに COM 終了処理の問題を追跡できるように修正.
+- Force UTF-8 for command log output stream on Windows so Japanese workbook filenames do not become mojibake in consumers decoding logs as UTF-8. ([#121])  
+  Windows でコマンドのログ出力ストリームを UTF-8 に固定し, UTF-8 としてログを読む側で日本語ワークブック名が文字化けしないように修正. ([#121])
+
+### Changed
+
+- Raise the minimum `typer` requirement from 0.26.8 to 0.27.0.
+  `typer` の最小要件を 0.26.8 から 0.27.0 へ引き上げ.
+- Raise the minimum `uv_build` requirement from 0.11.28 to 0.11.29.
+  `uv_build` の最小要件を 0.11.28 から 0.11.29 へ引き上げ.
+- Raise the minimum `mypy` requirement from 2.2.0 to 2.3.0.  
+  `mypy` の最小要件を 2.2.0 から 2.3.0 へ引き上げ.
+- Add `tox-uv`  
+  `tox-uv`を追加
+
 ## [0.3.11] - 2026-07-20
 
 ### Changed
 
 - Sync documentation version display with `pyproject.toml` by loading `[project].version` through Zensical macros.  
-  Zensical の macros で `[project].version` を読み込み、ドキュメントのバージョン表示を `pyproject.toml` と同期。
+  Zensical の macros で `[project].version` を読み込み, ドキュメントのバージョン表示を `pyproject.toml` と同期.
 - Harmonize impact color usage in demo images across the documentation.  
   ドキュメント全体でデモ画像のインパクトカラーを統一.
 - Raise the minimum `mypy` requirement from 2.1.0 to 2.2.0. ([#110])  
@@ -33,7 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Prevent `Workbook_Open` / `Auto_Open` from executing during `extract` by disabling Excel events and macro automation while opening workbooks. ([#107])  
-  `extract` 実行時にワークブックを開く際、Excel のイベントとマクロ自動実行を無効化し、`Workbook_Open` / `Auto_Open` が実行されないように修正. ([#107])
+  `extract` 実行時にワークブックを開く際, Excel のイベントとマクロ自動実行を無効化し, `Workbook_Open` / `Auto_Open` が実行されないように修正. ([#107])
 
 ## [0.3.10] - 2026-07-12
 
@@ -45,7 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Normalize `.pre-commit-hooks.yaml` descriptions to scalar strings for manifest validation compatibility.  
-  マニフェスト検証との互換性のため、`.pre-commit-hooks.yaml` の description をスカラー文字列に正規化.
+  マニフェスト検証との互換性のため, `.pre-commit-hooks.yaml` の description をスカラー文字列に正規化.
 - Raise the minimum `typer` requirement from 0.26.7 to 0.26.8. ([#95])  
   `typer` の最小要件を0.26.7から0.26.8へ引き上げ.
 - Raise the minimum `uv_build` requirement from 0.11.24 to 0.11.26. ([#96])  
@@ -138,7 +158,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add Dependabot configuration for the uv ecosystem with weekly update checks.  
-  uv エコシステム向けに、週次で更新確認する Dependabot 設定を追加.
+  uv エコシステム向けに, 週次で更新確認する Dependabot 設定を追加.
 
 ### Fixed
 
@@ -234,7 +254,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release as first version
 
-[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.11...HEAD
+[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.12...HEAD
+[0.3.12]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.11...v0.3.12
 [0.3.11]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.10...v0.3.11
 [0.3.10]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.9...v0.3.10
 [0.3.9]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.8...v0.3.9
@@ -254,6 +275,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.1.0]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.0.2...v0.1.0
 [0.0.2]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.0.1...v0.0.2
 [0.0.1]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/releases/tag/v0.0.1
+[#121]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/121
 [#107]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/107
 [#55]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/55
 [#49]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/49

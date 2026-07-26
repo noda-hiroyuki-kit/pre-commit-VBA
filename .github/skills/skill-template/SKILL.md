@@ -66,7 +66,7 @@ license: MIT
 - Format: `uv run ruff format`
 - Lint: `uv run ruff check`
 - Type check: `uv run mypy src/`
-- Tests: `uv run pytest .`
+- Tests: `uv run tox -e 3.14`, `uv run pytest tests/test_pre_commit_vba.py::TestExtractCommandExistenceFiles`
 
 ## Authoring Notes
 
