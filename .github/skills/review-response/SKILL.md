@@ -83,7 +83,7 @@ Follow the project conventions below.
 - Framework: `pytest`
 - Test files: `test_*.py` under `tests/`
 - Coverage target: >= 80%
-- Run the full test suite before committing: `uv run pytest .`
+- Run the full test suite before committing: `uv run tox -e 3.14`.
 - Add or update tests whenever behavior changes.
 
 #### Commit Messages
@@ -110,7 +110,7 @@ Run all checks in order.
 uv run ruff format
 uv run ruff check
 uv run mypy src/
-uv run pytest .
+uv run tox -e 3.14
 uv run pytest tests/test_pre_commit_vba.py::TestExtractCommandExistenceFiles
 ```
 
