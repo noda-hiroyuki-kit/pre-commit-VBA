@@ -7,7 +7,7 @@ extract code files from excel workbook with codes.
 # requires-python = ">=3.14"
 # dependencies = [
 #   "pywin32>=312",
-#   "typer>=0.26.8",
+#   "typer>=0.27.0",
 # ]
 # ///
 import re
@@ -117,7 +117,7 @@ def cleanup_excel_resource(action: Callable[[], None], resource_name: str) -> No
         )
 
 
-__version__ = "0.3.11"
+__version__ = "0.3.12"
 
 
 class UndefineTypeError(Exception):
