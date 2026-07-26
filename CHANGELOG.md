@@ -7,12 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.12] - 2026-07-26
+
 ### Fixed
 
 - Log Excel workbook/application cleanup failures at debug level so COM teardown issues remain traceable without masking the original command outcome.  
   Excel ワークブック/アプリケーションのクリーンアップ失敗を debug レベルで記録し, 元のコマンド結果を覆い隠さずに COM 終了処理の問題を追跡できるように修正.
 - Force UTF-8 for command log output stream on Windows so Japanese workbook filenames do not become mojibake in consumers decoding logs as UTF-8. ([#121])  
   Windows でコマンドのログ出力ストリームを UTF-8 に固定し, UTF-8 としてログを読む側で日本語ワークブック名が文字化けしないように修正. ([#121])
+
+### Changed
+
+- Raise the minimum `typer` requirement from 0.26.8 to 0.27.0.
+  `typer` の最小要件を 0.26.8 から 0.27.0 へ引き上げ.
+- Raise the minimum `uv_build` requirement from 0.11.28 to 0.11.29.
+  `uv_build` の最小要件を 0.11.28 から 0.11.29 へ引き上げ.
+- Raise the minimum `mypy` requirement from 2.2.0 to 2.3.0.  
+  `mypy` の最小要件を 2.2.0 から 2.3.0 へ引き上げ.
+- Add `tox-uv`  
+  `tox-uv`を追加
 
 ## [0.3.11] - 2026-07-20
 
@@ -241,7 +254,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release as first version
 
-[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.11...HEAD
+[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.12...HEAD
+[0.3.12]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.11...v0.3.12
 [0.3.11]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.10...v0.3.11
 [0.3.10]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.9...v0.3.10
 [0.3.9]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.8...v0.3.9
