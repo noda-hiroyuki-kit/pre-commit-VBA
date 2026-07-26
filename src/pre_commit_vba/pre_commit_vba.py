@@ -292,7 +292,7 @@ class ExcelVbaExporter:
                     lambda: workbook.Close(SaveChanges=False),
                     "workbook",
                 )
-            cleanup_excel_resource(lambda: app.Quit(), "application")  # noqa: PLW0108
+            cleanup_excel_resource(app.Quit, "application")
 
     def __get_xl_app(self) -> ExcelApplicationProtocol:
         """Get Excel application."""
@@ -598,7 +598,7 @@ def get_workbook_version(workbook_path: Path) -> str:
                 lambda: workbook.Close(SaveChanges=False),
                 "workbook",
             )
-        cleanup_excel_resource(lambda: app.Quit(), "application")  # noqa: PLW0108
+        cleanup_excel_resource(app.Quit, "application")
     return version
 
 
@@ -626,11 +626,14 @@ def has_rubberduck_addin_references(workbook_path: Path) -> bool:
 
 
 def configure_log_stream_encoding() -> None:
-    """Force UTF-8 encoding for sys.stderr on Windows to avoid mojibake in consumers."""
+    """Force UTF-8 encoding for non-interactive stderr on Windows."""
     if sys.platform != "win32":
         return
     stderr = getattr(sys, "stderr", None)
     if stderr is None:
+        return
+    isatty = getattr(stderr, "isatty", None)
+    if callable(isatty) and isatty():
         return
     reconfigure = getattr(stderr, "reconfigure", None)
     if not callable(reconfigure):

@@ -209,6 +209,38 @@ class TestExcelCleanupLogging:
         assert "Failed to clean up Excel resource: application" in caplog.text  # noqa: S101
 
 
+class TestConfigureLogStreamEncoding:
+    """Tests for stderr encoding configuration behavior."""
+
+    def test_reconfigure_skipped_for_tty_stderr(self) -> None:
+        """Interactive terminals should keep their active code page."""
+        stderr = mock.Mock()
+        stderr.isatty.return_value = True
+        stderr.reconfigure = mock.Mock()
+
+        with (
+            mock.patch.object(pre_commit_vba.sys, "platform", "win32"),
+            mock.patch.object(pre_commit_vba.sys, "stderr", stderr),
+        ):
+            pre_commit_vba.configure_log_stream_encoding()
+
+        stderr.reconfigure.assert_not_called()
+
+    def test_reconfigure_applied_for_non_tty_stderr(self) -> None:
+        """Captured logs should be forced to UTF-8 on Windows."""
+        stderr = mock.Mock()
+        stderr.isatty.return_value = False
+        stderr.reconfigure = mock.Mock()
+
+        with (
+            mock.patch.object(pre_commit_vba.sys, "platform", "win32"),
+            mock.patch.object(pre_commit_vba.sys, "stderr", stderr),
+        ):
+            pre_commit_vba.configure_log_stream_encoding()
+
+        stderr.reconfigure.assert_called_once_with(encoding="utf-8", errors="replace")
+
+
 class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
     """Test class for code metadata portion in trailing whitespace check."""
 
