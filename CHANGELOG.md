@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Bump minimum `ruff` requirement from 0.15.21 to 0.15.22. ([#126])  
+  `ruff` の最小要件を 0.15.21 から 0.15.22 へ引き上げ.
+
 ## [0.3.12] - 2026-07-26
 
 ### Fixed
@@ -308,3 +313,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#112]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/112
 [#113]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/113
 [#114]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/114
+[#126]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/126
