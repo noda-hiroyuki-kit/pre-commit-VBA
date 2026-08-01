@@ -53,6 +53,21 @@ class TestWindowsOnlyImportError:
             pre_commit_vba.get_dispatch_ex()
 
 
+class TestSettingsCommonFolder:
+    """Tests for SettingsCommonFolder path generation."""
+
+    def test_common_folder_uses_stem_when_include_extension_is_false(self) -> None:
+        """When include_extension is False, extension should be excluded."""
+        settings = pre_commit_vba.SettingsCommonFolder(
+            Path("tests/sample.workbook.xlsm"),
+            ".VBA",
+            include_extension=False,
+        )
+
+        expected = Path("tests", "sample.VBA")
+        assert settings.common_folder == expected  # noqa: S101
+
+
 def _project_version() -> str:
     """Read the project version from pyproject.toml."""
     pyproject_path = Path(__file__).resolve().parents[1] / "pyproject.toml"
