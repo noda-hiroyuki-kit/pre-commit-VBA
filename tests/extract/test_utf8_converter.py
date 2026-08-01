@@ -82,3 +82,32 @@ class TestExcelVbaExporter:
             ".gitignore",
         )
         assert Path.is_file(expected_file)  # noqa: S101
+
+    def test_not_create_gitignore_file_when_option_disabled(self) -> None:
+        """Test that .gitignore is not created when disabled."""
+        common_folder = SettingsCommonFolder(
+            Path(Path.cwd(), "tests", "test.xlsm"),
+            ".test",
+            include_extension=True,
+        )
+        settings = SettingsFoldersHandleExcel(
+            settings_common_folder=common_folder,
+            export_folder="export",
+            custom_ui_folder="customUI",
+            code_folder="code",
+        )
+        options = SettingsOptionsHandleExcel(
+            enable_folder_annotation=True,
+            create_gitignore=False,
+        )
+        if Path.is_dir(settings.common_folder):
+            shutil.rmtree(settings.common_folder)
+
+        try:
+            ExcelVbaExporter(settings)
+            Utf8Converter(settings, options)
+            expected_file = Path(Path.cwd(), "tests", "test.xlsm.test", ".gitignore")
+            assert not Path.is_file(expected_file)  # noqa: S101
+        finally:
+            if Path.is_dir(settings.common_folder):
+                shutil.rmtree(settings.common_folder)
