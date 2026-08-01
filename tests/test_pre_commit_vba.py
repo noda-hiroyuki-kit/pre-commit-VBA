@@ -363,6 +363,18 @@ class TestGetCurrentBranchName:
         assert result == "feature/test-branch"  # noqa: S101
 
 
+class TestHasRubberduckAddinReferences:
+    """Tests for has_rubberduck_addin_references helper."""
+
+    def test_returns_false_when_workbook_cannot_be_opened(self, tmp_path: Path) -> None:
+        """OSError while opening workbook should return False."""
+        missing_workbook = tmp_path / "missing.xlsm"
+
+        result = pre_commit_vba.has_rubberduck_addin_references(missing_workbook)
+
+        assert result is False  # noqa: S101
+
+
 class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
     """Test class for code metadata portion in trailing whitespace check."""
 
