@@ -337,6 +337,32 @@ class TestGetStagingStatus:
         assert result == "tree-id\n"  # noqa: S101
 
 
+class TestGetCurrentBranchName:
+    """Tests for get_current_branch_name helper."""
+
+    def test_kills_process_when_rev_parse_times_out(self) -> None:
+        """Timeout during git rev-parse should trigger kill and retry."""
+        process = mock.Mock()
+        process.communicate.side_effect = [
+            subprocess.TimeoutExpired(cmd="git rev-parse", timeout=15),
+            (b"feature/test-branch\n", b""),
+        ]
+
+        with mock.patch.object(
+            pre_commit_vba.subprocess,
+            "Popen",
+            return_value=process,
+        ):
+            result = pre_commit_vba.get_current_branch_name()
+
+        process.kill.assert_called_once_with()
+        assert process.communicate.call_args_list == [  # noqa: S101
+            mock.call(timeout=15),
+            mock.call(),
+        ]
+        assert result == "feature/test-branch"  # noqa: S101
+
+
 class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
     """Test class for code metadata portion in trailing whitespace check."""
 
