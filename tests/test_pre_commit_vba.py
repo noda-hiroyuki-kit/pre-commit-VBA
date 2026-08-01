@@ -32,6 +32,19 @@ from win32com.client import DispatchEx
 runner = CliRunner()
 
 
+class TestWindowsOnlyImportError:
+    """Tests for WindowsOnlyImportError message."""
+
+    def test_message_is_windows_only_hint(self) -> None:
+        """Error message should guide users to Windows/pywin32 setup."""
+        error = pre_commit_vba.WindowsOnlyImportError()
+        expected = (
+            "pre-commit-vba requires pywin32 (Windows only). "
+            "Install it on Windows or run this hook on a Windows runner."
+        )
+        assert str(error) == expected  # noqa: S101
+
+
 def _project_version() -> str:
     """Read the project version from pyproject.toml."""
     pyproject_path = Path(__file__).resolve().parents[1] / "pyproject.toml"
