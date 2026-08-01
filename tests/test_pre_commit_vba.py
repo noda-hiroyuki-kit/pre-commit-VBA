@@ -382,6 +382,25 @@ class TestGetStagingStatus:
         assert result == "tree-id\n"  # noqa: S101
 
 
+class TestExtractCommandStagingStatus:
+    """Tests for extract command staging-status failure handling."""
+
+    def test_extract_exits_when_post_extract_staging_status_fails(self) -> None:
+        """StagingStatusError after extraction should exit with code 1."""
+        with (
+            mock.patch.object(
+                pre_commit_vba,
+                "get_staging_status",
+                side_effect=["before-tree", pre_commit_vba.StagingStatusError()],
+            ) as get_status,
+            mock.patch.object(Path, "glob", return_value=[]),
+        ):
+            result = runner.invoke(app, ["extract", "--target-path", "."])
+
+        assert result.exit_code == 1  # noqa: S101
+        assert get_status.call_args_list == [mock.call(), mock.call()]  # noqa: S101
+
+
 class TestGetCurrentBranchName:
     """Tests for get_current_branch_name helper."""
 
