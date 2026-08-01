@@ -183,8 +183,13 @@ commands = [
 
 [tool.pytest]
 minversion = "9.0"
-addopts = ["-v", "-s", "--strict-markers"]
+addopts = ["-v", "-s", "--strict-markers","--cov=src", "--cov-report=html", "--cov-report=term"]
 testpaths = [
     "tests"
 ]
 markers=["develop_research"]
+
+[tool.coverage.report]
+exclude_also = [
+    "raise NotImplementedError",
+]
