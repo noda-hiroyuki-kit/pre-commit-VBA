@@ -293,6 +293,20 @@ class TestConfigureLogStreamEncoding:
         ):
             pre_commit_vba.configure_log_stream_encoding()
 
+    def test_reconfigure_value_error_is_swallowed(self) -> None:
+        """ValueError from reconfigure should be swallowed."""
+        stderr = mock.Mock()
+        stderr.isatty.return_value = False
+        stderr.reconfigure = mock.Mock(side_effect=ValueError("bad encoding"))
+
+        with (
+            mock.patch.object(pre_commit_vba.sys, "platform", "win32"),
+            mock.patch.object(pre_commit_vba.sys, "stderr", stderr),
+        ):
+            pre_commit_vba.configure_log_stream_encoding()
+
+        stderr.reconfigure.assert_called_once_with(encoding="utf-8", errors="replace")
+
     def test_reconfigure_applied_for_non_tty_stderr(self) -> None:
         """Captured logs should be forced to UTF-8 on Windows."""
         stderr = mock.Mock()
