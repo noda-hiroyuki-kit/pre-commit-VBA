@@ -398,24 +398,25 @@ class TestExtractCommandExistenceFiles:
     @classmethod
     def sut(cls) -> CliRunner:
         """Fixture for TestExtractCommandExistenceFiles."""
-        return runner.invoke(
-            app,
-            [
-                "extract",
-                "--target-path",
-                "tests",
-                "--folder-suffix",
-                ".test",
-                "--export-folder",
-                "export",
-                "--custom-ui-folder",
-                "customUI",
-                "--code-folder",
-                "code",
-                "--enable-folder-annotation",
-                "--create-gitignore",
-            ],
-        )
+        with mock.patch.object(pre_commit_vba, "add_to_staging", return_value=None):
+            return runner.invoke(
+                app,
+                [
+                    "extract",
+                    "--target-path",
+                    "tests",
+                    "--folder-suffix",
+                    ".test",
+                    "--export-folder",
+                    "export",
+                    "--custom-ui-folder",
+                    "customUI",
+                    "--code-folder",
+                    "code",
+                    "--enable-folder-annotation",
+                    "--create-gitignore",
+                ],
+            )
 
     @pytest.mark.parametrize(
         "file",
@@ -481,28 +482,32 @@ def test_not_exists_test1_vba_folder() -> None:
     """Test that the test1.VBA folder does not exist."""
     if Path(Path.cwd(), "tests", "test1.test").exists():
         shutil.rmtree(Path(Path.cwd(), "tests", "test1.test"))
-    runner.invoke(
-        app,
-        [
-            "extract",
-            "--target-path",
-            "tests",
-            "--folder-suffix",
-            ".test",
-            "--export-folder",
-            "export",
-            "--custom-ui-folder",
-            "customUI",
-            "--code-folder",
-            "code",
-            "--enable-folder-annotation",
-            "--create-gitignore",
-        ],
-    )
-    test_result = not Path(Path.cwd(), "tests", "test1.test").exists()
-    if Path(Path.cwd(), "tests", "test1.test").exists():
-        shutil.rmtree(Path(Path.cwd(), "tests", "test1.test"))
-    assert test_result  # noqa: S101
+    try:
+        with mock.patch.object(pre_commit_vba, "add_to_staging", return_value=None):
+            runner.invoke(
+                app,
+                [
+                    "extract",
+                    "--target-path",
+                    "tests",
+                    "--folder-suffix",
+                    ".test",
+                    "--export-folder",
+                    "export",
+                    "--custom-ui-folder",
+                    "customUI",
+                    "--code-folder",
+                    "code",
+                    "--enable-folder-annotation",
+                    "--create-gitignore",
+                ],
+            )
+        test_result = not Path(Path.cwd(), "tests", "test1.test").exists()
+        if Path(Path.cwd(), "tests", "test1.test").exists():
+            shutil.rmtree(Path(Path.cwd(), "tests", "test1.test"))
+        assert test_result  # noqa: S101
+    finally:
+        shutil.rmtree(Path(Path.cwd(), "tests", "test.xlsm.test"), ignore_errors=True)
 
 
 def test_extract_command_does_not_timeout_on_issue107_repro_workbook() -> None:
