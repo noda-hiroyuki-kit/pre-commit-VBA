@@ -11,6 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Bump minimum `ruff` requirement from 0.15.21 to 0.15.22. ([#126])  
   `ruff` の最小要件を 0.15.21 から 0.15.22 へ引き上げ.
+- Raise the minimum `uv_build` requirement from 0.11.29 to 0.11.31.  
+  `uv_build` の最小要件を 0.11.29 から 0.11.31 へ引き上げ.
+- Bump minimum `pre-commit` requirement from 4.6.0 to 4.6.1.  
+  `pre-commit` の最小要件を 4.6.0 から 4.6.1 へ引き上げ.
+- Bump minimum `pre-commit-uv` requirement from 4.2.2 to 4.3.0.  
+  `pre-commit-uv` の最小要件を 4.2.2 から 4.3.0 へ引き上げ.
+- Bump minimum `tox` requirement from 4.56.4 to 4.58.0.  
+  `tox` の最小要件を 4.56.4 から 4.58.0 へ引き上げ.
+- Bump minimum `tox-uv` requirement from 1.35.2 to 1.36.0.  
+  `tox-uv` の最小要件を 1.35.2 から 1.36.0 へ引き上げ.
+- Bump minimum `zensical` requirement from 0.0.50 to 0.0.51.  
+  `zensical` の最小要件を 0.0.50 から 0.0.51 へ引き上げ.
 
 ## [0.3.12] - 2026-07-26
 
