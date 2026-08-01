@@ -248,6 +248,19 @@ class TestExcelCleanupLogging:
 class TestConfigureLogStreamEncoding:
     """Tests for stderr encoding configuration behavior."""
 
+    def test_non_windows_platform_returns_without_reconfigure(self) -> None:
+        """Non-Windows environments should not reconfigure stderr."""
+        stderr = mock.Mock()
+        stderr.reconfigure = mock.Mock()
+
+        with (
+            mock.patch.object(pre_commit_vba.sys, "platform", "linux"),
+            mock.patch.object(pre_commit_vba.sys, "stderr", stderr),
+        ):
+            pre_commit_vba.configure_log_stream_encoding()
+
+        stderr.reconfigure.assert_not_called()
+
     def test_reconfigure_skipped_for_tty_stderr(self) -> None:
         """Interactive terminals should keep their active code page."""
         stderr = mock.Mock()
