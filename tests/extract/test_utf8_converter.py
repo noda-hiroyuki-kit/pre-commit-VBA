@@ -155,3 +155,35 @@ class TestUtf8ConverterFolderAnnotation:
         finally:
             if Path.is_dir(settings.common_folder):
                 shutil.rmtree(settings.common_folder)
+
+    def test_enable_folder_annotation_without_match_keeps_code_root(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        """Enabled annotation should fallback to code root when no marker exists."""
+        common_folder = SettingsCommonFolder(
+            tmp_path / "workbook.xlsm",
+            ".tmp",
+            include_extension=True,
+        )
+        settings = SettingsFoldersHandleExcel(
+            settings_common_folder=common_folder,
+            export_folder="export",
+            custom_ui_folder="customUI",
+            code_folder="code",
+        )
+        settings.export_folder.mkdir(parents=True, exist_ok=True)
+        Path(settings.export_folder, "NoFolderAnnotation.bas").write_text(
+            'Attribute VB_Name = "NoFolderAnnotation"\nOption Explicit\n',
+            encoding="cp932",
+            newline="\n",
+        )
+        options = SettingsOptionsHandleExcel(
+            enable_folder_annotation=True,
+            create_gitignore=False,
+        )
+
+        Utf8Converter(settings, options)
+
+        expected_file = Path(settings.code_folder, "NoFolderAnnotation.bas")
+        assert expected_file.is_file()  # noqa: S101
