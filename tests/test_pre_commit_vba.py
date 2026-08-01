@@ -310,6 +310,33 @@ class TestAddToStaging:
         ]
 
 
+class TestGetStagingStatus:
+    """Tests for get_staging_status helper."""
+
+    def test_kills_process_when_write_tree_times_out(self) -> None:
+        """Timeout during git write-tree should trigger kill and retry communicate."""
+        process = mock.Mock()
+        process.communicate.side_effect = [
+            subprocess.TimeoutExpired(cmd="git write-tree", timeout=15),
+            (b"tree-id\n", b""),
+        ]
+        process.returncode = 0
+
+        with mock.patch.object(
+            pre_commit_vba.subprocess,
+            "Popen",
+            return_value=process,
+        ):
+            result = pre_commit_vba.get_staging_status()
+
+        process.kill.assert_called_once_with()
+        assert process.communicate.call_args_list == [  # noqa: S101
+            mock.call(timeout=15),
+            mock.call(),
+        ]
+        assert result == "tree-id\n"  # noqa: S101
+
+
 class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
     """Test class for code metadata portion in trailing whitespace check."""
 
