@@ -255,7 +255,7 @@ class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
                 "--target-path",
                 "tests",
                 "--folder-suffix",
-                ".VBA",
+                ".test",
                 "--export-folder",
                 "export",
                 "--custom-ui-folder",
@@ -274,7 +274,7 @@ class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
                 "run",
                 "trailing-whitespace",
                 "--files",
-                "tests/test.xlsm.VBA/code/registerForm/RegisterProductForm.frm",
+                "tests/test.xlsm.test/code/registerForm/RegisterProductForm.frm",
             ],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -284,6 +284,10 @@ class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
         except subprocess.TimeoutExpired:
             process.kill()
             stdout_data, _ = process.communicate()
+        finally:
+            shutil.rmtree(
+                Path(Path.cwd(), "tests", "test.xlsm.test"), ignore_errors=True
+            )
         return process, stdout_data
 
     def test_process_return_code_is_zero(
@@ -315,7 +319,7 @@ class TestExtractCommandPositiveOptions:
                 "--target-path",
                 ".",
                 "--folder-suffix",
-                ".VBA",
+                ".test",
                 "--export-folder",
                 "export",
                 "--custom-ui-folder",
@@ -334,10 +338,10 @@ class TestExtractCommandPositiveOptions:
         assert f"{Path.cwd()}".lower() in caplog.text  # noqa: S101
 
     def test_folder_suffix_is_vba(self, caplog) -> None:  # noqa: ANN001
-        """Test that folder suffix is '.VBA'."""
+        """Test that folder suffix is '.test'."""
         result = self.extract_command_fixture(caplog)
         assert result.exit_code == 0  # noqa: S101
-        assert "folder-suffix: .VBA" in caplog.text  # noqa: S101
+        assert "folder-suffix: .test" in caplog.text  # noqa: S101
 
     def test_export_folder_is_export(self, caplog) -> None:  # noqa: ANN001
         """Test that export folder is 'export'."""
@@ -388,6 +392,7 @@ class TestExtractCommandExistenceFiles:
         yield _excel_instance, sut
         _workbook.Close(SaveChanges=False)
         _excel_instance.Quit()
+        shutil.rmtree(Path(Path.cwd(), "tests", "test.xlsm.test"), ignore_errors=True)
 
     @classmethod
     def sut(cls) -> CliRunner:
@@ -399,7 +404,7 @@ class TestExtractCommandExistenceFiles:
                 "--target-path",
                 "tests",
                 "--folder-suffix",
-                ".VBA",
+                ".test",
                 "--export-folder",
                 "export",
                 "--custom-ui-folder",
@@ -454,7 +459,7 @@ class TestExtractCommandExistenceFiles:
         file: str,
     ) -> None:
         """Test that the extract command creates expected files and folders."""
-        assert Path(Path.cwd(), "tests", "test.xlsm.VBA", file).exists()  # noqa: S101
+        assert Path(Path.cwd(), "tests", "test.xlsm.test", file).exists()  # noqa: S101
 
     def test_terminate_normal(
         self, prepare_pre_existing_excel: typing.tuple[DispatchEx, CliRunner]
@@ -473,8 +478,8 @@ class TestExtractCommandExistenceFiles:
 
 def test_not_exists_test1_vba_folder() -> None:
     """Test that the test1.VBA folder does not exist."""
-    if Path(Path.cwd(), "tests", "test1.VBA").exists():
-        shutil.rmtree(Path(Path.cwd(), "tests", "test1.VBA"))
+    if Path(Path.cwd(), "tests", "test1.test").exists():
+        shutil.rmtree(Path(Path.cwd(), "tests", "test1.test"))
     runner.invoke(
         app,
         [
@@ -482,7 +487,7 @@ def test_not_exists_test1_vba_folder() -> None:
             "--target-path",
             "tests",
             "--folder-suffix",
-            ".VBA",
+            ".test",
             "--export-folder",
             "export",
             "--custom-ui-folder",
@@ -493,9 +498,9 @@ def test_not_exists_test1_vba_folder() -> None:
             "--create-gitignore",
         ],
     )
-    test_result = not Path(Path.cwd(), "tests", "test1.VBA").exists()
-    if Path(Path.cwd(), "tests", "test1.VBA").exists():
-        shutil.rmtree(Path(Path.cwd(), "tests", "test1.VBA"))
+    test_result = not Path(Path.cwd(), "tests", "test1.test").exists()
+    if Path(Path.cwd(), "tests", "test1.test").exists():
+        shutil.rmtree(Path(Path.cwd(), "tests", "test1.test"))
     assert test_result  # noqa: S101
 
 
@@ -635,7 +640,7 @@ class TestExtractCommandNegativeOptions:
                 "--target-path",
                 ".",
                 "--folder-suffix",
-                ".VBA",
+                ".test",
                 "--export-folder",
                 "export",
                 "--custom-ui-folder",
@@ -716,6 +721,7 @@ class TestCheckSubCommand:
         yield
         _workbook.Close(SaveChanges=False)
         _excel_instance.Quit()
+        shutil.rmtree(Path(Path.cwd(), "tests", "test.xlsm.test"), ignore_errors=True)
 
     def test_not_exist_workbook_outs_no_found(
         self, caplog: Generator[pytest.LogCaptureFixture]
