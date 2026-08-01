@@ -87,7 +87,7 @@ class TestExcelVbaExporter:
         """Test that .gitignore is not created when disabled."""
         common_folder = SettingsCommonFolder(
             Path(Path.cwd(), "tests", "test.xlsm"),
-            ".test",
+            ".no-gitignore",
             include_extension=True,
         )
         settings = SettingsFoldersHandleExcel(
@@ -106,8 +106,52 @@ class TestExcelVbaExporter:
         try:
             ExcelVbaExporter(settings)
             Utf8Converter(settings, options)
-            expected_file = Path(Path.cwd(), "tests", "test.xlsm.test", ".gitignore")
+            expected_file = Path(
+                Path.cwd(),
+                "tests",
+                "test.xlsm.no-gitignore",
+                ".gitignore",
+            )
             assert not Path.is_file(expected_file)  # noqa: S101
+        finally:
+            if Path.is_dir(settings.common_folder):
+                shutil.rmtree(settings.common_folder)
+
+
+class TestUtf8ConverterFolderAnnotation:
+    """Tests for folder-annotation behavior in Utf8Converter."""
+
+    def test_disable_folder_annotation_keeps_file_in_code_root(self) -> None:
+        """Disabled folder annotation should keep modules in code root."""
+        common_folder = SettingsCommonFolder(
+            Path(Path.cwd(), "tests", "test.xlsm"),
+            ".no-annotation",
+            include_extension=True,
+        )
+        settings = SettingsFoldersHandleExcel(
+            settings_common_folder=common_folder,
+            export_folder="export",
+            custom_ui_folder="customUI",
+            code_folder="code",
+        )
+        options = SettingsOptionsHandleExcel(
+            enable_folder_annotation=False,
+            create_gitignore=False,
+        )
+        if Path.is_dir(settings.common_folder):
+            shutil.rmtree(settings.common_folder)
+
+        try:
+            ExcelVbaExporter(settings)
+            Utf8Converter(settings, options)
+            expected_file = Path(
+                Path.cwd(),
+                "tests",
+                "test.xlsm.no-annotation",
+                "code",
+                "upperFolderQuotation.bas",
+            )
+            assert Path.is_file(expected_file)  # noqa: S101
         finally:
             if Path.is_dir(settings.common_folder):
                 shutil.rmtree(settings.common_folder)
