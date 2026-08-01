@@ -283,6 +283,16 @@ class TestConfigureLogStreamEncoding:
 
         stderr.reconfigure.assert_not_called()
 
+    def test_non_callable_reconfigure_returns_without_error(self) -> None:
+        """Non-callable reconfigure should short-circuit safely."""
+        stderr = object()
+
+        with (
+            mock.patch.object(pre_commit_vba.sys, "platform", "win32"),
+            mock.patch.object(pre_commit_vba.sys, "stderr", stderr),
+        ):
+            pre_commit_vba.configure_log_stream_encoding()
+
     def test_reconfigure_applied_for_non_tty_stderr(self) -> None:
         """Captured logs should be forced to UTF-8 on Windows."""
         stderr = mock.Mock()
