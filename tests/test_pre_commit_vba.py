@@ -277,6 +277,39 @@ class TestConfigureLogStreamEncoding:
         stderr.reconfigure.assert_called_once_with(encoding="utf-8", errors="replace")
 
 
+class TestAddToStaging:
+    """Tests for add_to_staging helper."""
+
+    def test_kills_process_when_git_add_times_out(self, tmp_path: Path) -> None:
+        """Timeout during git add should trigger process.kill and retry communicate."""
+        settings = pre_commit_vba.SettingsFoldersHandleExcel(
+            pre_commit_vba.SettingsCommonFolder(tmp_path / "book.xlsm", ".VBA"),
+            "export",
+            "customUI",
+            "code",
+        )
+
+        process = mock.Mock()
+        process.communicate.side_effect = [
+            subprocess.TimeoutExpired(cmd="git add", timeout=15),
+            (b"", b""),
+        ]
+        process.returncode = 0
+
+        with mock.patch.object(
+            pre_commit_vba.subprocess,
+            "Popen",
+            return_value=process,
+        ):
+            pre_commit_vba.add_to_staging(settings)
+
+        process.kill.assert_called_once_with()
+        assert process.communicate.call_args_list == [  # noqa: S101
+            mock.call(timeout=15),
+            mock.call(),
+        ]
+
+
 class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
     """Test class for code metadata portion in trailing whitespace check."""
 
