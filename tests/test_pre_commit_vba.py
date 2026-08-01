@@ -44,6 +44,14 @@ class TestWindowsOnlyImportError:
         )
         assert str(error) == expected  # noqa: S101
 
+    def test_get_dispatch_ex_raises_when_dispatch_ex_is_missing(self) -> None:
+        """get_dispatch_ex should raise when pywin32 import is unavailable."""
+        with (
+            mock.patch.object(pre_commit_vba, "DispatchEx", None),
+            pytest.raises(pre_commit_vba.WindowsOnlyImportError),
+        ):
+            pre_commit_vba.get_dispatch_ex()
+
 
 def _project_version() -> str:
     """Read the project version from pyproject.toml."""
