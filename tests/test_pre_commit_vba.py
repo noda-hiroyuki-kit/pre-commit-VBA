@@ -248,24 +248,25 @@ class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
     @classmethod
     def set_up(cls) -> typing.tuple[subprocess.Popen, bytes]:
         """Set up for test."""
-        runner.invoke(
-            app,
-            [
-                "extract",
-                "--target-path",
-                "tests",
-                "--folder-suffix",
-                ".test",
-                "--export-folder",
-                "export",
-                "--custom-ui-folder",
-                "customUI",
-                "--code-folder",
-                "code",
-                "--enable-folder-annotation",
-                "--create-gitignore",
-            ],
-        )
+        with mock.patch.object(pre_commit_vba, "add_to_staging", return_value=None):
+            runner.invoke(
+                app,
+                [
+                    "extract",
+                    "--target-path",
+                    "tests",
+                    "--folder-suffix",
+                    ".test",
+                    "--export-folder",
+                    "export",
+                    "--custom-ui-folder",
+                    "customUI",
+                    "--code-folder",
+                    "code",
+                    "--enable-folder-annotation",
+                    "--create-gitignore",
+                ],
+            )
         process = subprocess.Popen(
             [  # noqa: S607
                 "uv",
