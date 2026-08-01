@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Change Dependabot to run weekly on Fridays at 18:00 JST.  
+  Dependabot の更新チェックを毎週金曜日 18:00 JST に実行するよう変更.
 - Bump minimum `ruff` requirement from 0.15.21 to 0.15.22. ([#126])  
   `ruff` の最小要件を 0.15.21 から 0.15.22 へ引き上げ.
 - Raise the minimum `uv_build` requirement from 0.11.29 to 0.11.31.  
