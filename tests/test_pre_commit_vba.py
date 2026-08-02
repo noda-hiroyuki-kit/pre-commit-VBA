@@ -7,12 +7,13 @@ import logging
 import multiprocessing
 import queue
 import re
+import runpy
 import shutil
 import subprocess
 import tempfile
 import tomllib
 import typing
-from collections.abc import Generator
+from collections.abc import Callable, Generator
 from contextlib import suppress
 from logging import DEBUG
 from pathlib import Path
@@ -26,7 +27,7 @@ from src.pre_commit_vba import pre_commit_vba
 from src.pre_commit_vba.pre_commit_vba import app
 
 if TYPE_CHECKING:
-    from collections.abc import Generator
+    from collections.abc import Callable, Generator
 
 from win32com.client import DispatchEx
 
@@ -84,6 +85,38 @@ class TestWindowsOnlyImportError:
         spec.loader.exec_module(module)
 
         assert module.DispatchEx is None  # noqa: S101
+
+
+class TestMainEntryPoint:
+    """Tests for module main entry point behavior."""
+
+    def test_module_main_invokes_app(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """Running module as __main__ should call app()."""
+        invoked = {"called": False}
+
+        class _FakeTyperApp:
+            def __init__(self, *_args: object, **_kwargs: object) -> None:
+                pass
+
+            def command(
+                self,
+                *_args: object,
+                **_kwargs: object,
+            ) -> Callable[[object], object]:
+                def _decorator(func: object) -> object:
+                    return func
+
+                return _decorator
+
+            def __call__(self) -> None:
+                invoked["called"] = True
+
+        module_path = Path(pre_commit_vba.__file__)
+        monkeypatch.setattr("typer.Typer", _FakeTyperApp)
+
+        runpy.run_path(str(module_path), run_name="__main__")
+
+        assert invoked["called"] is True  # noqa: S101
 
 
 class TestSettingsCommonFolder:
