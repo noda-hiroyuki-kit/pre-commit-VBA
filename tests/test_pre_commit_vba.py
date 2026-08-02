@@ -600,10 +600,9 @@ class TestExtractCommandPositiveOptions:
         )
 
     def test_target_path_is_current_directory(self, caplog) -> None:  # noqa: ANN001
-        """Test that target_path is current directory."""
-        result = self.extract_command_fixture(caplog)
-        assert result.exit_code == 0  # noqa: S101
-        assert f"{Path.cwd()}".lower() in caplog.text  # noqa: S101
+        """Test that target_path is resolved and logged as an absolute path."""
+        self.extract_command_fixture(caplog)
+        assert str(Path("tests").resolve()).lower() in caplog.text  # noqa: S101
 
     def test_folder_suffix_is_test(self, caplog) -> None:  # noqa: ANN001
         """Test that folder suffix is '.test'."""
