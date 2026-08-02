@@ -32,7 +32,7 @@ class TestExcelCustomUiExtractor:
     def sut(cls) -> Generator[ExcelCustomUiExtractor]:
         """Act first this tests."""
         common_folder = SettingsCommonFolder(
-            Path(Path.cwd(), "tests", "test.xlsm"), ".VBA", include_extension=True
+            Path(Path.cwd(), "tests", "test.xlsm"), ".test", include_extension=True
         )
         settings = SettingsFoldersHandleExcel(
             settings_common_folder=common_folder,
@@ -48,7 +48,7 @@ class TestExcelCustomUiExtractor:
     def test_exists_custom_ui_14_xml_file(self, sut: ExcelCustomUiExtractor) -> None:  # noqa: ARG002
         """Test that customUI14.xml file exists."""
         expected_file = Path(
-            Path.cwd(), "tests", "test.xlsm.VBA", "customUI", "customUI14.xml"
+            Path.cwd(), "tests", "test.xlsm.test", "customUI", "customUI14.xml"
         )
         assert Path.is_file(expected_file)  # noqa: S101
 
