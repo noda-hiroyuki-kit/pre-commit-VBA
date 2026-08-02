@@ -1,6 +1,7 @@
 """Test module for pre-commit-vba script."""
 
 import csv
+import importlib.util
 import locale
 import logging
 import multiprocessing
@@ -51,6 +52,38 @@ class TestWindowsOnlyImportError:
             pytest.raises(pre_commit_vba.WindowsOnlyImportError),
         ):
             pre_commit_vba.get_dispatch_ex()
+
+    def test_dispatch_ex_is_none_when_win32com_client_import_fails(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """Module import fallback should set DispatchEx to None."""
+        original_import = __import__
+
+        def _patched_import(
+            name: str,
+            globals_dict: dict[str, object] | None = None,
+            locals_dict: dict[str, object] | None = None,
+            from_list: tuple[str, ...] = (),
+            level: int = 0,
+        ) -> object:
+            if name == "win32com.client":
+                raise ModuleNotFoundError(name)
+            return original_import(name, globals_dict, locals_dict, from_list, level)
+
+        monkeypatch.setattr("builtins.__import__", _patched_import)
+
+        module_path = Path(pre_commit_vba.__file__)
+        module_name = "_test_pre_commit_vba_missing_win32com"
+        spec = importlib.util.spec_from_file_location(module_name, module_path)
+
+        assert spec is not None  # noqa: S101
+        assert spec.loader is not None  # noqa: S101
+
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        assert module.DispatchEx is None  # noqa: S101
 
 
 class TestSettingsCommonFolder:
