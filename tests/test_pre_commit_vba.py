@@ -585,7 +585,7 @@ class TestExtractCommandPositiveOptions:
             [
                 "extract",
                 "--target-path",
-                "tests",
+                ".",
                 "--folder-suffix",
                 ".test",
                 "--export-folder",
