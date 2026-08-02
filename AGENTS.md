@@ -9,7 +9,7 @@
 - Install dependencies: `uv sync`
 - Lint: `uv run ruff check`
 - Formatter: `uv run ruff format`
-- Run all tests: `uv run tox -e 314`
+- Run all tests: `uv run tox -e 3.14`
 - Type check: `uv run mypy src/`
 
 ## Code style
