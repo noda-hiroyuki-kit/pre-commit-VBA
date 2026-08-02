@@ -29,7 +29,10 @@ from src.pre_commit_vba.pre_commit_vba import app
 if TYPE_CHECKING:
     from collections.abc import Callable, Generator
 
-from win32com.client import DispatchEx
+try:
+    from win32com.client import DispatchEx
+except ModuleNotFoundError:
+    DispatchEx = None
 
 runner = CliRunner()
 
@@ -639,6 +642,7 @@ class TestExtractCommandPositiveOptions:
         assert "create-gitignore: True" in caplog.text  # noqa: S101
 
 
+@pytest.mark.skipif(DispatchEx is None, reason="pywin32 is only available on Windows")
 class TestExtractCommandExistenceFiles:
     """Test class for extract command."""
 
@@ -974,6 +978,7 @@ def test_display_version_subcommand(subcommand: str) -> None:
     )
 
 
+@pytest.mark.skipif(DispatchEx is None, reason="pywin32 is only available on Windows")
 class TestCheckSubCommand:
     """Tests for check sub command."""
 
