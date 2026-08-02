@@ -73,7 +73,6 @@ uvx mypy src/
 
 ```powershell
 uv run tox -e 3.14
-uv run pytest tests/test_pre_commit_vba.py::TestExtractCommandExistenceFiles
 ```
 
 テストは `pytest` で記述され, `tests/` ディレクトリの `test_*.py` ファイルにあります.

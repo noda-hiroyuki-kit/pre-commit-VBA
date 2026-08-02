@@ -73,7 +73,6 @@ Run the full test suite:
 
 ```powershell
 uv run tox -e 3.14
-uv run pytest tests/test_pre_commit_vba.py::TestExtractCommandExistenceFiles
 ```
 
 Tests are written with `pytest` and live under `tests/` with `test_*.py` naming.

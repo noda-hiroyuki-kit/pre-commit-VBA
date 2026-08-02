@@ -1,17 +1,19 @@
 """Test module for pre-commit-vba script."""
 
 import csv
+import importlib.util
 import locale
 import logging
 import multiprocessing
 import queue
 import re
+import runpy
 import shutil
 import subprocess
 import tempfile
 import tomllib
 import typing
-from collections.abc import Generator
+from collections.abc import Callable, Generator
 from contextlib import suppress
 from logging import DEBUG
 from pathlib import Path
@@ -25,11 +27,114 @@ from src.pre_commit_vba import pre_commit_vba
 from src.pre_commit_vba.pre_commit_vba import app
 
 if TYPE_CHECKING:
-    from collections.abc import Generator
+    from collections.abc import Callable, Generator
 
-from win32com.client import DispatchEx
+try:
+    from win32com.client import DispatchEx
+except ModuleNotFoundError:
+    DispatchEx = None
 
 runner = CliRunner()
+
+
+class TestWindowsOnlyImportError:
+    """Tests for WindowsOnlyImportError message."""
+
+    def test_message_is_windows_only_hint(self) -> None:
+        """Error message should guide users to Windows/pywin32 setup."""
+        error = pre_commit_vba.WindowsOnlyImportError()
+        expected = (
+            "pre-commit-vba requires pywin32 (Windows only). "
+            "Install it on Windows or run this hook on a Windows runner."
+        )
+        assert str(error) == expected  # noqa: S101
+
+    def test_get_dispatch_ex_raises_when_dispatch_ex_is_missing(self) -> None:
+        """get_dispatch_ex should raise when pywin32 import is unavailable."""
+        with (
+            mock.patch.object(pre_commit_vba, "DispatchEx", None),
+            pytest.raises(pre_commit_vba.WindowsOnlyImportError),
+        ):
+            pre_commit_vba.get_dispatch_ex()
+
+    def test_dispatch_ex_is_none_when_win32com_client_import_fails(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """Module import fallback should set DispatchEx to None."""
+        original_import = __import__
+
+        def _patched_import(
+            name: str,
+            globals_dict: dict[str, object] | None = None,
+            locals_dict: dict[str, object] | None = None,
+            from_list: tuple[str, ...] = (),
+            level: int = 0,
+        ) -> object:
+            if name == "win32com.client":
+                raise ModuleNotFoundError(name)
+            return original_import(name, globals_dict, locals_dict, from_list, level)
+
+        monkeypatch.setattr("builtins.__import__", _patched_import)
+
+        module_path = Path(pre_commit_vba.__file__)
+        module_name = "_test_pre_commit_vba_missing_win32com"
+        spec = importlib.util.spec_from_file_location(module_name, module_path)
+
+        assert spec is not None  # noqa: S101
+        assert spec.loader is not None  # noqa: S101
+
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        assert module.DispatchEx is None  # noqa: S101
+
+
+class TestMainEntryPoint:
+    """Tests for module main entry point behavior."""
+
+    def test_module_main_invokes_app(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """Running module as __main__ should call app()."""
+        invoked = {"called": False}
+
+        class _FakeTyperApp:
+            def __init__(self, *_args: object, **_kwargs: object) -> None:
+                pass
+
+            def command(
+                self,
+                *_args: object,
+                **_kwargs: object,
+            ) -> Callable[[object], object]:
+                def _decorator(func: object) -> object:
+                    return func
+
+                return _decorator
+
+            def __call__(self) -> None:
+                invoked["called"] = True
+
+        module_path = Path(pre_commit_vba.__file__)
+        monkeypatch.setattr("typer.Typer", _FakeTyperApp)
+
+        runpy.run_path(str(module_path), run_name="__main__")
+
+        assert invoked["called"] is True  # noqa: S101
+
+
+class TestSettingsCommonFolder:
+    """Tests for SettingsCommonFolder path generation."""
+
+    def test_common_folder_uses_stem_when_include_extension_is_false(self) -> None:
+        """When include_extension is False, extension should be excluded."""
+        settings = pre_commit_vba.SettingsCommonFolder(
+            Path("tests/sample.workbook.xlsm"),
+            ".VBA",
+            include_extension=False,
+        )
+
+        expected = Path("tests", "sample.VBA")
+        assert settings.common_folder == expected  # noqa: S101
 
 
 def _project_version() -> str:
@@ -212,6 +317,27 @@ class TestExcelCleanupLogging:
 class TestConfigureLogStreamEncoding:
     """Tests for stderr encoding configuration behavior."""
 
+    def test_non_windows_platform_returns_without_reconfigure(self) -> None:
+        """Non-Windows environments should not reconfigure stderr."""
+        stderr = mock.Mock()
+        stderr.reconfigure = mock.Mock()
+
+        with (
+            mock.patch.object(pre_commit_vba.sys, "platform", "linux"),
+            mock.patch.object(pre_commit_vba.sys, "stderr", stderr),
+        ):
+            pre_commit_vba.configure_log_stream_encoding()
+
+        stderr.reconfigure.assert_not_called()
+
+    def test_none_stderr_returns_without_reconfigure(self) -> None:
+        """Missing stderr stream should exit without attempting reconfigure."""
+        with (
+            mock.patch.object(pre_commit_vba.sys, "platform", "win32"),
+            mock.patch.object(pre_commit_vba.sys, "stderr", None),
+        ):
+            pre_commit_vba.configure_log_stream_encoding()
+
     def test_reconfigure_skipped_for_tty_stderr(self) -> None:
         """Interactive terminals should keep their active code page."""
         stderr = mock.Mock()
@@ -225,6 +351,30 @@ class TestConfigureLogStreamEncoding:
             pre_commit_vba.configure_log_stream_encoding()
 
         stderr.reconfigure.assert_not_called()
+
+    def test_non_callable_reconfigure_returns_without_error(self) -> None:
+        """Non-callable reconfigure should short-circuit safely."""
+        stderr = object()
+
+        with (
+            mock.patch.object(pre_commit_vba.sys, "platform", "win32"),
+            mock.patch.object(pre_commit_vba.sys, "stderr", stderr),
+        ):
+            pre_commit_vba.configure_log_stream_encoding()
+
+    def test_reconfigure_value_error_is_swallowed(self) -> None:
+        """ValueError from reconfigure should be swallowed."""
+        stderr = mock.Mock()
+        stderr.isatty.return_value = False
+        stderr.reconfigure = mock.Mock(side_effect=ValueError("bad encoding"))
+
+        with (
+            mock.patch.object(pre_commit_vba.sys, "platform", "win32"),
+            mock.patch.object(pre_commit_vba.sys, "stderr", stderr),
+        ):
+            pre_commit_vba.configure_log_stream_encoding()
+
+        stderr.reconfigure.assert_called_once_with(encoding="utf-8", errors="replace")
 
     def test_reconfigure_applied_for_non_tty_stderr(self) -> None:
         """Captured logs should be forced to UTF-8 on Windows."""
@@ -241,6 +391,123 @@ class TestConfigureLogStreamEncoding:
         stderr.reconfigure.assert_called_once_with(encoding="utf-8", errors="replace")
 
 
+class TestAddToStaging:
+    """Tests for add_to_staging helper."""
+
+    def test_kills_process_when_git_add_times_out(self, tmp_path: Path) -> None:
+        """Timeout during git add should trigger process.kill and retry communicate."""
+        settings = pre_commit_vba.SettingsFoldersHandleExcel(
+            pre_commit_vba.SettingsCommonFolder(tmp_path / "book.xlsm", ".VBA"),
+            "export",
+            "customUI",
+            "code",
+        )
+
+        process = mock.Mock()
+        process.communicate.side_effect = [
+            subprocess.TimeoutExpired(cmd="git add", timeout=15),
+            (b"", b""),
+        ]
+        process.returncode = 0
+
+        with mock.patch.object(
+            pre_commit_vba.subprocess,
+            "Popen",
+            return_value=process,
+        ):
+            pre_commit_vba.add_to_staging(settings)
+
+        process.kill.assert_called_once_with()
+        assert process.communicate.call_args_list == [  # noqa: S101
+            mock.call(timeout=15),
+            mock.call(),
+        ]
+
+
+class TestGetStagingStatus:
+    """Tests for get_staging_status helper."""
+
+    def test_kills_process_when_write_tree_times_out(self) -> None:
+        """Timeout during git write-tree should trigger kill and retry communicate."""
+        process = mock.Mock()
+        process.communicate.side_effect = [
+            subprocess.TimeoutExpired(cmd="git write-tree", timeout=15),
+            (b"tree-id\n", b""),
+        ]
+        process.returncode = 0
+
+        with mock.patch.object(
+            pre_commit_vba.subprocess,
+            "Popen",
+            return_value=process,
+        ):
+            result = pre_commit_vba.get_staging_status()
+
+        process.kill.assert_called_once_with()
+        assert process.communicate.call_args_list == [  # noqa: S101
+            mock.call(timeout=15),
+            mock.call(),
+        ]
+        assert result == "tree-id\n"  # noqa: S101
+
+
+class TestExtractCommandStagingStatus:
+    """Tests for extract command staging-status failure handling."""
+
+    def test_extract_exits_when_post_extract_staging_status_fails(self) -> None:
+        """StagingStatusError after extraction should exit with code 1."""
+        with (
+            mock.patch.object(
+                pre_commit_vba,
+                "get_staging_status",
+                side_effect=["before-tree", pre_commit_vba.StagingStatusError()],
+            ) as get_status,
+            mock.patch.object(Path, "glob", return_value=[]),
+        ):
+            result = runner.invoke(app, ["extract", "--target-path", "."])
+
+        assert result.exit_code == 1  # noqa: S101
+        assert get_status.call_args_list == [mock.call(), mock.call()]  # noqa: S101
+
+
+class TestGetCurrentBranchName:
+    """Tests for get_current_branch_name helper."""
+
+    def test_kills_process_when_rev_parse_times_out(self) -> None:
+        """Timeout during git rev-parse should trigger kill and retry."""
+        process = mock.Mock()
+        process.communicate.side_effect = [
+            subprocess.TimeoutExpired(cmd="git rev-parse", timeout=15),
+            (b"feature/test-branch\n", b""),
+        ]
+
+        with mock.patch.object(
+            pre_commit_vba.subprocess,
+            "Popen",
+            return_value=process,
+        ):
+            result = pre_commit_vba.get_current_branch_name()
+
+        process.kill.assert_called_once_with()
+        assert process.communicate.call_args_list == [  # noqa: S101
+            mock.call(timeout=15),
+            mock.call(),
+        ]
+        assert result == "feature/test-branch"  # noqa: S101
+
+
+class TestHasRubberduckAddinReferences:
+    """Tests for has_rubberduck_addin_references helper."""
+
+    def test_returns_false_when_workbook_cannot_be_opened(self, tmp_path: Path) -> None:
+        """OSError while opening workbook should return False."""
+        missing_workbook = tmp_path / "missing.xlsm"
+
+        result = pre_commit_vba.has_rubberduck_addin_references(missing_workbook)
+
+        assert result is False  # noqa: S101
+
+
 class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
     """Test class for code metadata portion in trailing whitespace check."""
 
@@ -248,24 +515,25 @@ class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
     @classmethod
     def set_up(cls) -> typing.tuple[subprocess.Popen, bytes]:
         """Set up for test."""
-        runner.invoke(
-            app,
-            [
-                "extract",
-                "--target-path",
-                "tests",
-                "--folder-suffix",
-                ".VBA",
-                "--export-folder",
-                "export",
-                "--custom-ui-folder",
-                "customUI",
-                "--code-folder",
-                "code",
-                "--enable-folder-annotation",
-                "--create-gitignore",
-            ],
-        )
+        with mock.patch.object(pre_commit_vba, "add_to_staging", return_value=None):
+            runner.invoke(
+                app,
+                [
+                    "extract",
+                    "--target-path",
+                    "tests",
+                    "--folder-suffix",
+                    ".test",
+                    "--export-folder",
+                    "export",
+                    "--custom-ui-folder",
+                    "customUI",
+                    "--code-folder",
+                    "code",
+                    "--enable-folder-annotation",
+                    "--create-gitignore",
+                ],
+            )
         process = subprocess.Popen(
             [  # noqa: S607
                 "uv",
@@ -274,7 +542,7 @@ class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
                 "run",
                 "trailing-whitespace",
                 "--files",
-                "tests/test.xlsm.VBA/code/registerForm/RegisterProductForm.frm",
+                "tests/test.xlsm.test/code/registerForm/RegisterProductForm.frm",
             ],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -284,6 +552,10 @@ class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
         except subprocess.TimeoutExpired:
             process.kill()
             stdout_data, _ = process.communicate()
+        finally:
+            shutil.rmtree(
+                Path(Path.cwd(), "tests", "test.xlsm.test"), ignore_errors=True
+            )
         return process, stdout_data
 
     def test_process_return_code_is_zero(
@@ -315,7 +587,7 @@ class TestExtractCommandPositiveOptions:
                 "--target-path",
                 ".",
                 "--folder-suffix",
-                ".VBA",
+                ".test",
                 "--export-folder",
                 "export",
                 "--custom-ui-folder",
@@ -333,11 +605,11 @@ class TestExtractCommandPositiveOptions:
         assert result.exit_code == 0  # noqa: S101
         assert f"{Path.cwd()}".lower() in caplog.text  # noqa: S101
 
-    def test_folder_suffix_is_vba(self, caplog) -> None:  # noqa: ANN001
-        """Test that folder suffix is '.VBA'."""
+    def test_folder_suffix_is_test(self, caplog) -> None:  # noqa: ANN001
+        """Test that folder suffix is '.test'."""
         result = self.extract_command_fixture(caplog)
         assert result.exit_code == 0  # noqa: S101
-        assert "folder-suffix: .VBA" in caplog.text  # noqa: S101
+        assert "folder-suffix: .test" in caplog.text  # noqa: S101
 
     def test_export_folder_is_export(self, caplog) -> None:  # noqa: ANN001
         """Test that export folder is 'export'."""
@@ -370,6 +642,7 @@ class TestExtractCommandPositiveOptions:
         assert "create-gitignore: True" in caplog.text  # noqa: S101
 
 
+@pytest.mark.skipif(DispatchEx is None, reason="pywin32 is only available on Windows")
 class TestExtractCommandExistenceFiles:
     """Test class for extract command."""
 
@@ -388,28 +661,30 @@ class TestExtractCommandExistenceFiles:
         yield _excel_instance, sut
         _workbook.Close(SaveChanges=False)
         _excel_instance.Quit()
+        shutil.rmtree(Path(Path.cwd(), "tests", "test.xlsm.test"), ignore_errors=True)
 
     @classmethod
     def sut(cls) -> CliRunner:
         """Fixture for TestExtractCommandExistenceFiles."""
-        return runner.invoke(
-            app,
-            [
-                "extract",
-                "--target-path",
-                "tests",
-                "--folder-suffix",
-                ".VBA",
-                "--export-folder",
-                "export",
-                "--custom-ui-folder",
-                "customUI",
-                "--code-folder",
-                "code",
-                "--enable-folder-annotation",
-                "--create-gitignore",
-            ],
-        )
+        with mock.patch.object(pre_commit_vba, "add_to_staging", return_value=None):
+            return runner.invoke(
+                app,
+                [
+                    "extract",
+                    "--target-path",
+                    "tests",
+                    "--folder-suffix",
+                    ".test",
+                    "--export-folder",
+                    "export",
+                    "--custom-ui-folder",
+                    "customUI",
+                    "--code-folder",
+                    "code",
+                    "--enable-folder-annotation",
+                    "--create-gitignore",
+                ],
+            )
 
     @pytest.mark.parametrize(
         "file",
@@ -454,7 +729,7 @@ class TestExtractCommandExistenceFiles:
         file: str,
     ) -> None:
         """Test that the extract command creates expected files and folders."""
-        assert Path(Path.cwd(), "tests", "test.xlsm.VBA", file).exists()  # noqa: S101
+        assert Path(Path.cwd(), "tests", "test.xlsm.test", file).exists()  # noqa: S101
 
     def test_terminate_normal(
         self, prepare_pre_existing_excel: typing.tuple[DispatchEx, CliRunner]
@@ -472,31 +747,35 @@ class TestExtractCommandExistenceFiles:
 
 
 def test_not_exists_test1_vba_folder() -> None:
-    """Test that the test1.VBA folder does not exist."""
-    if Path(Path.cwd(), "tests", "test1.VBA").exists():
-        shutil.rmtree(Path(Path.cwd(), "tests", "test1.VBA"))
-    runner.invoke(
-        app,
-        [
-            "extract",
-            "--target-path",
-            "tests",
-            "--folder-suffix",
-            ".VBA",
-            "--export-folder",
-            "export",
-            "--custom-ui-folder",
-            "customUI",
-            "--code-folder",
-            "code",
-            "--enable-folder-annotation",
-            "--create-gitignore",
-        ],
-    )
-    test_result = not Path(Path.cwd(), "tests", "test1.VBA").exists()
-    if Path(Path.cwd(), "tests", "test1.VBA").exists():
-        shutil.rmtree(Path(Path.cwd(), "tests", "test1.VBA"))
-    assert test_result  # noqa: S101
+    """Test that the test1.test folder does not exist."""
+    if Path(Path.cwd(), "tests", "test1.test").exists():
+        shutil.rmtree(Path(Path.cwd(), "tests", "test1.test"))
+    try:
+        with mock.patch.object(pre_commit_vba, "add_to_staging", return_value=None):
+            runner.invoke(
+                app,
+                [
+                    "extract",
+                    "--target-path",
+                    "tests",
+                    "--folder-suffix",
+                    ".test",
+                    "--export-folder",
+                    "export",
+                    "--custom-ui-folder",
+                    "customUI",
+                    "--code-folder",
+                    "code",
+                    "--enable-folder-annotation",
+                    "--create-gitignore",
+                ],
+            )
+        test_result = not Path(Path.cwd(), "tests", "test1.test").exists()
+        if Path(Path.cwd(), "tests", "test1.test").exists():
+            shutil.rmtree(Path(Path.cwd(), "tests", "test1.test"))
+        assert test_result  # noqa: S101
+    finally:
+        shutil.rmtree(Path(Path.cwd(), "tests", "test.xlsm.test"), ignore_errors=True)
 
 
 def test_extract_command_does_not_timeout_on_issue107_repro_workbook() -> None:
@@ -635,7 +914,7 @@ class TestExtractCommandNegativeOptions:
                 "--target-path",
                 ".",
                 "--folder-suffix",
-                ".VBA",
+                ".test",
                 "--export-folder",
                 "export",
                 "--custom-ui-folder",
@@ -699,6 +978,7 @@ def test_display_version_subcommand(subcommand: str) -> None:
     )
 
 
+@pytest.mark.skipif(DispatchEx is None, reason="pywin32 is only available on Windows")
 class TestCheckSubCommand:
     """Tests for check sub command."""
 
@@ -716,6 +996,7 @@ class TestCheckSubCommand:
         yield
         _workbook.Close(SaveChanges=False)
         _excel_instance.Quit()
+        shutil.rmtree(Path(Path.cwd(), "tests", "test.xlsm.test"), ignore_errors=True)
 
     def test_not_exist_workbook_outs_no_found(
         self, caplog: Generator[pytest.LogCaptureFixture]
@@ -804,6 +1085,32 @@ class TestCheckSubCommand:
             sut = runner.invoke(app, ["check", "--target-path", "tests"])
             assert sut.exit_code == 0  # noqa: S101
             assert "Version check passed." in caplog.text  # noqa: S101
+
+    def test_branch_release_version_mismatch_exits_with_error(
+        self, caplog: Generator[pytest.LogCaptureFixture]
+    ) -> None:
+        """Version mismatch between workbook and branch should exit with error."""
+        caplog.set_level(logging.INFO)
+        with (
+            mock.patch.object(
+                pre_commit_vba,
+                "get_current_branch_name",
+                return_value="release/v0.0.1-alpha",
+            ),
+            mock.patch.object(
+                pre_commit_vba,
+                "has_rubberduck_addin_references",
+                return_value=False,
+            ),
+            mock.patch.object(
+                pre_commit_vba,
+                "get_workbook_version",
+                return_value="v9.9.9",
+            ),
+        ):
+            sut = runner.invoke(app, ["check", "--target-path", "tests"])
+            assert sut.exit_code == 1  # noqa: S101
+            assert "Version mismatch" in caplog.text  # noqa: S101
 
     def test_branch_hotfix_v_0_0_1_alpha_outs_version_check_passed(
         self, caplog: Generator[pytest.LogCaptureFixture]

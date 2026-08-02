@@ -12,6 +12,7 @@ from pathlib import Path
 
 import pytest
 
+from src.pre_commit_vba import pre_commit_vba
 from src.pre_commit_vba.pre_commit_vba import (
     ExcelVbaExporter,
     SettingsCommonFolder,
@@ -19,6 +20,9 @@ from src.pre_commit_vba.pre_commit_vba import (
 )
 
 
+@pytest.mark.skipif(
+    pre_commit_vba.DispatchEx is None, reason="pywin32 is only available on Windows"
+)
 class TestExcelVbaExporter:
     """Tests for ExcelVbaExporter class."""
 
@@ -27,7 +31,7 @@ class TestExcelVbaExporter:
     def sut(cls) -> Generator[ExcelVbaExporter]:
         """Act first this tests."""
         common_folder = SettingsCommonFolder(
-            Path(Path.cwd(), "tests", "test.xlsm"), ".VBA", include_extension=True
+            Path(Path.cwd(), "tests", "test.xlsm"), ".test", include_extension=True
         )
         settings = SettingsFoldersHandleExcel(
             settings_common_folder=common_folder,
@@ -43,13 +47,13 @@ class TestExcelVbaExporter:
     def test_exists_this_workbook_file(self, sut: ExcelVbaExporter) -> None:  # noqa: ARG002
         """Test that ThisWorkbook component file exists."""
         expected_file = Path(
-            Path.cwd(), "tests", "test.xlsm.VBA", "export", "ThisWorkbook.cls"
+            Path.cwd(), "tests", "test.xlsm.test", "export", "ThisWorkbook.cls"
         )
         assert Path.is_file(expected_file)  # noqa: S101
 
     def test_exists_sheet1_file(self, sut: ExcelVbaExporter) -> None:  # noqa: ARG002
-        """Test that ThisWorkbook component file exists."""
+        """Test that Sheet1 component file exists."""
         expected_file = Path(
-            Path.cwd(), "tests", "test.xlsm.VBA", "export", "sheet1.cls"
+            Path.cwd(), "tests", "test.xlsm.test", "export", "sheet1.cls"
         )
         assert Path.is_file(expected_file)  # noqa: S101

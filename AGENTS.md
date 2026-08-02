@@ -7,10 +7,10 @@
 ## Commands
 
 - Install dependencies: `uv sync`
-- Lint: `uvx ruff check`
-- Formatter: `uvx ruff format`
-- Run all tests: `uvx tox -e 314`
-- Type check: `uvx mypy src/`
+- Lint: `uv run ruff check`
+- Formatter: `uv run ruff format`
+- Run all tests: `uv run tox -e 3.14`
+- Type check: `uv run mypy src/`
 
 ## Code style
 - Use python
