@@ -12,6 +12,7 @@ from pathlib import Path
 
 import pytest
 
+from src.pre_commit_vba import pre_commit_vba
 from src.pre_commit_vba.pre_commit_vba import (
     ExcelVbaExporter,
     SettingsCommonFolder,
@@ -19,6 +20,9 @@ from src.pre_commit_vba.pre_commit_vba import (
 )
 
 
+@pytest.mark.skipif(
+    pre_commit_vba.DispatchEx is None, reason="pywin32 is only available on Windows"
+)
 class TestExcelVbaExporter:
     """Tests for ExcelVbaExporter class."""
 
