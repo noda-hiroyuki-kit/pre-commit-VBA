@@ -25,6 +25,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `tox-uv` の最小要件を 1.35.2 から 1.36.0 へ引き上げ.
 - Bump minimum `zensical` requirement from 0.0.50 to 0.0.51.  
   `zensical` の最小要件を 0.0.50 から 0.0.51 へ引き上げ.
+- Expand automated test coverage for CLI and helper error-handling branches, including Windows-only import fallback, subprocess timeout recovery, staging-status failure exits, log stream encoding guards, and module main entrypoint invocation.  
+  Windows 専用 import フォールバック, subprocess タイムアウト復旧, ステージ状態取得失敗時の終了, ログストリームエンコーディングのガード分岐, モジュール main エントリポイント呼び出しを含む CLI/ヘルパーのエラーハンドリング分岐に対する自動テストカバレッジを拡張.
+- Update contributing and skill documentation pages for English/Japanese guidance consistency.  
+  英語/日本語ガイダンスの整合性向上のため, Contributing と Skill のドキュメントを更新.
+
+### Fixed
+
+- Stabilize extract-related tests by migrating temporary extraction outputs from `.VBA` to `.test`, isolating fixture output folders, and avoiding git staging side effects during test execution.  
+  テスト実行中の git ステージ副作用を回避しつつ, 一時的な展開出力を `.VBA` から `.test` へ移行し, fixture の出力フォルダを分離して extract 関連テストを安定化.
+- Improve Utf8Converter test reliability for option branches and binary-probe fallback behavior, including OSError handling.  
+  オプション分岐とバイナリ判定フォールバック（OSError ハンドリングを含む）に対する Utf8Converter テストの信頼性を改善.
 
 ## [0.3.12] - 2026-07-26
 
