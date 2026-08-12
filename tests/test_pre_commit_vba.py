@@ -605,43 +605,57 @@ class TestExtractCommandPositiveOptions:
             ],
         )
 
-    def test_target_path_is_logged(self, caplog, tmp_path: Path) -> None:  # noqa: ANN001
+    def test_target_path_is_logged(
+        self, caplog: pytest.LogCaptureFixture, tmp_path: Path
+    ) -> None:
         """Test that target_path is logged."""
         result = self.extract_command_fixture(caplog, tmp_path)
         assert result.exit_code == 0  # noqa: S101
         assert str(tmp_path.resolve()).lower() in caplog.text  # noqa: S101
 
-    def test_folder_suffix_is_test(self, caplog, tmp_path: Path) -> None:  # noqa: ANN001
+    def test_folder_suffix_is_test(
+        self, caplog: pytest.LogCaptureFixture, tmp_path: Path
+    ) -> None:
         """Test that folder suffix is '.test'."""
         result = self.extract_command_fixture(caplog, tmp_path)
         assert result.exit_code == 0  # noqa: S101
         assert "folder-suffix: .test" in caplog.text  # noqa: S101
 
-    def test_export_folder_is_export(self, caplog, tmp_path: Path) -> None:  # noqa: ANN001
+    def test_export_folder_is_export(
+        self, caplog: pytest.LogCaptureFixture, tmp_path: Path
+    ) -> None:
         """Test that export folder is 'export'."""
         result = self.extract_command_fixture(caplog, tmp_path)
         assert result.exit_code == 0  # noqa: S101
         assert "export-folder: export" in caplog.text  # noqa: S101
 
-    def test_custom_ui_folder_is_custom_ui(self, caplog, tmp_path: Path) -> None:  # noqa: ANN001
+    def test_custom_ui_folder_is_custom_ui(
+        self, caplog: pytest.LogCaptureFixture, tmp_path: Path
+    ) -> None:
         """Test that custom ui folder is 'customUI'."""
         result = self.extract_command_fixture(caplog, tmp_path)
         assert result.exit_code == 0  # noqa: S101
         assert "custom-ui-folder: customUI" in caplog.text  # noqa: S101
 
-    def test_code_folder_is_code(self, caplog, tmp_path: Path) -> None:  # noqa: ANN001
+    def test_code_folder_is_code(
+        self, caplog: pytest.LogCaptureFixture, tmp_path: Path
+    ) -> None:
         """Test that code folder is 'code'."""
         result = self.extract_command_fixture(caplog, tmp_path)
         assert result.exit_code == 0  # noqa: S101
         assert "code-folder: code" in caplog.text  # noqa: S101
 
-    def test_enable_folder_annotation_is_true(self, caplog, tmp_path: Path) -> None:  # noqa: ANN001
+    def test_enable_folder_annotation_is_true(
+        self, caplog: pytest.LogCaptureFixture, tmp_path: Path
+    ) -> None:
         """Test that enable-folder-annotation is True."""
         result = self.extract_command_fixture(caplog, tmp_path)
         assert result.exit_code == 0  # noqa: S101
         assert "enable-folder-annotation: True" in caplog.text  # noqa: S101
 
-    def test_create_gitignore_is_true(self, caplog, tmp_path: Path) -> None:  # noqa: ANN001
+    def test_create_gitignore_is_true(
+        self, caplog: pytest.LogCaptureFixture, tmp_path: Path
+    ) -> None:
         """Test that create-gitignore is True."""
         result = self.extract_command_fixture(caplog, tmp_path)
         assert result.exit_code == 0  # noqa: S101
@@ -934,13 +948,17 @@ class TestExtractCommandNegativeOptions:
             ],
         )
 
-    def test_enable_folder_annotation_is_false(self, caplog, tmp_path: Path) -> None:  # noqa: ANN001
+    def test_enable_folder_annotation_is_false(
+        self, caplog: pytest.LogCaptureFixture, tmp_path: Path
+    ) -> None:
         """Test that enable-folder-annotation is False."""
         result = self.extract_command_fixture(caplog, tmp_path)
         assert result.exit_code == 0  # noqa: S101
         assert "enable-folder-annotation: False" in caplog.text  # noqa: S101
 
-    def test_create_gitignore_is_false(self, caplog, tmp_path: Path) -> None:  # noqa: ANN001
+    def test_create_gitignore_is_false(
+        self, caplog: pytest.LogCaptureFixture, tmp_path: Path
+    ) -> None:
         """Test that create-gitignore is False."""
         result = self.extract_command_fixture(caplog, tmp_path)
         assert result.exit_code == 0  # noqa: S101
