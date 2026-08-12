@@ -376,7 +376,7 @@ class SheetClassModule(IVbComponentType):
         return self.module_name + ".cls"
 
 
-class ExcelCustomUiExtractor:
+class CustomUiExtractor:
     """A placeholder class for ExcelCustomUiExtractor."""
 
     def __init__(self, settings: SettingsFoldersHandleOffice) -> None:
@@ -742,7 +742,7 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913, C901
         if folder_settings.common_folder.exists():
             shutil.rmtree(folder_settings.common_folder)
         ExcelVbaExporter(folder_settings)
-        ExcelCustomUiExtractor(folder_settings)
+        CustomUiExtractor(folder_settings)
         Utf8Converter(folder_settings, options)
         try:
             add_to_staging(folder_settings)

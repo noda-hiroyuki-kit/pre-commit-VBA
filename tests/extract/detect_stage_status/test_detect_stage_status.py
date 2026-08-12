@@ -99,7 +99,7 @@ def _patch_extract_dependencies(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr(pre_commit_vba, "ExcelVbaExporter", _DummyExcelVbaExporter)
     monkeypatch.setattr(
         pre_commit_vba,
-        "ExcelCustomUiExtractor",
+        "CustomUiExtractor",
         _DummyExcelCustomUiExtractor,
     )
     monkeypatch.setattr(pre_commit_vba, "Utf8Converter", _DummyUtf8Converter)

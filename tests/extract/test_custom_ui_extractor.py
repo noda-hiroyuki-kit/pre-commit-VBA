@@ -1,5 +1,5 @@
 # Copyright (c) 2026 Noda Hiroyuki
-"""Tests for ExcelCustomUiExtractor class."""
+"""Tests for CustomUiExtractor class."""
 
 from __future__ import annotations
 
@@ -19,18 +19,18 @@ from pathlib import Path
 import pytest
 
 from src.pre_commit_vba.pre_commit_vba import (
-    ExcelCustomUiExtractor,
+    CustomUiExtractor,
     SettingsCommonFolder,
     SettingsFoldersHandleOffice,
 )
 
 
-class TestExcelCustomUiExtractor:
-    """Tests for ExcelCustomUiExtractor class."""
+class TestCustomUiExtractor:
+    """Tests for CustomUiExtractor class."""
 
     @pytest.fixture(scope="class")
     @classmethod
-    def sut(cls) -> Generator[ExcelCustomUiExtractor]:
+    def sut(cls) -> Generator[CustomUiExtractor]:
         """Act first this tests."""
         common_folder = SettingsCommonFolder(
             Path(Path.cwd(), "tests", "test.xlsm"),
@@ -45,10 +45,10 @@ class TestExcelCustomUiExtractor:
         )
         if Path.is_dir(settings.common_folder):
             shutil.rmtree(settings.common_folder)
-        yield ExcelCustomUiExtractor(settings)
+        yield CustomUiExtractor(settings)
         shutil.rmtree(settings.common_folder)
 
-    def test_exists_custom_ui_14_xml_file(self, sut: ExcelCustomUiExtractor) -> None:  # noqa: ARG002
+    def test_exists_custom_ui_14_xml_file(self, sut: CustomUiExtractor) -> None:  # noqa: ARG002
         """Test that customUI14.xml file exists."""
         expected_file = Path(
             Path.cwd(),
@@ -74,7 +74,7 @@ class TestExcelCustomUiExtractor:
         if settings.common_folder.exists():
             shutil.rmtree(settings.common_folder)
 
-        ExcelCustomUiExtractor(settings)
+        CustomUiExtractor(settings)
 
         assert not settings.custom_ui_folder.exists()  # noqa: S101
 
@@ -96,7 +96,7 @@ class TestExcelCustomUiExtractor:
 
         try:
             caplog.set_level(logging.INFO)
-            ExcelCustomUiExtractor(settings)
+            CustomUiExtractor(settings)
 
             expected_log_14 = "customUI14.xml does not exists in Issue121_日本語.xlsm"
             expected_log = "customUI.xml does not exists in Issue121_日本語.xlsm"
@@ -124,7 +124,7 @@ class TestExcelCustomUiExtractor:
             """
             from pathlib import Path
             from src.pre_commit_vba.pre_commit_vba import (
-                ExcelCustomUiExtractor,
+                CustomUiExtractor,
                 SettingsCommonFolder,
                 SettingsFoldersHandleOffice,
             )
@@ -141,7 +141,7 @@ class TestExcelCustomUiExtractor:
                 import shutil
 
                 shutil.rmtree(settings.common_folder)
-            ExcelCustomUiExtractor(settings)
+            CustomUiExtractor(settings)
             """,
         )
         env = os.environ.copy()
