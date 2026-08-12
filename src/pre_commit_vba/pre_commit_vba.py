@@ -169,7 +169,7 @@ class SettingsCommonFolder:
 
     def __init__(
         self,
-        workbook_path: Path,
+        office_file_path: Path,
         folder_suffix: str,
         *,
         include_extension: bool = True,
@@ -177,7 +177,7 @@ class SettingsCommonFolder:
         """Initialize settings.
 
         Args:
-            workbook_path: Path to the Excel workbook.
+            office_file_path: Path to the Office file (e.g., Excel workbook).
             folder_suffix: Suffix for the folder (e.g., ".VBA").
             include_extension:
                 If True, use full filename with extension(e.g., "test.xlsm.VBA").
@@ -185,7 +185,7 @@ class SettingsCommonFolder:
                 Default is True (include extension).
 
         """
-        self.__workbook_path = workbook_path
+        self.__office_file_path = office_file_path
         self.__folder_suffix = folder_suffix
         self.__include_extension = include_extension
 
@@ -193,17 +193,17 @@ class SettingsCommonFolder:
     def common_folder(self) -> Path:
         """Return common folder path."""
         if self.__include_extension:
-            folder_name = f"{self.__workbook_path.name}{self.__folder_suffix}"
+            folder_name = f"{self.__office_file_path.name}{self.__folder_suffix}"
         else:
             folder_name = (
-                f"{self.__workbook_path.name.split('.')[0]}{self.__folder_suffix}"
+                f"{self.__office_file_path.name.split('.')[0]}{self.__folder_suffix}"
             )
-        return Path(self.__workbook_path.parent, folder_name)
+        return Path(self.__office_file_path.parent, folder_name)
 
     @property
-    def workbook_path(self) -> Path:
-        """Return workbook path."""
-        return self.__workbook_path
+    def office_file_path(self) -> Path:
+        """Return Office file path."""
+        return self.__office_file_path
 
 
 class SettingsFoldersHandleExcel:
@@ -243,7 +243,7 @@ class SettingsFoldersHandleExcel:
     @property
     def workbook_path(self) -> Path:
         """Return workbook path."""
-        return self.__settings_common_folder.workbook_path
+        return self.__settings_common_folder.office_file_path
 
     @property
     def common_folder(self) -> Path:
@@ -723,13 +723,13 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913, C901
             staging_status_before = get_staging_status()
         except StagingStatusError:
             sys.exit(1)
-    for workbook_path in resolved_target_path.glob("*.xls*"):
-        if workbook_path.name.startswith("~$"):
+    for office_file_path in resolved_target_path.glob("*.xls*"):
+        if office_file_path.name.startswith("~$"):
             continue
-        if not has_vba_code(workbook_path):
+        if not has_vba_code(office_file_path):
             continue
         common_folder_settings = SettingsCommonFolder(
-            workbook_path=workbook_path,
+            office_file_path=office_file_path,
             folder_suffix=folder_suffix,
             include_extension=include_extension,
         )
