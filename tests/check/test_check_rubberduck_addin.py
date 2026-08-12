@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Noda Hiroyuki
 """Tests for Rubberduck Addin reference detection in check command."""
 
 from pathlib import Path

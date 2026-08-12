@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Noda Hiroyuki
 """Tests for ExcelCustomUiExtractor class."""
 
 from __future__ import annotations

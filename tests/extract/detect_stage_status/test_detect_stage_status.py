@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Noda Hiroyuki
 """Tests for staging state detection during extract command."""
 
 from __future__ import annotations

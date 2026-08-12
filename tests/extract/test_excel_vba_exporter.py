@@ -1,4 +1,5 @@
-"""Tests for ExcelVbComponent class."""
+# Copyright (c) 2026 Noda Hiroyuki
+"""Tests for ExcelVbaExporter class."""
 
 from __future__ import annotations
 

@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Noda Hiroyuki
 """Check branch name tests for pre-commit-vba."""
 
 import re

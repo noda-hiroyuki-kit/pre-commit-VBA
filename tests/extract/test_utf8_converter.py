@@ -1,4 +1,5 @@
-"""Test for Utf8Converter."""
+# Copyright (c) 2026 Noda Hiroyuki
+"""Tests for Utf8Converter class."""
 
 from __future__ import annotations
 
@@ -25,8 +26,8 @@ from src.pre_commit_vba.pre_commit_vba import (
 @pytest.mark.skipif(
     pre_commit_vba.DispatchEx is None, reason="pywin32 is only available on Windows"
 )
-class TestExcelVbaExporter:
-    """Tests for ExcelVbaExporter class."""
+class TestUtf8Converter:
+    """Tests for Utf8Converter class."""
 
     @pytest.fixture(scope="class")
     @classmethod
@@ -65,7 +66,7 @@ class TestExcelVbaExporter:
         assert Path.is_file(expected_file)  # noqa: S101
 
     def test_exists_sheet1_file(self, sut: Utf8Converter) -> None:  # noqa: ARG002
-        """Test that ThisWorkbook component file exists."""
+        """Test that Sheet1 component file exists."""
         expected_file = Path(
             Path.cwd(),
             "tests",
@@ -78,7 +79,7 @@ class TestExcelVbaExporter:
         assert Path.is_file(expected_file)  # noqa: S101
 
     def test_exists_gitignore_file(self, sut: Utf8Converter) -> None:  # noqa: ARG002
-        """Test that ThisWorkbook component file exists."""
+        """Test that .gitignore file exists."""
         expected_file = Path(
             Path.cwd(),
             "tests",

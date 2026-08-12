@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Noda Hiroyuki
 """pre-commit-vba script.
 
 extract code files from excel workbook with codes.
