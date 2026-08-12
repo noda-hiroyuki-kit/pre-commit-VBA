@@ -15,7 +15,6 @@ import subprocess
 import tempfile
 import tomllib
 import typing
-from collections.abc import Callable, Generator
 from contextlib import suppress
 from logging import DEBUG
 from pathlib import Path
