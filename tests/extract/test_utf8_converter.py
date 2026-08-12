@@ -24,7 +24,8 @@ from src.pre_commit_vba.pre_commit_vba import (
 
 
 @pytest.mark.skipif(
-    pre_commit_vba.DispatchEx is None, reason="pywin32 is only available on Windows"
+    pre_commit_vba.DispatchEx is None,
+    reason="pywin32 is only available on Windows",
 )
 class TestUtf8Converter:
     """Tests for Utf8Converter class."""
@@ -34,7 +35,9 @@ class TestUtf8Converter:
     def sut(cls) -> Generator[Utf8Converter]:
         """Act first this tests."""
         common_folder = SettingsCommonFolder(
-            Path(Path.cwd(), "tests", "test.xlsm"), ".test", include_extension=True
+            Path(Path.cwd(), "tests", "test.xlsm"),
+            ".test",
+            include_extension=True,
         )
         settings = SettingsFoldersHandleExcel(
             settings_common_folder=common_folder,

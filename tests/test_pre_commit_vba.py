@@ -294,7 +294,8 @@ class TestExcelCleanupLogging:
         assert "Failed to clean up Excel resource: application" in caplog.text  # noqa: S101
 
     def test_get_workbook_version_swallows_non_com_cleanup_errors(
-        self, caplog: pytest.LogCaptureFixture
+        self,
+        caplog: pytest.LogCaptureFixture,
     ) -> None:
         """Non-COM cleanup errors should not alter command outcome."""
         caplog.set_level(logging.DEBUG)
@@ -558,19 +559,22 @@ class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
             stdout_data, _ = process.communicate()
         finally:
             shutil.rmtree(
-                Path(Path.cwd(), "tests", "test.xlsm.test"), ignore_errors=True
+                Path(Path.cwd(), "tests", "test.xlsm.test"),
+                ignore_errors=True,
             )
         return process, stdout_data
 
     def test_process_return_code_is_zero(
-        self, set_up: typing.tuple[subprocess.Popen, bytes]
+        self,
+        set_up: typing.tuple[subprocess.Popen, bytes],
     ) -> None:
         """Test that the process return code is zero."""
         process, _ = set_up
         assert process.returncode == 0  # noqa: S101
 
     def test_stdout_contains_passed_message(
-        self, set_up: typing.tuple[subprocess.Popen, bytes]
+        self,
+        set_up: typing.tuple[subprocess.Popen, bytes],
     ) -> None:
         """Test that the stdout contains 'Passed' message."""
         _, stdout_data = set_up
@@ -582,7 +586,9 @@ class TestExtractCommandPositiveOptions:
     """Test class for extract command."""
 
     def extract_command_fixture(
-        self, caplog: pytest.LogCaptureFixture, target_path: Path
+        self,
+        caplog: pytest.LogCaptureFixture,
+        target_path: Path,
     ) -> Result:
         """Test that the extract command executes without errors."""
         caplog.set_level(DEBUG)
@@ -606,7 +612,9 @@ class TestExtractCommandPositiveOptions:
         )
 
     def test_target_path_is_logged(
-        self, caplog: pytest.LogCaptureFixture, tmp_path: Path
+        self,
+        caplog: pytest.LogCaptureFixture,
+        tmp_path: Path,
     ) -> None:
         """Test that target_path is logged."""
         result = self.extract_command_fixture(caplog, tmp_path)
@@ -614,7 +622,9 @@ class TestExtractCommandPositiveOptions:
         assert str(tmp_path.resolve()).lower() in caplog.text  # noqa: S101
 
     def test_folder_suffix_is_test(
-        self, caplog: pytest.LogCaptureFixture, tmp_path: Path
+        self,
+        caplog: pytest.LogCaptureFixture,
+        tmp_path: Path,
     ) -> None:
         """Test that folder suffix is '.test'."""
         result = self.extract_command_fixture(caplog, tmp_path)
@@ -622,7 +632,9 @@ class TestExtractCommandPositiveOptions:
         assert "folder-suffix: .test" in caplog.text  # noqa: S101
 
     def test_export_folder_is_export(
-        self, caplog: pytest.LogCaptureFixture, tmp_path: Path
+        self,
+        caplog: pytest.LogCaptureFixture,
+        tmp_path: Path,
     ) -> None:
         """Test that export folder is 'export'."""
         result = self.extract_command_fixture(caplog, tmp_path)
@@ -630,7 +642,9 @@ class TestExtractCommandPositiveOptions:
         assert "export-folder: export" in caplog.text  # noqa: S101
 
     def test_custom_ui_folder_is_custom_ui(
-        self, caplog: pytest.LogCaptureFixture, tmp_path: Path
+        self,
+        caplog: pytest.LogCaptureFixture,
+        tmp_path: Path,
     ) -> None:
         """Test that custom ui folder is 'customUI'."""
         result = self.extract_command_fixture(caplog, tmp_path)
@@ -638,7 +652,9 @@ class TestExtractCommandPositiveOptions:
         assert "custom-ui-folder: customUI" in caplog.text  # noqa: S101
 
     def test_code_folder_is_code(
-        self, caplog: pytest.LogCaptureFixture, tmp_path: Path
+        self,
+        caplog: pytest.LogCaptureFixture,
+        tmp_path: Path,
     ) -> None:
         """Test that code folder is 'code'."""
         result = self.extract_command_fixture(caplog, tmp_path)
@@ -646,7 +662,9 @@ class TestExtractCommandPositiveOptions:
         assert "code-folder: code" in caplog.text  # noqa: S101
 
     def test_enable_folder_annotation_is_true(
-        self, caplog: pytest.LogCaptureFixture, tmp_path: Path
+        self,
+        caplog: pytest.LogCaptureFixture,
+        tmp_path: Path,
     ) -> None:
         """Test that enable-folder-annotation is True."""
         result = self.extract_command_fixture(caplog, tmp_path)
@@ -654,7 +672,9 @@ class TestExtractCommandPositiveOptions:
         assert "enable-folder-annotation: True" in caplog.text  # noqa: S101
 
     def test_create_gitignore_is_true(
-        self, caplog: pytest.LogCaptureFixture, tmp_path: Path
+        self,
+        caplog: pytest.LogCaptureFixture,
+        tmp_path: Path,
     ) -> None:
         """Test that create-gitignore is True."""
         result = self.extract_command_fixture(caplog, tmp_path)
@@ -748,7 +768,8 @@ class TestExtractCommandExistenceFiles:
     def test_exists_file(
         self,
         prepare_pre_existing_excel: typing.tuple[  # noqa: ARG002
-            pre_commit_vba.ExcelApplicationProtocol, CliRunner
+            pre_commit_vba.ExcelApplicationProtocol,
+            CliRunner,
         ],
         file: str,
     ) -> None:
@@ -758,7 +779,8 @@ class TestExtractCommandExistenceFiles:
     def test_terminate_normal(
         self,
         prepare_pre_existing_excel: typing.tuple[
-            pre_commit_vba.ExcelApplicationProtocol, CliRunner
+            pre_commit_vba.ExcelApplicationProtocol,
+            CliRunner,
         ],
     ) -> None:
         """Test that the extract command terminates normally."""
@@ -768,7 +790,8 @@ class TestExtractCommandExistenceFiles:
     def test_exists_pre_existing_excel_instance(
         self,
         prepare_pre_existing_excel: typing.tuple[
-            pre_commit_vba.ExcelApplicationProtocol, CliRunner
+            pre_commit_vba.ExcelApplicationProtocol,
+            CliRunner,
         ],
     ) -> None:
         """Test that the pre-existing Excel instance is not None."""
@@ -884,7 +907,7 @@ def test_check_command_does_not_timeout_on_issue107_repro_workbook() -> None:
     assert repro_workbook.exists()  # noqa: S101
 
     temp_root = Path(
-        tempfile.mkdtemp(prefix="issue107-check-", dir=Path.cwd() / "tests")
+        tempfile.mkdtemp(prefix="issue107-check-", dir=Path.cwd() / "tests"),
     )
     target_workbook = Path(temp_root, repro_workbook.name)
     git_path = shutil.which("git")
@@ -935,7 +958,9 @@ class TestExtractCommandNegativeOptions:
     """Test class for extract command."""
 
     def extract_command_fixture(
-        self, caplog: pytest.LogCaptureFixture, target_path: Path
+        self,
+        caplog: pytest.LogCaptureFixture,
+        target_path: Path,
     ) -> Result:
         """Test that the extract command executes without errors."""
         caplog.set_level(DEBUG)
@@ -959,7 +984,9 @@ class TestExtractCommandNegativeOptions:
         )
 
     def test_enable_folder_annotation_is_false(
-        self, caplog: pytest.LogCaptureFixture, tmp_path: Path
+        self,
+        caplog: pytest.LogCaptureFixture,
+        tmp_path: Path,
     ) -> None:
         """Test that enable-folder-annotation is False."""
         result = self.extract_command_fixture(caplog, tmp_path)
@@ -967,7 +994,9 @@ class TestExtractCommandNegativeOptions:
         assert "enable-folder-annotation: False" in caplog.text  # noqa: S101
 
     def test_create_gitignore_is_false(
-        self, caplog: pytest.LogCaptureFixture, tmp_path: Path
+        self,
+        caplog: pytest.LogCaptureFixture,
+        tmp_path: Path,
     ) -> None:
         """Test that create-gitignore is False."""
         result = self.extract_command_fixture(caplog, tmp_path)
@@ -1035,7 +1064,8 @@ class TestCheckSubCommand:
         shutil.rmtree(Path(Path.cwd(), "tests", "test.xlsm.test"), ignore_errors=True)
 
     def test_not_exist_workbook_outs_no_found(
-        self, caplog: Generator[pytest.LogCaptureFixture]
+        self,
+        caplog: Generator[pytest.LogCaptureFixture],
     ) -> None:
         """Test not exist workbook in target path."""
         caplog.set_level(logging.INFO)
@@ -1051,7 +1081,8 @@ class TestCheckSubCommand:
             )
 
     def test_not_a_release_or_hotfix_branch_outs_in_feature_branch(
-        self, caplog: Generator[pytest.LogCaptureFixture]
+        self,
+        caplog: Generator[pytest.LogCaptureFixture],
     ) -> None:
         """Test not release branch."""
         caplog.set_level(logging.INFO)
@@ -1065,7 +1096,8 @@ class TestCheckSubCommand:
             assert "Branch is not a release or hotfix branch" in caplog.text  # noqa: S101
 
     def test_branch_release_v_0_0_1_0123_outs_invalid_semantic_version(
-        self, caplog: Generator[pytest.LogCaptureFixture]
+        self,
+        caplog: Generator[pytest.LogCaptureFixture],
     ) -> None:
         """Test invalid semantic version in branch name."""
         caplog.set_level(logging.INFO)
@@ -1079,7 +1111,8 @@ class TestCheckSubCommand:
             assert "Invalid semantic version in branch name" in caplog.text  # noqa: S101
 
     def test_branch_release_v_0_0_1_alpha_outs_version_check_passed(
-        self, caplog: Generator[pytest.LogCaptureFixture]
+        self,
+        caplog: Generator[pytest.LogCaptureFixture],
     ) -> None:
         """Test check ok."""
         caplog.set_level(logging.INFO)
@@ -1123,7 +1156,8 @@ class TestCheckSubCommand:
             assert "Version check passed." in caplog.text  # noqa: S101
 
     def test_branch_release_version_mismatch_exits_with_error(
-        self, caplog: Generator[pytest.LogCaptureFixture]
+        self,
+        caplog: Generator[pytest.LogCaptureFixture],
     ) -> None:
         """Version mismatch between workbook and branch should exit with error."""
         caplog.set_level(logging.INFO)
@@ -1149,7 +1183,8 @@ class TestCheckSubCommand:
             assert "Version mismatch" in caplog.text  # noqa: S101
 
     def test_branch_hotfix_v_0_0_1_alpha_outs_version_check_passed(
-        self, caplog: Generator[pytest.LogCaptureFixture]
+        self,
+        caplog: Generator[pytest.LogCaptureFixture],
     ) -> None:
         """Test check ok."""
         caplog.set_level(logging.INFO)

@@ -15,7 +15,11 @@ from src.pre_commit_vba.pre_commit_vba import (
 runner = CliRunner()
 
 RUBBERDUCK_WORKBOOK = Path(
-    Path.cwd(), "tests", "check", "withRubberduck", "WithRubberduckAddinReferences.xlsm"
+    Path.cwd(),
+    "tests",
+    "check",
+    "withRubberduck",
+    "WithRubberduckAddinReferences.xlsm",
 )
 NORMAL_WORKBOOK = Path(
     Path.cwd(),
@@ -34,7 +38,9 @@ WITHOUT_ACTIVE_RUBBERDUCK_WORKBOOK = Path(
 CHECK_DIR_WITH_RUBBERDUCK = Path("tests", "check", "withRubberduck")
 CHECK_DIR_WITHOUT_RUBBERDUCK = Path("tests", "check", "withoutRubberduck")
 CHECK_DIR_WITHOUT_ACTIVE_RUBBERDUCK = Path(
-    "tests", "check", "withoutActiveRubberduckReference"
+    "tests",
+    "check",
+    "withoutActiveRubberduckReference",
 )
 
 

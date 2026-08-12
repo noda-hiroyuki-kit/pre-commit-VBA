@@ -33,7 +33,9 @@ class TestExcelCustomUiExtractor:
     def sut(cls) -> Generator[ExcelCustomUiExtractor]:
         """Act first this tests."""
         common_folder = SettingsCommonFolder(
-            Path(Path.cwd(), "tests", "test.xlsm"), ".test", include_extension=True
+            Path(Path.cwd(), "tests", "test.xlsm"),
+            ".test",
+            include_extension=True,
         )
         settings = SettingsFoldersHandleExcel(
             settings_common_folder=common_folder,
@@ -49,7 +51,11 @@ class TestExcelCustomUiExtractor:
     def test_exists_custom_ui_14_xml_file(self, sut: ExcelCustomUiExtractor) -> None:  # noqa: ARG002
         """Test that customUI14.xml file exists."""
         expected_file = Path(
-            Path.cwd(), "tests", "test.xlsm.test", "customUI", "customUI14.xml"
+            Path.cwd(),
+            "tests",
+            "test.xlsm.test",
+            "customUI",
+            "customUI14.xml",
         )
         assert Path.is_file(expected_file)  # noqa: S101
 
@@ -73,7 +79,8 @@ class TestExcelCustomUiExtractor:
         assert not settings.custom_ui_folder.exists()  # noqa: S101
 
     def test_logs_japanese_workbook_filename_without_mojibake(
-        self, caplog: pytest.LogCaptureFixture
+        self,
+        caplog: pytest.LogCaptureFixture,
     ) -> None:
         """Issue121: log output should keep Japanese workbook filename."""
         workbook_path = Path("tests/fixtures/issue121/Issue121_日本語.xlsm")
@@ -100,7 +107,8 @@ class TestExcelCustomUiExtractor:
                 shutil.rmtree(settings.common_folder)
 
     @pytest.mark.skipif(
-        sys.platform != "win32", reason="Windows specific encoding behavior"
+        sys.platform != "win32",
+        reason="Windows specific encoding behavior",
     )
     def test_japanese_filename_is_readable_by_utf8_consumers(self) -> None:
         """Issue121: UTF-8 consumers should read Japanese filename without mojibake."""
@@ -134,7 +142,7 @@ class TestExcelCustomUiExtractor:
 
                 shutil.rmtree(settings.common_folder)
             ExcelCustomUiExtractor(settings)
-            """
+            """,
         )
         env = os.environ.copy()
         env["PYTHONUTF8"] = "0"
