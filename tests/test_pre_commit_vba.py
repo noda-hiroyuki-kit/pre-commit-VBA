@@ -668,7 +668,9 @@ class TestExtractCommandExistenceFiles:
 
     @pytest.fixture(scope="class")
     @classmethod
-    def prepare_pre_existing_excel(cls) -> typing.tuple[DispatchEx, CliRunner]:
+    def prepare_pre_existing_excel(
+        cls,
+    ) -> typing.tuple[pre_commit_vba.ExcelApplicationProtocol, CliRunner]:
         """Fixture to prepare pre-existing Excel workbook for testing."""
         _excel_instance = DispatchEx("Excel.Application")
         _excel_instance.Visible = False
@@ -745,21 +747,29 @@ class TestExtractCommandExistenceFiles:
     )
     def test_exists_file(
         self,
-        prepare_pre_existing_excel: typing.tuple[DispatchEx, CliRunner],  # noqa: ARG002
+        prepare_pre_existing_excel: typing.tuple[  # noqa: ARG002
+            pre_commit_vba.ExcelApplicationProtocol, CliRunner
+        ],
         file: str,
     ) -> None:
         """Test that the extract command creates expected files and folders."""
         assert Path(Path.cwd(), "tests", "test.xlsm.test", file).exists()  # noqa: S101
 
     def test_terminate_normal(
-        self, prepare_pre_existing_excel: typing.tuple[DispatchEx, CliRunner]
+        self,
+        prepare_pre_existing_excel: typing.tuple[
+            pre_commit_vba.ExcelApplicationProtocol, CliRunner
+        ],
     ) -> None:
         """Test that the extract command terminates normally."""
         _, sut = prepare_pre_existing_excel
         assert sut.exit_code == 0  # noqa: S101
 
     def test_exists_pre_existing_excel_instance(
-        self, prepare_pre_existing_excel: typing.tuple[DispatchEx, CliRunner]
+        self,
+        prepare_pre_existing_excel: typing.tuple[
+            pre_commit_vba.ExcelApplicationProtocol, CliRunner
+        ],
     ) -> None:
         """Test that the pre-existing Excel instance is not None."""
         excel_instance, _ = prepare_pre_existing_excel
