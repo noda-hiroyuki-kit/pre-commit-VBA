@@ -117,7 +117,7 @@ def cleanup_excel_resource(action: Callable[[], None], resource_name: str) -> No
         )
 
 
-__version__ = "0.3.13"
+__version__ = "0.3.14"
 
 
 class UndefineTypeError(Exception):
