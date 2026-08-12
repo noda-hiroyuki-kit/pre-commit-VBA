@@ -18,7 +18,7 @@ from src.pre_commit_vba.pre_commit_vba import (
     ExcelVbaExporter,
     SettingsCommonFolder,
     SettingsFoldersHandleExcel,
-    SettingsOptionsHandleExcel,
+    SettingsOptionsHandleOffice,
     Utf8Converter,
 )
 
@@ -45,7 +45,7 @@ class TestUtf8Converter:
             custom_ui_folder="customUI",
             code_folder="code",
         )
-        options = SettingsOptionsHandleExcel(
+        options = SettingsOptionsHandleOffice(
             enable_folder_annotation=True,
             create_gitignore=True,
         )
@@ -104,7 +104,7 @@ class TestUtf8Converter:
             custom_ui_folder="customUI",
             code_folder="code",
         )
-        options = SettingsOptionsHandleExcel(
+        options = SettingsOptionsHandleOffice(
             enable_folder_annotation=True,
             create_gitignore=False,
         )
@@ -142,7 +142,7 @@ class TestUtf8ConverterFolderAnnotation:
             custom_ui_folder="customUI",
             code_folder="code",
         )
-        options = SettingsOptionsHandleExcel(
+        options = SettingsOptionsHandleOffice(
             enable_folder_annotation=False,
             create_gitignore=False,
         )
@@ -186,7 +186,7 @@ class TestUtf8ConverterFolderAnnotation:
             encoding="cp932",
             newline="\n",
         )
-        options = SettingsOptionsHandleExcel(
+        options = SettingsOptionsHandleOffice(
             enable_folder_annotation=True,
             create_gitignore=False,
         )
@@ -220,7 +220,7 @@ class TestUtf8ConverterFolderAnnotation:
             encoding="cp932",
             newline="\n",
         )
-        options = SettingsOptionsHandleExcel(
+        options = SettingsOptionsHandleOffice(
             enable_folder_annotation=False,
             create_gitignore=False,
         )

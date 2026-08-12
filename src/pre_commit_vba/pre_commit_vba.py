@@ -251,8 +251,8 @@ class SettingsFoldersHandleExcel:
         return self.__settings_common_folder.common_folder
 
 
-class SettingsOptionsHandleExcel:
-    """Settings for handling Excel options."""
+class SettingsOptionsHandleOffice:
+    """Settings for handling Office options."""
 
     def __init__(
         self,
@@ -411,7 +411,7 @@ class Utf8Converter:
     def __init__(
         self,
         settings: SettingsFoldersHandleExcel,
-        options: SettingsOptionsHandleExcel,
+        options: SettingsOptionsHandleOffice,
     ) -> None:
         """Initialize with file path."""
         self.__settings = settings
@@ -711,7 +711,7 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913, C901
     logger.debug("enable-folder-annotation: %s", enable_folder_annotation)
     logger.debug("create-gitignore: %s", create_gitignore)
     logger.debug("include-extension: %s", include_extension)
-    options = SettingsOptionsHandleExcel(
+    options = SettingsOptionsHandleOffice(
         enable_folder_annotation=enable_folder_annotation,
         create_gitignore=create_gitignore,
     )

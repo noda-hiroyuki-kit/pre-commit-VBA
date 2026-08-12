@@ -67,7 +67,7 @@ class _DummyUtf8Converter:
     def __init__(
         self,
         settings: pre_commit_vba.SettingsFoldersHandleExcel,
-        options: pre_commit_vba.SettingsOptionsHandleExcel,
+        options: pre_commit_vba.SettingsOptionsHandleOffice,
     ) -> None:
         settings.code_folder.mkdir(parents=True, exist_ok=True)
         Path(settings.code_folder, "Module1.bas").write_text(
