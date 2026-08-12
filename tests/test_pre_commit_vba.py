@@ -1,5 +1,7 @@
 """Test module for pre-commit-vba script."""
 
+from __future__ import annotations
+
 import csv
 import importlib.util
 import locale
@@ -28,6 +30,8 @@ from src.pre_commit_vba.pre_commit_vba import app
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Generator
+
+    from click.testing import Result
 
 try:
     from win32com.client import DispatchEx
@@ -577,7 +581,7 @@ class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
 class TestExtractCommandPositiveOptions:
     """Test class for extract command."""
 
-    def extract_command_fixture(self, caplog, target_path: Path) -> CliRunner:  # noqa: ANN001
+    def extract_command_fixture(self, caplog, target_path: Path) -> Result:  # noqa: ANN001
         """Test that the extract command executes without errors."""
         caplog.set_level(DEBUG)
         return runner.invoke(
@@ -904,7 +908,7 @@ def test_check_command_does_not_timeout_on_issue107_repro_workbook() -> None:
 class TestExtractCommandNegativeOptions:
     """Test class for extract command."""
 
-    def extract_command_fixture(self, caplog, target_path: Path) -> CliRunner:  # noqa: ANN001
+    def extract_command_fixture(self, caplog, target_path: Path) -> Result:  # noqa: ANN001
         """Test that the extract command executes without errors."""
         caplog.set_level(DEBUG)
         return runner.invoke(
