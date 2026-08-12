@@ -577,7 +577,7 @@ class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
 class TestExtractCommandPositiveOptions:
     """Test class for extract command."""
 
-    def extract_command_fixture(self, caplog) -> CliRunner:  # noqa: ANN001
+    def extract_command_fixture(self, caplog, target_path: Path) -> CliRunner:  # noqa: ANN001
         """Test that the extract command executes without errors."""
         caplog.set_level(DEBUG)
         return runner.invoke(
@@ -585,7 +585,7 @@ class TestExtractCommandPositiveOptions:
             [
                 "extract",
                 "--target-path",
-                ".",
+                str(target_path),
                 "--folder-suffix",
                 ".test",
                 "--export-folder",
@@ -599,45 +599,45 @@ class TestExtractCommandPositiveOptions:
             ],
         )
 
-    def test_target_path_is_current_directory(self, caplog) -> None:  # noqa: ANN001
-        """Test that target_path is current directory."""
-        result = self.extract_command_fixture(caplog)
+    def test_target_path_is_logged(self, caplog, tmp_path: Path) -> None:  # noqa: ANN001
+        """Test that target_path is logged."""
+        result = self.extract_command_fixture(caplog, tmp_path)
         assert result.exit_code == 0  # noqa: S101
-        assert f"{Path.cwd()}".lower() in caplog.text  # noqa: S101
+        assert str(tmp_path.resolve()).lower() in caplog.text  # noqa: S101
 
-    def test_folder_suffix_is_test(self, caplog) -> None:  # noqa: ANN001
+    def test_folder_suffix_is_test(self, caplog, tmp_path: Path) -> None:  # noqa: ANN001
         """Test that folder suffix is '.test'."""
-        result = self.extract_command_fixture(caplog)
+        result = self.extract_command_fixture(caplog, tmp_path)
         assert result.exit_code == 0  # noqa: S101
         assert "folder-suffix: .test" in caplog.text  # noqa: S101
 
-    def test_export_folder_is_export(self, caplog) -> None:  # noqa: ANN001
+    def test_export_folder_is_export(self, caplog, tmp_path: Path) -> None:  # noqa: ANN001
         """Test that export folder is 'export'."""
-        result = self.extract_command_fixture(caplog)
+        result = self.extract_command_fixture(caplog, tmp_path)
         assert result.exit_code == 0  # noqa: S101
         assert "export-folder: export" in caplog.text  # noqa: S101
 
-    def test_custom_ui_folder_is_custom_ui(self, caplog) -> None:  # noqa: ANN001
+    def test_custom_ui_folder_is_custom_ui(self, caplog, tmp_path: Path) -> None:  # noqa: ANN001
         """Test that custom ui folder is 'customUI'."""
-        result = self.extract_command_fixture(caplog)
+        result = self.extract_command_fixture(caplog, tmp_path)
         assert result.exit_code == 0  # noqa: S101
         assert "custom-ui-folder: customUI" in caplog.text  # noqa: S101
 
-    def test_code_folder_is_code(self, caplog) -> None:  # noqa: ANN001
+    def test_code_folder_is_code(self, caplog, tmp_path: Path) -> None:  # noqa: ANN001
         """Test that code folder is 'code'."""
-        result = self.extract_command_fixture(caplog)
+        result = self.extract_command_fixture(caplog, tmp_path)
         assert result.exit_code == 0  # noqa: S101
         assert "code-folder: code" in caplog.text  # noqa: S101
 
-    def test_enable_folder_annotation_is_true(self, caplog) -> None:  # noqa: ANN001
+    def test_enable_folder_annotation_is_true(self, caplog, tmp_path: Path) -> None:  # noqa: ANN001
         """Test that enable-folder-annotation is True."""
-        result = self.extract_command_fixture(caplog)
+        result = self.extract_command_fixture(caplog, tmp_path)
         assert result.exit_code == 0  # noqa: S101
         assert "enable-folder-annotation: True" in caplog.text  # noqa: S101
 
-    def test_create_gitignore_is_true(self, caplog) -> None:  # noqa: ANN001
+    def test_create_gitignore_is_true(self, caplog, tmp_path: Path) -> None:  # noqa: ANN001
         """Test that create-gitignore is True."""
-        result = self.extract_command_fixture(caplog)
+        result = self.extract_command_fixture(caplog, tmp_path)
         assert result.exit_code == 0  # noqa: S101
         assert "create-gitignore: True" in caplog.text  # noqa: S101
 
@@ -904,7 +904,7 @@ def test_check_command_does_not_timeout_on_issue107_repro_workbook() -> None:
 class TestExtractCommandNegativeOptions:
     """Test class for extract command."""
 
-    def extract_command_fixture(self, caplog) -> CliRunner:  # noqa: ANN001
+    def extract_command_fixture(self, caplog, target_path: Path) -> CliRunner:  # noqa: ANN001
         """Test that the extract command executes without errors."""
         caplog.set_level(DEBUG)
         return runner.invoke(
@@ -912,7 +912,7 @@ class TestExtractCommandNegativeOptions:
             [
                 "extract",
                 "--target-path",
-                "tests",
+                str(target_path),
                 "--folder-suffix",
                 ".test",
                 "--export-folder",
@@ -926,15 +926,15 @@ class TestExtractCommandNegativeOptions:
             ],
         )
 
-    def test_enable_folder_annotation_is_false(self, caplog) -> None:  # noqa: ANN001
+    def test_enable_folder_annotation_is_false(self, caplog, tmp_path: Path) -> None:  # noqa: ANN001
         """Test that enable-folder-annotation is False."""
-        result = self.extract_command_fixture(caplog)
+        result = self.extract_command_fixture(caplog, tmp_path)
         assert result.exit_code == 0  # noqa: S101
         assert "enable-folder-annotation: False" in caplog.text  # noqa: S101
 
-    def test_create_gitignore_is_false(self, caplog) -> None:  # noqa: ANN001
+    def test_create_gitignore_is_false(self, caplog, tmp_path: Path) -> None:  # noqa: ANN001
         """Test that create-gitignore is False."""
-        result = self.extract_command_fixture(caplog)
+        result = self.extract_command_fixture(caplog, tmp_path)
         assert result.exit_code == 0  # noqa: S101
         assert "create-gitignore: False" in caplog.text  # noqa: S101
 
