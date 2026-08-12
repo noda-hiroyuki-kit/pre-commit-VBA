@@ -206,8 +206,8 @@ class SettingsCommonFolder:
         return self.__office_file_path
 
 
-class SettingsFoldersHandleExcel:
-    """Settings for handling Excel."""
+class SettingsFoldersHandleOffice:
+    """Settings for handling Office."""
 
     def __init__(
         self,
@@ -224,7 +224,7 @@ class SettingsFoldersHandleExcel:
 
     @property
     def export_folder(self) -> Path:
-        """Return common folder path."""
+        """Return export folder path."""
         return Path(self.__settings_common_folder.common_folder, self.__export_folder)
 
     @property
@@ -241,8 +241,8 @@ class SettingsFoldersHandleExcel:
         return Path(self.__settings_common_folder.common_folder, self.__code_folder)
 
     @property
-    def workbook_path(self) -> Path:
-        """Return workbook path."""
+    def office_file_path(self) -> Path:
+        """Return Office file path."""
         return self.__settings_common_folder.office_file_path
 
     @property
@@ -287,12 +287,12 @@ def has_vba_code(workbook_path: Path) -> bool:
 class ExcelVbaExporter:
     """A placeholder class for ExcelVbaExporter."""
 
-    def __init__(self, settings: SettingsFoldersHandleExcel) -> None:
+    def __init__(self, settings: SettingsFoldersHandleOffice) -> None:
         """Initialize with file path."""
         app = self.__get_xl_app()
         workbook = None
         try:
-            workbook = app.Workbooks.Open(settings.workbook_path, ReadOnly=True)
+            workbook = app.Workbooks.Open(settings.office_file_path, ReadOnly=True)
             settings.export_folder.mkdir(parents=True, exist_ok=True)
             for vb_comp in workbook.VBProject.VBComponents:
                 vb_comp_file_name = vb_component_type_factory(
@@ -379,7 +379,7 @@ class SheetClassModule(IVbComponentType):
 class ExcelCustomUiExtractor:
     """A placeholder class for ExcelCustomUiExtractor."""
 
-    def __init__(self, settings: SettingsFoldersHandleExcel) -> None:
+    def __init__(self, settings: SettingsFoldersHandleOffice) -> None:
         """Initialize with file path."""
         self.__settings = settings
         self.__extract_custom_ui_files()
@@ -390,7 +390,7 @@ class ExcelCustomUiExtractor:
 
     def __extract_custom_ui_file(self, full_item_name: str) -> None:
         try:
-            with ZipFile(self.__settings.workbook_path, "r") as zip_ref:
+            with ZipFile(self.__settings.office_file_path, "r") as zip_ref:
                 file_data = zip_ref.read(full_item_name)
             self.__settings.custom_ui_folder.mkdir(parents=True, exist_ok=True)
             with Path(self.__settings.custom_ui_folder, Path(full_item_name).name).open(
@@ -401,7 +401,7 @@ class ExcelCustomUiExtractor:
             logger.info(
                 "%s does not exists in %s",
                 Path(full_item_name).name,
-                self.__settings.workbook_path.name,
+                self.__settings.office_file_path.name,
             )
 
 
@@ -410,7 +410,7 @@ class Utf8Converter:
 
     def __init__(
         self,
-        settings: SettingsFoldersHandleExcel,
+        settings: SettingsFoldersHandleOffice,
         options: SettingsOptionsHandleOffice,
     ) -> None:
         """Initialize with file path."""
@@ -517,7 +517,7 @@ class OtherModuleTrailingWhiteSpaceRemover(ITrailingWhiteSpaceRemover):
         return text
 
 
-def add_to_staging(settings: SettingsFoldersHandleExcel) -> None:
+def add_to_staging(settings: SettingsFoldersHandleOffice) -> None:
     """Add files extracted to staging."""
     process = subprocess.Popen(  # noqa: S603
         ["git", "add", settings.common_folder],  # noqa: S607
@@ -733,7 +733,7 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913, C901
             folder_suffix=folder_suffix,
             include_extension=include_extension,
         )
-        folder_settings = SettingsFoldersHandleExcel(
+        folder_settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder_settings,
             export_folder=export_folder,
             custom_ui_folder=custom_ui_folder,

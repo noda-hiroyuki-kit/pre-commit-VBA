@@ -50,7 +50,7 @@ def _create_workbook_with_vba(workbook_path: Path) -> None:
 
 
 class _DummyExcelVbaExporter:
-    def __init__(self, settings: pre_commit_vba.SettingsFoldersHandleExcel) -> None:
+    def __init__(self, settings: pre_commit_vba.SettingsFoldersHandleOffice) -> None:
         settings.export_folder.mkdir(parents=True, exist_ok=True)
         Path(settings.export_folder, "Module1.bas").write_text(
             MODULE_TEXT,
@@ -59,14 +59,14 @@ class _DummyExcelVbaExporter:
 
 
 class _DummyExcelCustomUiExtractor:
-    def __init__(self, _settings: pre_commit_vba.SettingsFoldersHandleExcel) -> None:
+    def __init__(self, _settings: pre_commit_vba.SettingsFoldersHandleOffice) -> None:
         pass
 
 
 class _DummyUtf8Converter:
     def __init__(
         self,
-        settings: pre_commit_vba.SettingsFoldersHandleExcel,
+        settings: pre_commit_vba.SettingsFoldersHandleOffice,
         options: pre_commit_vba.SettingsOptionsHandleOffice,
     ) -> None:
         settings.code_folder.mkdir(parents=True, exist_ok=True)
@@ -153,7 +153,7 @@ def test_add_to_staging_raises_error_when_git_add_fails(
     monkeypatch.setattr(pre_commit_vba.subprocess, "Popen", _mock_popen)
 
     common_settings = pre_commit_vba.SettingsCommonFolder(Path("test.xlsm"), ".VBA")
-    folder_settings = pre_commit_vba.SettingsFoldersHandleExcel(
+    folder_settings = pre_commit_vba.SettingsFoldersHandleOffice(
         settings_common_folder=common_settings,
         export_folder="export",
         custom_ui_folder="customUI",
@@ -181,7 +181,7 @@ def test_extract_returns_non_zero_when_add_to_staging_fails(
     _create_workbook_with_vba(workbook_path)
 
     def _raise_add_to_staging_error(
-        _settings: pre_commit_vba.SettingsFoldersHandleExcel,
+        _settings: pre_commit_vba.SettingsFoldersHandleOffice,
     ) -> None:
         raise pre_commit_vba.AddToStagingError
 

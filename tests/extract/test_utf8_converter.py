@@ -17,7 +17,7 @@ from src.pre_commit_vba import pre_commit_vba
 from src.pre_commit_vba.pre_commit_vba import (
     ExcelVbaExporter,
     SettingsCommonFolder,
-    SettingsFoldersHandleExcel,
+    SettingsFoldersHandleOffice,
     SettingsOptionsHandleOffice,
     Utf8Converter,
 )
@@ -39,7 +39,7 @@ class TestUtf8Converter:
             ".test",
             include_extension=True,
         )
-        settings = SettingsFoldersHandleExcel(
+        settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder,
             export_folder="export",
             custom_ui_folder="customUI",
@@ -98,7 +98,7 @@ class TestUtf8Converter:
             ".no-gitignore",
             include_extension=True,
         )
-        settings = SettingsFoldersHandleExcel(
+        settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder,
             export_folder="export",
             custom_ui_folder="customUI",
@@ -136,7 +136,7 @@ class TestUtf8ConverterFolderAnnotation:
             ".no-annotation",
             include_extension=True,
         )
-        settings = SettingsFoldersHandleExcel(
+        settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder,
             export_folder="export",
             custom_ui_folder="customUI",
@@ -174,7 +174,7 @@ class TestUtf8ConverterFolderAnnotation:
             ".tmp",
             include_extension=True,
         )
-        settings = SettingsFoldersHandleExcel(
+        settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder,
             export_folder="export",
             custom_ui_folder="customUI",
@@ -207,7 +207,7 @@ class TestUtf8ConverterFolderAnnotation:
             ".open-error",
             include_extension=True,
         )
-        settings = SettingsFoldersHandleExcel(
+        settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder,
             export_folder="export",
             custom_ui_folder="customUI",

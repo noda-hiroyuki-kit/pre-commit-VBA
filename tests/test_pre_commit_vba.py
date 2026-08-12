@@ -276,7 +276,7 @@ class TestExcelCleanupLogging:
         excel_app.Workbooks.Open.return_value = workbook
         excel_app.Quit.side_effect = OSError("quit failed")
 
-        settings = pre_commit_vba.SettingsFoldersHandleExcel(
+        settings = pre_commit_vba.SettingsFoldersHandleOffice(
             pre_commit_vba.SettingsCommonFolder(tmp_path / "dummy.xlsm", ".VBA"),
             "export",
             "customUI",
@@ -412,7 +412,7 @@ class TestAddToStaging:
 
     def test_kills_process_when_git_add_times_out(self, tmp_path: Path) -> None:
         """Timeout during git add should trigger process.kill and retry communicate."""
-        settings = pre_commit_vba.SettingsFoldersHandleExcel(
+        settings = pre_commit_vba.SettingsFoldersHandleOffice(
             pre_commit_vba.SettingsCommonFolder(tmp_path / "book.xlsm", ".VBA"),
             "export",
             "customUI",

@@ -21,7 +21,7 @@ import pytest
 from src.pre_commit_vba.pre_commit_vba import (
     ExcelCustomUiExtractor,
     SettingsCommonFolder,
-    SettingsFoldersHandleExcel,
+    SettingsFoldersHandleOffice,
 )
 
 
@@ -37,7 +37,7 @@ class TestExcelCustomUiExtractor:
             ".test",
             include_extension=True,
         )
-        settings = SettingsFoldersHandleExcel(
+        settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder,
             export_folder="",
             custom_ui_folder="customUI",
@@ -65,7 +65,7 @@ class TestExcelCustomUiExtractor:
         """  # noqa: D205
         workbook_path = Path("tests/extract/no_custom_ui.xlsm")
         common_folder = SettingsCommonFolder(workbook_path, ".VBA")
-        settings = SettingsFoldersHandleExcel(
+        settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder,
             export_folder="",
             custom_ui_folder="customUI",
@@ -85,7 +85,7 @@ class TestExcelCustomUiExtractor:
         """Issue121: log output should keep Japanese workbook filename."""
         workbook_path = Path("tests/fixtures/issue121/Issue121_日本語.xlsm")
         common_folder = SettingsCommonFolder(workbook_path, ".VBA")
-        settings = SettingsFoldersHandleExcel(
+        settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder,
             export_folder="",
             custom_ui_folder="customUI",
@@ -114,7 +114,7 @@ class TestExcelCustomUiExtractor:
         """Issue121: UTF-8 consumers should read Japanese filename without mojibake."""
         workbook_path = Path("tests/fixtures/issue121/Issue121_日本語.xlsm")
         common_folder = SettingsCommonFolder(workbook_path, ".VBA")
-        settings = SettingsFoldersHandleExcel(
+        settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder,
             export_folder="",
             custom_ui_folder="customUI",
@@ -126,12 +126,12 @@ class TestExcelCustomUiExtractor:
             from src.pre_commit_vba.pre_commit_vba import (
                 ExcelCustomUiExtractor,
                 SettingsCommonFolder,
-                SettingsFoldersHandleExcel,
+                SettingsFoldersHandleOffice,
             )
 
             workbook_path = Path("tests/fixtures/issue121/Issue121_日本語.xlsm")
             common_folder = SettingsCommonFolder(workbook_path, ".VBA")
-            settings = SettingsFoldersHandleExcel(
+            settings = SettingsFoldersHandleOffice(
                 settings_common_folder=common_folder,
                 export_folder="",
                 custom_ui_folder="customUI",
