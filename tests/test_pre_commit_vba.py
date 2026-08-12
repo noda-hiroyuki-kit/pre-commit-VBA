@@ -318,6 +318,17 @@ class TestExcelCleanupLogging:
         assert "Failed to clean up Excel resource: workbook" in caplog.text  # noqa: S101
         assert "Failed to clean up Excel resource: application" in caplog.text  # noqa: S101
 
+    def test_cleanup_logs_com_errors(self, caplog) -> None:  # noqa: ANN001
+        """COM cleanup errors should be logged without escaping."""
+        caplog.set_level(logging.DEBUG)
+        action = mock.Mock(
+            side_effect=pre_commit_vba.com_error(-1, "cleanup failed", None),
+        )
+
+        pre_commit_vba.cleanup_excel_resource(action, "application")
+
+        assert "Failed to clean up Excel resource: application" in caplog.text  # noqa: S101
+
 
 class TestConfigureLogStreamEncoding:
     """Tests for stderr encoding configuration behavior."""

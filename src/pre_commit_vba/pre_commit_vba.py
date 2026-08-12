@@ -26,9 +26,15 @@ from zipfile import BadZipFile, ZipFile
 import typer
 
 try:
+    from pywintypes import com_error
     from win32com.client import DispatchEx
 except ModuleNotFoundError:
     DispatchEx = None
+
+    class _ComError(Exception):
+        """Fallback COM error for non-Windows environments."""
+
+    com_error = _ComError
 
 
 class WindowsOnlyImportError(RuntimeError):
@@ -112,7 +118,7 @@ def cleanup_excel_resource(action: Callable[[], None], resource_name: str) -> No
     """
     try:
         action()
-    except Exception:
+    except OSError, AttributeError, TypeError, com_error:
         logger.debug(
             "Failed to clean up Excel resource: %s",
             resource_name,
