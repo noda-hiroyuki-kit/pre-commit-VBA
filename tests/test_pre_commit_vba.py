@@ -940,6 +940,45 @@ def test_not_exists_test1_vba_folder() -> None:
         shutil.rmtree(Path(Path.cwd(), "tests", "test.xlsm.test"), ignore_errors=True)
 
 
+def test_not_exists_test_without_code_xlsm_vba_folder() -> None:
+    """Test that the test_without_code.xlsm.test folder does not exist."""
+    if Path(Path.cwd(), "tests", "test_without_code.xlsm.test").exists():
+        shutil.rmtree(Path(Path.cwd(), "tests", "test_without_code.xlsm.test"))
+    try:
+        with mock.patch.object(pre_commit_vba, "add_to_staging", return_value=None):
+            runner.invoke(
+                app,
+                [
+                    "extract",
+                    "--target-path",
+                    "tests",
+                    "--folder-suffix",
+                    ".test",
+                    "--export-folder",
+                    "export",
+                    "--custom-ui-folder",
+                    "customUI",
+                    "--code-folder",
+                    "code",
+                    "--enable-folder-annotation",
+                    "--create-gitignore",
+                ],
+            )
+        test_result = not Path(
+            Path.cwd(),
+            "tests",
+            "test_without_code.xlsm.test",
+        ).exists()
+        if Path(Path.cwd(), "tests", "test_without_code.xlsm.test").exists():
+            shutil.rmtree(Path(Path.cwd(), "tests", "test_without_code.xlsm.test"))
+        assert test_result  # noqa: S101
+    finally:
+        shutil.rmtree(
+            Path(Path.cwd(), "tests", "test_without_code.xlsm.test"),
+            ignore_errors=True,
+        )
+
+
 def test_extract_command_does_not_timeout_on_issue107_repro_workbook() -> None:
     """Issue107: extract command should not block on Workbook_Open macro."""
     repro_workbook = Path(
