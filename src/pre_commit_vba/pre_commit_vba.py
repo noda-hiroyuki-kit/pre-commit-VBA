@@ -284,7 +284,16 @@ def has_vba_code(workbook_path: Path) -> bool:
         return True
 
 
-class ExcelVbaExporter:
+class OfficeVbaExporter(ABC):
+    """Abstract base class for Office VBA exporters."""
+
+    @abstractmethod
+    def __init__(self, settings: SettingsFoldersHandleOffice) -> None:
+        """Initialize with file path."""
+        raise NotImplementedError
+
+
+class ExcelVbaExporter(OfficeVbaExporter):
     """A placeholder class for ExcelVbaExporter."""
 
     def __init__(self, settings: SettingsFoldersHandleOffice) -> None:
@@ -311,6 +320,13 @@ class ExcelVbaExporter:
     def __get_xl_app(self) -> ExcelApplicationProtocol:
         """Get Excel application."""
         return get_noninteractive_excel_app()
+
+
+def office_vba_exporter_factory(
+    settings: SettingsFoldersHandleOffice,
+) -> OfficeVbaExporter:
+    """Return OfficeVbaExporter instances."""
+    return ExcelVbaExporter(settings)
 
 
 def vb_component_type_factory(module_name: str, type_id: int) -> IVbComponentType:
@@ -741,7 +757,7 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913, C901
         )
         if folder_settings.common_folder.exists():
             shutil.rmtree(folder_settings.common_folder)
-        ExcelVbaExporter(folder_settings)
+        office_vba_exporter_factory(folder_settings)
         CustomUiExtractor(folder_settings)
         Utf8Converter(folder_settings, options)
         try:
