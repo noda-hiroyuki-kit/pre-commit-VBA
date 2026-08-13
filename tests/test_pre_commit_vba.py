@@ -178,7 +178,7 @@ class TestIsOfficeFile:
         assert pre_commit_vba.is_excel_file(Path(f"workbook{suffix}")) is True  # noqa: S101
         assert pre_commit_vba.is_office_file(Path(f"workbook{suffix}")) is True  # noqa: S101
 
-    @pytest.mark.parametrize("suffix", [".docm", ".DOCM", ".dotm", ".doc"])
+    @pytest.mark.parametrize("suffix", [".docm", ".DOCM", ".dotm"])
     def test_returns_true_for_supported_word_extension(self, suffix: str) -> None:
         """Supported Word extensions should be recognized regardless of case."""
         assert pre_commit_vba.is_word_file(Path(f"document{suffix}")) is True  # noqa: S101
@@ -942,8 +942,22 @@ def test_not_exists_test1_vba_folder() -> None:
 
 def test_not_exists_test_without_code_xlsm_vba_folder() -> None:
     """Test that the test_without_code.xlsm.test folder does not exist."""
-    if Path(Path.cwd(), "tests", "test_without_code.xlsm.test").exists():
-        shutil.rmtree(Path(Path.cwd(), "tests", "test_without_code.xlsm.test"))
+    if Path(
+        Path.cwd(),
+        "tests",
+        "excel",
+        "without_codes",
+        "test_without_code.xlsm.test",
+    ).exists():
+        shutil.rmtree(
+            Path(
+                Path.cwd(),
+                "tests",
+                "excel",
+                "without_codes",
+                "test_without_code.xlsm.test",
+            )
+        )
     try:
         with mock.patch.object(pre_commit_vba, "add_to_staging", return_value=None):
             runner.invoke(
@@ -951,7 +965,7 @@ def test_not_exists_test_without_code_xlsm_vba_folder() -> None:
                 [
                     "extract",
                     "--target-path",
-                    "tests",
+                    "tests/excel/without_codes",
                     "--folder-suffix",
                     ".test",
                     "--export-folder",
@@ -967,14 +981,111 @@ def test_not_exists_test_without_code_xlsm_vba_folder() -> None:
         test_result = not Path(
             Path.cwd(),
             "tests",
+            "excel",
+            "without_codes",
             "test_without_code.xlsm.test",
         ).exists()
-        if Path(Path.cwd(), "tests", "test_without_code.xlsm.test").exists():
-            shutil.rmtree(Path(Path.cwd(), "tests", "test_without_code.xlsm.test"))
+        if Path(
+            Path.cwd(),
+            "tests",
+            "excel",
+            "without_codes",
+            "test_without_code.xlsm.test",
+        ).exists():
+            shutil.rmtree(
+                Path(
+                    Path.cwd(),
+                    "tests",
+                    "excel",
+                    "without_codes",
+                    "test_without_code.xlsm.test",
+                )
+            )
         assert test_result  # noqa: S101
     finally:
         shutil.rmtree(
-            Path(Path.cwd(), "tests", "test_without_code.xlsm.test"),
+            Path(
+                Path.cwd(),
+                "tests",
+                "excel",
+                "without_codes",
+                "test_without_code.xlsm.test",
+            ),
+            ignore_errors=True,
+        )
+
+
+def test_not_exists_test_without_codes_docm_vba_folder() -> None:
+    """Test that the test_without_codes.docm.test folder does not exist."""
+    if Path(
+        Path.cwd(),
+        "tests",
+        "word",
+        "without_codes",
+        "test_without_codes.docm.test",
+    ).exists():
+        shutil.rmtree(
+            Path(
+                Path.cwd(),
+                "tests",
+                "word",
+                "without_codes",
+                "test_without_codes.docm.test",
+            ),
+        )
+    try:
+        with mock.patch.object(pre_commit_vba, "add_to_staging", return_value=None):
+            runner.invoke(
+                app,
+                [
+                    "extract",
+                    "--target-path",
+                    "tests/word/without_codes",
+                    "--folder-suffix",
+                    ".test",
+                    "--export-folder",
+                    "export",
+                    "--custom-ui-folder",
+                    "customUI",
+                    "--code-folder",
+                    "code",
+                    "--enable-folder-annotation",
+                    "--create-gitignore",
+                ],
+            )
+        test_result = not Path(
+            Path.cwd(),
+            "tests",
+            "word",
+            "without_codes",
+            "test_without_codes.docm.test",
+        ).exists()
+        if Path(
+            Path.cwd(),
+            "tests",
+            "word",
+            "without_codes",
+            "test_without_codes.docm.test",
+        ).exists():
+            shutil.rmtree(
+                Path(
+                    Path.cwd(),
+                    "tests",
+                    "word",
+                    "without_codes",
+                    "test_without_codes.docm.test",
+                ),
+            )
+        assert test_result  # noqa: S101
+    finally:
+        shutil.rmtree(
+            Path(
+                Path.cwd(),
+                "tests",
+                "word",
+                "without_codes",
+                "test_without_codes.docm.test",
+            ),
             ignore_errors=True,
         )
 

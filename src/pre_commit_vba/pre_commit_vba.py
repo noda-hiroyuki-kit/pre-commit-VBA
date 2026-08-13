@@ -299,15 +299,13 @@ class SettingsOptionsHandleOffice:
         return self.__create_gitignore
 
 
-def has_vba_code(workbook_path: Path) -> bool:
+def has_vba_code(office_file_path: Path) -> bool:
     """Check if an Office document contains VBA code."""
     vba_project_path = (
-        "word/vbaProject.bin"
-        if workbook_path.suffix.lower() == ".docm"
-        else "xl/vbaProject.bin"
+        "word/vbaProject.bin" if is_word_file(office_file_path) else "xl/vbaProject.bin"
     )
     try:
-        with ZipFile(workbook_path, "r") as zip_ref:
+        with ZipFile(office_file_path, "r") as zip_ref:
             zip_ref.getinfo(vba_project_path)
     except KeyError, OSError, BadZipFile:
         return False
@@ -329,7 +327,6 @@ def is_excel_file(office_file_path: Path) -> bool:
 def is_word_file(office_file_path: Path) -> bool:
     """Check if a path has a supported Word VBA file extension."""
     return office_file_path.suffix.lower() in {
-        ".doc",
         ".docm",
         ".dotm",
     }
