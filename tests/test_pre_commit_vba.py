@@ -171,20 +171,20 @@ class TestIsOfficeFile:
 
     @pytest.mark.parametrize(
         "suffix",
-        [".xls", ".xlsx", ".xlsm", ".xlsb", ".XLSM"],
+        [".xls", ".xlsm", ".xlsb", ".XLSM", ".XLSB", ".xltm", ".xlam"],
     )
     def test_returns_true_for_supported_excel_extension(self, suffix: str) -> None:
         """Supported Excel extensions should be recognized regardless of case."""
         assert pre_commit_vba.is_excel_file(Path(f"workbook{suffix}")) is True  # noqa: S101
         assert pre_commit_vba.is_office_file(Path(f"workbook{suffix}")) is True  # noqa: S101
 
-    @pytest.mark.parametrize("suffix", [".docm", ".DOCM"])
+    @pytest.mark.parametrize("suffix", [".docm", ".DOCM", ".dotm", ".doc"])
     def test_returns_true_for_supported_word_extension(self, suffix: str) -> None:
         """Supported Word extensions should be recognized regardless of case."""
         assert pre_commit_vba.is_word_file(Path(f"document{suffix}")) is True  # noqa: S101
         assert pre_commit_vba.is_office_file(Path(f"document{suffix}")) is True  # noqa: S101
 
-    @pytest.mark.parametrize("suffix", [".docx", ".csv", ".xlsm.bak", ""])
+    @pytest.mark.parametrize("suffix", [".xlsx", ".docx", ".csv", ".xlsm.bak", ""])
     def test_returns_false_for_unsupported_extension(self, suffix: str) -> None:
         """Unsupported extensions should not be recognized as Office files."""
         assert pre_commit_vba.is_office_file(Path(f"workbook{suffix}")) is False  # noqa: S101

@@ -316,18 +316,20 @@ def has_vba_code(workbook_path: Path) -> bool:
 
 
 def is_excel_file(office_file_path: Path) -> bool:
-    """Check if a path has a supported Excel file extension."""
+    """Check if a path has a supported Excel VBA file extension."""
     return office_file_path.suffix.lower() in {
         ".xls",
-        ".xlsx",
         ".xlsm",
         ".xlsb",
+        ".xltm",
+        ".xlam",
     }
 
 
 def is_word_file(office_file_path: Path) -> bool:
     """Check if a path has a supported Word VBA file extension."""
     return office_file_path.suffix.lower() in {
+        ".doc",
         ".docm",
         ".dotm",
     }
