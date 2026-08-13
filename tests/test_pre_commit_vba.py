@@ -940,14 +940,14 @@ def test_not_exists_test1_vba_folder() -> None:
         shutil.rmtree(Path(Path.cwd(), "tests", "test.xlsm.test"), ignore_errors=True)
 
 
-def test_not_exists_test_without_code_xlsm_vba_folder() -> None:
-    """Test that the test_without_code.xlsm.test folder does not exist."""
+def test_not_exists_test_without_codes_xlsm_vba_folder() -> None:
+    """Test that the test_without_codes.xlsm.test folder does not exist."""
     if Path(
         Path.cwd(),
         "tests",
         "excel",
         "without_codes",
-        "test_without_code.xlsm.test",
+        "test_without_codes.xlsm.test",
     ).exists():
         shutil.rmtree(
             Path(
@@ -955,7 +955,7 @@ def test_not_exists_test_without_code_xlsm_vba_folder() -> None:
                 "tests",
                 "excel",
                 "without_codes",
-                "test_without_code.xlsm.test",
+                "test_without_codes.xlsm.test",
             )
         )
     try:
@@ -983,14 +983,14 @@ def test_not_exists_test_without_code_xlsm_vba_folder() -> None:
             "tests",
             "excel",
             "without_codes",
-            "test_without_code.xlsm.test",
+            "test_without_codes.xlsm.test",
         ).exists()
         if Path(
             Path.cwd(),
             "tests",
             "excel",
             "without_codes",
-            "test_without_code.xlsm.test",
+            "test_without_codes.xlsm.test",
         ).exists():
             shutil.rmtree(
                 Path(
@@ -998,7 +998,7 @@ def test_not_exists_test_without_code_xlsm_vba_folder() -> None:
                     "tests",
                     "excel",
                     "without_codes",
-                    "test_without_code.xlsm.test",
+                    "test_without_codes.xlsm.test",
                 )
             )
         assert test_result  # noqa: S101
@@ -1009,7 +1009,7 @@ def test_not_exists_test_without_code_xlsm_vba_folder() -> None:
                 "tests",
                 "excel",
                 "without_codes",
-                "test_without_code.xlsm.test",
+                "test_without_codes.xlsm.test",
             ),
             ignore_errors=True,
         )
