@@ -141,6 +141,20 @@ class TestSettingsCommonFolder:
         assert settings.common_folder == expected  # noqa: S101
 
 
+class TestIsOfficeFile:
+    """Tests for Excel Office file detection."""
+
+    @pytest.mark.parametrize("suffix", [".xls", ".xlsx", ".xlsm", ".xlsb", ".XLSM"])
+    def test_returns_true_for_supported_excel_extension(self, suffix: str) -> None:
+        """Supported Excel extensions should be recognized regardless of case."""
+        assert pre_commit_vba.is_office_file(Path(f"workbook{suffix}")) is True  # noqa: S101
+
+    @pytest.mark.parametrize("suffix", [".docx", ".csv", ".xlsm.bak", ""])
+    def test_returns_false_for_unsupported_extension(self, suffix: str) -> None:
+        """Non-Excel extensions should not be recognized as Office files."""
+        assert pre_commit_vba.is_office_file(Path(f"workbook{suffix}")) is False  # noqa: S101
+
+
 def _project_version() -> str:
     """Read the project version from pyproject.toml."""
     pyproject_path = Path(__file__).resolve().parents[1] / "pyproject.toml"

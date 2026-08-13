@@ -284,6 +284,11 @@ def has_vba_code(workbook_path: Path) -> bool:
         return True
 
 
+def is_office_file(office_file_path: Path) -> bool:
+    """Check if a path has a supported Excel Office file extension."""
+    return office_file_path.suffix.lower() in {".xls", ".xlsx", ".xlsm", ".xlsb"}
+
+
 class OfficeVbaExporter(ABC):
     """Abstract base class for Office VBA exporters."""
 
@@ -739,8 +744,10 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913, C901
             staging_status_before = get_staging_status()
         except StagingStatusError:
             sys.exit(1)
-    for office_file_path in resolved_target_path.glob("*.xls*"):
+    for office_file_path in resolved_target_path.glob("*"):
         if office_file_path.name.startswith("~$"):
+            continue
+        if not is_office_file(office_file_path):
             continue
         if not has_vba_code(office_file_path):
             continue
@@ -791,8 +798,10 @@ def check(
     try:
         branch_version = get_version_from_branch_name()
         exist_workbook: bool = False
-        for workbook_path in Path(target_path).resolve().glob("*.xls*"):
+        for workbook_path in Path(target_path).resolve().glob("*"):
             if workbook_path.name.startswith("~$"):
+                continue
+            if not is_office_file(workbook_path):
                 continue
             if not has_vba_code(workbook_path):
                 continue
