@@ -315,15 +315,27 @@ def has_vba_code(workbook_path: Path) -> bool:
         return True
 
 
-def is_office_file(office_file_path: Path) -> bool:
-    """Check if a path has a supported Office file extension."""
+def is_excel_file(office_file_path: Path) -> bool:
+    """Check if a path has a supported Excel file extension."""
     return office_file_path.suffix.lower() in {
-        ".docm",
         ".xls",
         ".xlsx",
         ".xlsm",
         ".xlsb",
     }
+
+
+def is_word_file(office_file_path: Path) -> bool:
+    """Check if a path has a supported Word VBA file extension."""
+    return office_file_path.suffix.lower() in {
+        ".docm",
+        ".dotm",
+    }
+
+
+def is_office_file(office_file_path: Path) -> bool:
+    """Check if a path matches any supported Office file extension."""
+    return is_excel_file(office_file_path) or is_word_file(office_file_path)
 
 
 class OfficeVbaExporter(ABC):
