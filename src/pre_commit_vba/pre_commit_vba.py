@@ -1,7 +1,7 @@
 # Copyright (c) 2026 Noda Hiroyuki
 """pre-commit-vba script.
 
-extract code files from excel workbook with codes.
+extract code files from excel workbook/word document with codes.
 """
 
 # /// script
@@ -88,7 +88,23 @@ class ExcelApplicationProtocol(Protocol):
     Quit: Callable[[], None]
 
 
-DispatchExFactory = Callable[[str], ExcelApplicationProtocol]
+class DocumentsProtocol(Protocol):
+    """Protocol for the Word documents collection."""
+
+    Open: Callable[..., WorkbookPropertiesProtocol]
+
+
+class WordApplicationProtocol(Protocol):
+    """Protocol for the Word application object."""
+
+    Visible: bool
+    DisplayAlerts: bool
+    AutomationSecurity: int
+    Documents: DocumentsProtocol
+    Quit: Callable[[], None]
+
+
+DispatchExFactory = Callable[[str], ExcelApplicationProtocol | WordApplicationProtocol]
 
 
 def get_dispatch_ex() -> DispatchExFactory:
@@ -101,13 +117,23 @@ def get_dispatch_ex() -> DispatchExFactory:
 def get_noninteractive_excel_app() -> ExcelApplicationProtocol:
     """Return a non-interactive Excel application instance."""
     dispatch_ex = get_dispatch_ex()
-    excel_app = dispatch_ex("Excel.Application")
+    excel_app = cast("ExcelApplicationProtocol", dispatch_ex("Excel.Application"))
     excel_app.Visible = False
     excel_app.DisplayAlerts = False
     # Prevent Workbook_Open / Auto_Open execution while opening workbooks.
     excel_app.EnableEvents = False
     excel_app.AutomationSecurity = constants.mso_automation_security_force_disable
     return excel_app
+
+
+def get_noninteractive_word_app() -> WordApplicationProtocol:
+    """Return a non-interactive Word application instance."""
+    dispatch_ex = get_dispatch_ex()
+    word_app = cast("WordApplicationProtocol", dispatch_ex("Word.Application"))
+    word_app.Visible = False
+    word_app.DisplayAlerts = False
+    word_app.AutomationSecurity = constants.mso_automation_security_force_disable
+    return word_app
 
 
 def cleanup_excel_resource(action: Callable[[], None], resource_name: str) -> None:
@@ -274,10 +300,15 @@ class SettingsOptionsHandleOffice:
 
 
 def has_vba_code(workbook_path: Path) -> bool:
-    """Check if the Excel workbook contains VBA code."""
+    """Check if an Office document contains VBA code."""
+    vba_project_path = (
+        "word/vbaProject.bin"
+        if workbook_path.suffix.lower() == ".docm"
+        else "xl/vbaProject.bin"
+    )
     try:
         with ZipFile(workbook_path, "r") as zip_ref:
-            zip_ref.getinfo("xl/vbaProject.bin")
+            zip_ref.getinfo(vba_project_path)
     except KeyError, OSError, BadZipFile:
         return False
     else:
@@ -285,8 +316,14 @@ def has_vba_code(workbook_path: Path) -> bool:
 
 
 def is_office_file(office_file_path: Path) -> bool:
-    """Check if a path has a supported Excel Office file extension."""
-    return office_file_path.suffix.lower() in {".xls", ".xlsx", ".xlsm", ".xlsb"}
+    """Check if a path has a supported Office file extension."""
+    return office_file_path.suffix.lower() in {
+        ".docm",
+        ".xls",
+        ".xlsx",
+        ".xlsm",
+        ".xlsb",
+    }
 
 
 class OfficeVbaExporter(ABC):
@@ -327,10 +364,41 @@ class ExcelVbaExporter(OfficeVbaExporter):
         return get_noninteractive_excel_app()
 
 
+class WordVbaExporter(OfficeVbaExporter):
+    """Export VBA components from a Word document."""
+
+    def __init__(self, settings: SettingsFoldersHandleOffice) -> None:
+        """Initialize with file path."""
+        app = get_noninteractive_word_app()
+        document = None
+        try:
+            document = app.Documents.Open(
+                str(settings.office_file_path),
+                ReadOnly=True,
+                AddToRecentFiles=False,
+            )
+            settings.export_folder.mkdir(parents=True, exist_ok=True)
+            for vb_comp in document.VBProject.VBComponents:
+                vb_comp_file_name = vb_component_type_factory(
+                    vb_comp.Name,
+                    vb_comp.Type,
+                ).file_name
+                vb_comp.Export(Path(settings.export_folder, vb_comp_file_name))
+        finally:
+            if document is not None:
+                cleanup_excel_resource(
+                    lambda: document.Close(SaveChanges=False),
+                    "document",
+                )
+            cleanup_excel_resource(app.Quit, "application")
+
+
 def office_vba_exporter_factory(
     settings: SettingsFoldersHandleOffice,
 ) -> OfficeVbaExporter:
-    """Return OfficeVbaExporter instances."""
+    """Return an exporter suitable for the Office document type."""
+    if settings.office_file_path.suffix.lower() == ".docm":
+        return WordVbaExporter(settings)
     return ExcelVbaExporter(settings)
 
 
@@ -801,7 +869,7 @@ def check(
         for workbook_path in Path(target_path).resolve().glob("*"):
             if workbook_path.name.startswith("~$"):
                 continue
-            if not is_office_file(workbook_path):
+            if workbook_path.suffix.lower() not in {".xls", ".xlsx", ".xlsm", ".xlsb"}:
                 continue
             if not has_vba_code(workbook_path):
                 continue

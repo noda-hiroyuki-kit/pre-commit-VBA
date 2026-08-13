@@ -94,6 +94,31 @@ class TestWindowsOnlyImportError:
         assert module.DispatchEx is None  # noqa: S101
 
 
+class TestWordApplicationSetup:
+    """Tests for non-interactive Word application setup."""
+
+    def test_get_noninteractive_word_app_configures_word(self) -> None:
+        """Word should be hidden, silent, and have macros disabled."""
+        word_app = mock.Mock()
+        dispatch_ex = mock.Mock(return_value=word_app)
+
+        with mock.patch.object(
+            pre_commit_vba,
+            "get_dispatch_ex",
+            return_value=dispatch_ex,
+        ):
+            result = pre_commit_vba.get_noninteractive_word_app()
+
+        assert result is word_app  # noqa: S101
+        dispatch_ex.assert_called_once_with("Word.Application")
+        assert word_app.Visible is False  # noqa: S101
+        assert word_app.DisplayAlerts is False  # noqa: S101
+        assert (  # noqa: S101
+            word_app.AutomationSecurity
+            == pre_commit_vba.constants.mso_automation_security_force_disable
+        )
+
+
 class TestMainEntryPoint:
     """Tests for module main entry point behavior."""
 
@@ -144,15 +169,67 @@ class TestSettingsCommonFolder:
 class TestIsOfficeFile:
     """Tests for Excel Office file detection."""
 
-    @pytest.mark.parametrize("suffix", [".xls", ".xlsx", ".xlsm", ".xlsb", ".XLSM"])
-    def test_returns_true_for_supported_excel_extension(self, suffix: str) -> None:
-        """Supported Excel extensions should be recognized regardless of case."""
+    @pytest.mark.parametrize(
+        "suffix",
+        [".docm", ".xls", ".xlsx", ".xlsm", ".xlsb", ".XLSM"],
+    )
+    def test_returns_true_for_supported_office_extension(self, suffix: str) -> None:
+        """Supported Office extensions should be recognized regardless of case."""
         assert pre_commit_vba.is_office_file(Path(f"workbook{suffix}")) is True  # noqa: S101
 
     @pytest.mark.parametrize("suffix", [".docx", ".csv", ".xlsm.bak", ""])
     def test_returns_false_for_unsupported_extension(self, suffix: str) -> None:
         """Non-Excel extensions should not be recognized as Office files."""
         assert pre_commit_vba.is_office_file(Path(f"workbook{suffix}")) is False  # noqa: S101
+
+
+class TestWordDocumentExtraction:
+    """Tests for extracting VBA from Word macro-enabled documents."""
+
+    def test_extract_command_exports_test_docm(self, tmp_path: Path) -> None:
+        """The Word fixture should be extracted through Word.Application."""
+        fixture_path = Path("tests", "word", "test-doc.docm")
+        target_path = Path(tmp_path, fixture_path.name)
+        shutil.copy2(fixture_path, target_path)
+
+        component = mock.Mock()
+        component.Name = "Module1"
+        component.Type = pre_commit_vba.constants.vbext_ct_StdModule
+        component.Export.side_effect = lambda path: path.write_text(
+            'Attribute VB_Name = "Module1"\r\n',
+            encoding="cp932",
+        )
+        document = mock.Mock()
+        document.VBProject.VBComponents = [component]
+        word_app = mock.Mock()
+        word_app.Documents.Open.return_value = document
+
+        with (
+            mock.patch.object(
+                pre_commit_vba,
+                "get_noninteractive_word_app",
+                return_value=word_app,
+            ),
+            mock.patch.object(pre_commit_vba, "add_to_staging"),
+        ):
+            result = runner.invoke(app, ["extract", "--target-path", str(tmp_path)])
+
+        assert result.exit_code == 0, result.output  # noqa: S101
+        word_app.Documents.Open.assert_called_once_with(
+            str(target_path),
+            ReadOnly=True,
+            AddToRecentFiles=False,
+        )
+        component.Export.assert_called_once()
+        assert Path(tmp_path, "test-doc.docm.VBA", "code", "Module1.bas").is_file()  # noqa: S101
+        assert Path(  # noqa: S101
+            tmp_path,
+            "test-doc.docm.VBA",
+            "customUI",
+            "customUI14.xml",
+        ).is_file()
+        document.Close.assert_called_once_with(SaveChanges=False)
+        word_app.Quit.assert_called_once()
 
 
 def _project_version() -> str:
