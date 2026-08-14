@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Raise the minimum `typer` requirement from 0.27.0 to 0.27.1. ([#147])  
+  `typer` の最小要件を 0.27.0 から 0.27.1 へ引き上げ.
+
 ## [0.3.14] - 2026-08-12
 
 ### Changed
@@ -354,3 +359,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#113]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/113
 [#114]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/114
 [#126]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/126
+[#147]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/147
