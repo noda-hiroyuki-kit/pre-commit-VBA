@@ -956,7 +956,7 @@ def test_not_exists_test_without_codes_xlsm_vba_folder() -> None:
                 "excel",
                 "without_codes",
                 "test_without_codes.xlsm.test",
-            )
+            ),
         )
     try:
         with mock.patch.object(pre_commit_vba, "add_to_staging", return_value=None):
@@ -999,7 +999,7 @@ def test_not_exists_test_without_codes_xlsm_vba_folder() -> None:
                     "excel",
                     "without_codes",
                     "test_without_codes.xlsm.test",
-                )
+                ),
             )
         assert test_result  # noqa: S101
     finally:
