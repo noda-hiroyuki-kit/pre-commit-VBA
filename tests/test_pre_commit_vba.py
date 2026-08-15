@@ -423,9 +423,41 @@ class TestExcelCleanupLogging:
             side_effect=pre_commit_vba.com_error(-1, "cleanup failed", None),
         )
 
-        pre_commit_vba.cleanup_excel_resource(action, "application")
+        pre_commit_vba.cleanup_office_resource(action, "application", "Excel")
 
         assert "Failed to clean up Excel resource: application" in caplog.text  # noqa: S101
+
+
+class TestWordCleanupLogging:
+    """Tests for debug logging during Word cleanup failures."""
+
+    def test_exporter_logs_cleanup_failures(self, tmp_path: Path, caplog) -> None:  # noqa: ANN001
+        """Word exporter cleanup failures should identify Word resources."""
+        caplog.set_level(logging.DEBUG)
+        document = mock.Mock()
+        document.VBProject.VBComponents = []
+        document.Close.side_effect = OSError("close failed")
+
+        word_app = mock.Mock()
+        word_app.Documents.Open.return_value = document
+        word_app.Quit.side_effect = OSError("quit failed")
+
+        settings = pre_commit_vba.SettingsFoldersHandleOffice(
+            pre_commit_vba.SettingsCommonFolder(tmp_path / "dummy.docm", ".VBA"),
+            str(tmp_path / "export"),
+            "customUI",
+            "code",
+        )
+
+        with mock.patch.object(
+            pre_commit_vba,
+            "get_noninteractive_word_app",
+            return_value=word_app,
+        ):
+            pre_commit_vba.WordVbaExporter(settings)
+
+        assert "Failed to clean up Word resource: document" in caplog.text  # noqa: S101
+        assert "Failed to clean up Word resource: application" in caplog.text  # noqa: S101
 
 
 class TestConfigureLogStreamEncoding:

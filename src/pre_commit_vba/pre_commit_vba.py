@@ -136,8 +136,12 @@ def get_noninteractive_word_app() -> WordApplicationProtocol:
     return word_app
 
 
-def cleanup_excel_resource(action: Callable[[], None], resource_name: str) -> None:
-    """Run Excel cleanup without masking the original failure cause.
+def cleanup_office_resource(
+    action: Callable[[], None],
+    resource_name: str,
+    application_name: str,
+) -> None:
+    """Run Office cleanup without masking the original failure cause.
 
     Cleanup errors are logged at debug level so the command behavior stays the same
     while still leaving a diagnostic trail for stray COM teardown failures.
@@ -146,7 +150,8 @@ def cleanup_excel_resource(action: Callable[[], None], resource_name: str) -> No
         action()
     except OSError, AttributeError, TypeError, com_error:
         logger.debug(
-            "Failed to clean up Excel resource: %s",
+            "Failed to clean up %s resource: %s",
+            application_name,
             resource_name,
             exc_info=True,
         )
@@ -364,11 +369,12 @@ class ExcelVbaExporter(OfficeVbaExporter):
                 vb_comp.Export(Path(settings.export_folder, f"{vb_comp_file_name}"))
         finally:
             if workbook is not None:
-                cleanup_excel_resource(
+                cleanup_office_resource(
                     lambda: workbook.Close(SaveChanges=False),
                     "workbook",
+                    "Excel",
                 )
-            cleanup_excel_resource(app.Quit, "application")
+            cleanup_office_resource(app.Quit, "application", "Excel")
 
     def __get_xl_app(self) -> ExcelApplicationProtocol:
         """Get Excel application."""
@@ -397,11 +403,12 @@ class WordVbaExporter(OfficeVbaExporter):
                 vb_comp.Export(Path(settings.export_folder, vb_comp_file_name))
         finally:
             if document is not None:
-                cleanup_excel_resource(
+                cleanup_office_resource(
                     lambda: document.Close(SaveChanges=False),
                     "document",
+                    "Word",
                 )
-            cleanup_excel_resource(app.Quit, "application")
+            cleanup_office_resource(app.Quit, "application", "Word")
 
 
 def office_vba_exporter_factory(
@@ -713,11 +720,12 @@ def get_workbook_version(workbook_path: Path) -> str:
         version = str(workbook.BuiltinDocumentProperties("Document version"))
     finally:
         if workbook is not None:
-            cleanup_excel_resource(
+            cleanup_office_resource(
                 lambda: workbook.Close(SaveChanges=False),
                 "workbook",
+                "Excel",
             )
-        cleanup_excel_resource(app.Quit, "application")
+        cleanup_office_resource(app.Quit, "application", "Excel")
     return version
 
 
