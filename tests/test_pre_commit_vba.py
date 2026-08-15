@@ -985,7 +985,7 @@ def test_not_exists_test_without_codes_xlsm_vba_folder() -> None:
         shutil.rmtree(xlsm_test_folder_path)
     try:
         with mock.patch.object(pre_commit_vba, "add_to_staging", return_value=None):
-            runner.invoke(
+            result = runner.invoke(
                 app,
                 [
                     "extract",
@@ -1003,6 +1003,7 @@ def test_not_exists_test_without_codes_xlsm_vba_folder() -> None:
                     "--create-gitignore",
                 ],
             )
+            assert result.exit_code == 0, result.output  # noqa: S101
         test_result = not xlsm_test_folder_path.exists()
         if xlsm_test_folder_path.exists():
             shutil.rmtree(xlsm_test_folder_path)
