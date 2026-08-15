@@ -942,22 +942,15 @@ def test_not_exists_test1_vba_folder() -> None:
 
 def test_not_exists_test_without_codes_xlsm_vba_folder() -> None:
     """Test that the test_without_codes.xlsm.test folder does not exist."""
-    if Path(
+    xlsm_test_folder_path = Path(
         Path.cwd(),
         "tests",
         "excel",
         "without_codes",
         "test_without_codes.xlsm.test",
-    ).exists():
-        shutil.rmtree(
-            Path(
-                Path.cwd(),
-                "tests",
-                "excel",
-                "without_codes",
-                "test_without_codes.xlsm.test",
-            ),
-        )
+    )
+    if xlsm_test_folder_path.exists():
+        shutil.rmtree(xlsm_test_folder_path)
     try:
         with mock.patch.object(pre_commit_vba, "add_to_staging", return_value=None):
             runner.invoke(
@@ -978,41 +971,12 @@ def test_not_exists_test_without_codes_xlsm_vba_folder() -> None:
                     "--create-gitignore",
                 ],
             )
-        test_result = not Path(
-            Path.cwd(),
-            "tests",
-            "excel",
-            "without_codes",
-            "test_without_codes.xlsm.test",
-        ).exists()
-        if Path(
-            Path.cwd(),
-            "tests",
-            "excel",
-            "without_codes",
-            "test_without_codes.xlsm.test",
-        ).exists():
-            shutil.rmtree(
-                Path(
-                    Path.cwd(),
-                    "tests",
-                    "excel",
-                    "without_codes",
-                    "test_without_codes.xlsm.test",
-                ),
-            )
+        test_result = not xlsm_test_folder_path.exists()
+        if xlsm_test_folder_path.exists():
+            shutil.rmtree(xlsm_test_folder_path)
         assert test_result  # noqa: S101
     finally:
-        shutil.rmtree(
-            Path(
-                Path.cwd(),
-                "tests",
-                "excel",
-                "without_codes",
-                "test_without_codes.xlsm.test",
-            ),
-            ignore_errors=True,
-        )
+        shutil.rmtree(xlsm_test_folder_path, ignore_errors=True)
 
 
 def test_not_exists_test_without_codes_docm_vba_folder() -> None:
