@@ -1035,7 +1035,7 @@ def test_not_exists_test_without_codes_docm_vba_folder() -> None:
         )
     try:
         with mock.patch.object(pre_commit_vba, "add_to_staging", return_value=None):
-            runner.invoke(
+            result = runner.invoke(
                 app,
                 [
                     "extract",
@@ -1053,6 +1053,7 @@ def test_not_exists_test_without_codes_docm_vba_folder() -> None:
                     "--create-gitignore",
                 ],
             )
+            assert result.exit_code == 0, result.output  # noqa: S101
         test_result = not Path(
             Path.cwd(),
             "tests",
