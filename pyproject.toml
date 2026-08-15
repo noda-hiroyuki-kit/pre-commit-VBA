@@ -28,7 +28,7 @@ dev = [
     "termynal>=0.14.0",
     "tox>=4.58.0",
     "tox-uv>=1.36.0",
-    "zensical>=0.0.52",
+    "zensical>=0.0.53",
 ]
 
 [tool.uv]
