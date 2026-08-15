@@ -1017,22 +1017,15 @@ def test_not_exists_test_without_codes_xlsm_vba_folder() -> None:
 
 def test_not_exists_test_without_codes_docm_vba_folder() -> None:
     """Test that the test_without_codes.docm.test folder does not exist."""
-    if Path(
+    docm_test_folder_path = Path(
         Path.cwd(),
         "tests",
         "word",
         "without_codes",
         "test_without_codes.docm.test",
-    ).exists():
-        shutil.rmtree(
-            Path(
-                Path.cwd(),
-                "tests",
-                "word",
-                "without_codes",
-                "test_without_codes.docm.test",
-            ),
-        )
+    )
+    if docm_test_folder_path.exists():
+        shutil.rmtree(docm_test_folder_path)
     try:
         with mock.patch.object(pre_commit_vba, "add_to_staging", return_value=None):
             result = runner.invoke(
@@ -1054,41 +1047,12 @@ def test_not_exists_test_without_codes_docm_vba_folder() -> None:
                 ],
             )
             assert result.exit_code == 0, result.output  # noqa: S101
-        test_result = not Path(
-            Path.cwd(),
-            "tests",
-            "word",
-            "without_codes",
-            "test_without_codes.docm.test",
-        ).exists()
-        if Path(
-            Path.cwd(),
-            "tests",
-            "word",
-            "without_codes",
-            "test_without_codes.docm.test",
-        ).exists():
-            shutil.rmtree(
-                Path(
-                    Path.cwd(),
-                    "tests",
-                    "word",
-                    "without_codes",
-                    "test_without_codes.docm.test",
-                ),
-            )
+        test_result = not docm_test_folder_path.exists()
+        if docm_test_folder_path.exists():
+            shutil.rmtree(docm_test_folder_path)
         assert test_result  # noqa: S101
     finally:
-        shutil.rmtree(
-            Path(
-                Path.cwd(),
-                "tests",
-                "word",
-                "without_codes",
-                "test_without_codes.docm.test",
-            ),
-            ignore_errors=True,
-        )
+        shutil.rmtree(docm_test_folder_path, ignore_errors=True)
 
 
 def test_extract_command_does_not_timeout_on_issue107_repro_workbook() -> None:
