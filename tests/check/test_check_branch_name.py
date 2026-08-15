@@ -10,8 +10,8 @@ import pytest
 from src.pre_commit_vba import pre_commit_vba
 from src.pre_commit_vba.pre_commit_vba import (
     get_current_branch_name,
+    get_office_file_version,
     get_version_from_branch_name,
-    get_workbook_version,
 )
 
 
@@ -24,7 +24,7 @@ def test_get_current_branch_name() -> None:
 
 def test_get_workbook_version() -> None:
     """Test get workbook version."""
-    sut = get_workbook_version(Path(Path.cwd(), "tests", "test.xlsm"))
+    sut = get_office_file_version(Path(Path.cwd(), "tests", "test.xlsm"))
     assert sut == "v0.0.1-alpha"  # noqa: S101
 
 

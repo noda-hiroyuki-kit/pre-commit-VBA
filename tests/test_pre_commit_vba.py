@@ -357,7 +357,7 @@ class TestExcelCleanupLogging:
             "get_noninteractive_excel_app",
             return_value=excel_app,
         ):
-            result = pre_commit_vba.get_workbook_version(Path("dummy.xlsm"))
+            result = pre_commit_vba.get_office_file_version(Path("dummy.xlsm"))
 
         assert result == "0.3.11"  # noqa: S101
         assert "Failed to clean up Excel resource: workbook" in caplog.text  # noqa: S101
@@ -410,7 +410,7 @@ class TestExcelCleanupLogging:
             "get_noninteractive_excel_app",
             return_value=excel_app,
         ):
-            result = pre_commit_vba.get_workbook_version(Path("dummy.xlsm"))
+            result = pre_commit_vba.get_office_file_version(Path("dummy.xlsm"))
 
         assert result == "0.3.11"  # noqa: S101
         assert "Failed to clean up Excel resource: workbook" in caplog.text  # noqa: S101
@@ -1284,7 +1284,7 @@ class TestCheckSubCommand:
         _excel_instance.Quit()
         shutil.rmtree(Path(Path.cwd(), "tests", "test.xlsm.test"), ignore_errors=True)
 
-    def test_not_exist_workbook_outs_no_found(
+    def test_not_exist_office_files_outs_no_found(
         self,
         caplog: Generator[pytest.LogCaptureFixture],
     ) -> None:
@@ -1298,7 +1298,7 @@ class TestCheckSubCommand:
             sut = runner.invoke(app, ["check"])
             assert sut.exit_code == 0  # noqa: S101
             assert (  # noqa: S101
-                "No Excel workbooks found in the target path." in caplog.text
+                "No Office files found in the target path." in caplog.text
             )
 
     def test_not_a_release_or_hotfix_branch_outs_in_feature_branch(
@@ -1395,7 +1395,7 @@ class TestCheckSubCommand:
             ),
             mock.patch.object(
                 pre_commit_vba,
-                "get_workbook_version",
+                "get_office_file_version",
                 return_value="v9.9.9",
             ),
         ):

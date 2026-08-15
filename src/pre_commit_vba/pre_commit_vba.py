@@ -711,7 +711,7 @@ def get_current_branch_name() -> str:
     return stdout_data.decode("utf-8").replace("\n", "")
 
 
-def get_workbook_version(workbook_path: Path) -> str:
+def get_office_file_version(workbook_path: Path) -> str:
     """Get workbook version."""
     app = get_noninteractive_excel_app()
     workbook = None
@@ -729,10 +729,10 @@ def get_workbook_version(workbook_path: Path) -> str:
     return version
 
 
-def has_rubberduck_addin_references(workbook_path: Path) -> bool:
-    """Check whether workbook includes active Rubberduck reference metadata."""
+def has_rubberduck_addin_references(office_file_path: Path) -> bool:
+    """Check whether the office file includes active Rubberduck reference metadata."""
     try:
-        with ZipFile(workbook_path) as zip_ref:
+        with ZipFile(office_file_path) as zip_ref:
             project_bin = zip_ref.read("xl/vbaProject.bin")
     except BadZipFile, KeyError, OSError:
         return False
@@ -884,31 +884,36 @@ def check(
     """Check between workbook version and repository name."""
     try:
         branch_version = get_version_from_branch_name()
-        exist_workbook: bool = False
-        for workbook_path in Path(target_path).resolve().glob("*"):
-            if workbook_path.name.startswith("~$"):
+        exist_office_file: bool = False
+        for office_file_path in Path(target_path).resolve().glob("*"):
+            if office_file_path.name.startswith("~$"):
                 continue
-            if workbook_path.suffix.lower() not in {".xls", ".xlsx", ".xlsm", ".xlsb"}:
+            if office_file_path.suffix.lower() not in {
+                ".xls",
+                ".xlsx",
+                ".xlsm",
+                ".xlsb",
+            }:
                 continue
-            if not has_vba_code(workbook_path):
+            if not has_vba_code(office_file_path):
                 continue
-            exist_workbook = True
-            if has_rubberduck_addin_references(workbook_path):
+            exist_office_file = True
+            if has_rubberduck_addin_references(office_file_path):
                 logger.error(
                     "Rubberduck Addin reference detected: %s",
-                    workbook_path,
+                    office_file_path,
                 )
                 sys.exit(1)
-            workbook_version = get_workbook_version(workbook_path)
-            if workbook_version != "v" + branch_version:
+            office_file_version = get_office_file_version(office_file_path)
+            if office_file_version != "v" + branch_version:
                 logger.error(
-                    "Version mismatch: Workbook version '%s' != Branch version '%s'",
-                    workbook_version,
+                    "Version mismatch: Office file version '%s' != Branch version '%s'",
+                    office_file_version,
                     branch_version,
                 )
                 sys.exit(1)
-        if not exist_workbook:
-            logger.warning("No Excel workbooks found in the target path.")
+        if not exist_office_file:
+            logger.warning("No Office files found in the target path.")
             sys.exit(0)
     except NotReleaseBranchError:
         logger.info("Branch is not a release or hotfix branch")

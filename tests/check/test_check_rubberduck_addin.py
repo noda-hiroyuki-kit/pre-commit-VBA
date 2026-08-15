@@ -78,7 +78,7 @@ class TestCheckCommandRubberduckAddin:
             ),
             mock.patch.object(
                 pre_commit_vba,
-                "get_workbook_version",
+                "get_office_file_version",
                 return_value="v0.0.1-alpha",
             ),
         ):
@@ -101,7 +101,7 @@ class TestCheckCommandRubberduckAddin:
             ),
             mock.patch.object(
                 pre_commit_vba,
-                "get_workbook_version",
+                "get_office_file_version",
                 return_value="v0.0.1-alpha",
             ),
         ):
@@ -124,7 +124,7 @@ class TestCheckCommandRubberduckAddin:
             ),
             mock.patch.object(
                 pre_commit_vba,
-                "get_workbook_version",
+                "get_office_file_version",
                 return_value="v0.0.1-alpha",
             ),
         ):
