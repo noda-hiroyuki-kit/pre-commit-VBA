@@ -408,7 +408,7 @@ def office_vba_exporter_factory(
     settings: SettingsFoldersHandleOffice,
 ) -> OfficeVbaExporter:
     """Return an exporter suitable for the Office document type."""
-    if settings.office_file_path.suffix.lower() == ".docm":
+    if is_word_file(settings.office_file_path):
         return WordVbaExporter(settings)
     return ExcelVbaExporter(settings)
 
