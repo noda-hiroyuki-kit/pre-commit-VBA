@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Raise the minimum `typer` requirement from 0.27.0 to 0.27.1. ([#147])  
   `typer` の最小要件を 0.27.0 から 0.27.1 へ引き上げ.
+- Bump minimum `zensical` requirement from 0.0.52 to 0.0.53.  
+  `zensical` の最小要件を 0.0.52 から 0.0.53 へ引き上げ.
 
 ## [0.3.14] - 2026-08-12
 
