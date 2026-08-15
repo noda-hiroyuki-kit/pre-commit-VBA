@@ -304,14 +304,18 @@ class SettingsOptionsHandleOffice:
         return self.__create_gitignore
 
 
+def get_vba_project_path(office_file_path: Path) -> str:
+    """Return the path to the vbaProject.bin file inside the Office document."""
+    if is_word_file(office_file_path):
+        return "word/vbaProject.bin"
+    return "xl/vbaProject.bin"
+
+
 def has_vba_code(office_file_path: Path) -> bool:
     """Check if an Office document contains VBA code."""
-    vba_project_path = (
-        "word/vbaProject.bin" if is_word_file(office_file_path) else "xl/vbaProject.bin"
-    )
     try:
         with ZipFile(office_file_path, "r") as zip_ref:
-            zip_ref.getinfo(vba_project_path)
+            zip_ref.getinfo(get_vba_project_path(office_file_path))
     except KeyError, OSError, BadZipFile:
         return False
     else:
@@ -733,7 +737,7 @@ def has_rubberduck_addin_references(office_file_path: Path) -> bool:
     """Check whether the office file includes active Rubberduck reference metadata."""
     try:
         with ZipFile(office_file_path) as zip_ref:
-            project_bin = zip_ref.read("xl/vbaProject.bin")
+            project_bin = zip_ref.read(get_vba_project_path(office_file_path))
     except BadZipFile, KeyError, OSError:
         return False
 
@@ -888,12 +892,7 @@ def check(
         for office_file_path in Path(target_path).resolve().glob("*"):
             if office_file_path.name.startswith("~$"):
                 continue
-            if office_file_path.suffix.lower() not in {
-                ".xls",
-                ".xlsx",
-                ".xlsm",
-                ".xlsb",
-            }:
+            if not is_office_file(office_file_path):
                 continue
             if not has_vba_code(office_file_path):
                 continue
