@@ -5,6 +5,7 @@ description = "Extracts VBA code from Excel files for managing VBA code in git a
 readme = "README.md"
 requires-python = ">=3.14,<3.15"
 dependencies = [
+    "olefile>=0.47",
     "pywin32>=312;platform_system == 'Windows'",
     "typer>=0.27.1",
 ]

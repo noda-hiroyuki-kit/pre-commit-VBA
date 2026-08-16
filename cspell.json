@@ -78,6 +78,7 @@
         "Noda",
         "nodeenv",
         "noninteractive",
+        "openstream",
         "nosetests",
         "pathspec",
         "pipenv",

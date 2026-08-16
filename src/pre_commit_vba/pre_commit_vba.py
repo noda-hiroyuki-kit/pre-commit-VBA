@@ -8,11 +8,13 @@ extract code files from excel workbook/word document with codes.
 # requires-python = ">=3.14"
 # dependencies = [
 #   "pywin32>=312",
+#   "olefile>=0.47",
 #   "typer>=0.27.1",
 # ]
 # ///
 import re
 import shutil
+import struct
 import subprocess
 import sys
 from abc import ABC, abstractmethod
@@ -23,7 +25,10 @@ from pathlib import Path
 from typing import Annotated, Protocol, cast
 from zipfile import BadZipFile, ZipFile
 
+import olefile
 import typer
+
+OLE_FILE_ERROR: type[BaseException] = getattr(olefile, "OleFileError", OSError)
 
 try:
     from pywintypes import com_error
@@ -733,27 +738,130 @@ def get_office_file_version(workbook_path: Path) -> str:
     return version
 
 
+VBA_CHUNK_SIGNATURE = 0b011
+RAW_CHUNK_SIZE = 4098
+
+
+def _read_vba_chunk_header(data: bytes | bytearray, pos: int) -> tuple[int, int, int]:
+    """Return the chunk size, signature, and flag for a VBA compressed chunk."""
+    header = struct.unpack("<H", data[pos : pos + 2])[0]
+    chunk_size = (header & 0x0FFF) + 3
+    chunk_signature = (header >> 12) & 0x07
+    chunk_flag = (header >> 15) & 0x01
+    return chunk_size, chunk_signature, chunk_flag
+
+
+def _validate_vba_chunk(chunk_size: int, chunk_signature: int, chunk_flag: int) -> None:
+    """Validate a VBA chunk before processing it."""
+    if chunk_signature != VBA_CHUNK_SIGNATURE:
+        error_message = "Invalid CompressedChunkSignature in VBA compressed stream"
+        raise ValueError(error_message)
+    if chunk_flag == 0 and chunk_size != RAW_CHUNK_SIZE:
+        error_message = "Invalid raw chunk size"
+        raise ValueError(error_message)
+
+
+def _copy_token_help(
+    decompressed_current: int,
+    decompressed_chunk_start: int,
+) -> tuple[int, int, int, int]:
+    """Return masks and bit width for a VBA CopyToken."""
+    difference = decompressed_current - decompressed_chunk_start
+    bit_count = max((difference - 1).bit_length(), 4)
+    length_mask = 0xFFFF >> bit_count
+    offset_mask = ~length_mask
+    maximum_length = (0xFFFF >> bit_count) + 3
+    return length_mask, offset_mask, bit_count, maximum_length
+
+
+def _decompress_vba_tokens(
+    data: bytes | bytearray,
+    chunk_start: int,
+    chunk_size: int,
+    decompressed: bytearray,
+) -> int:
+    """Decompress a single token sequence in a compressed VBA chunk."""
+    pos = chunk_start + 2
+    decompressed_chunk_start = len(decompressed)
+    while pos < chunk_start + chunk_size:
+        flag_byte = data[pos]
+        pos += 1
+        for bit_index in range(8):
+            if pos >= chunk_start + chunk_size:
+                break
+            flag_bit = (flag_byte >> bit_index) & 1
+            if flag_bit == 0:
+                decompressed.append(data[pos])
+                pos += 1
+                continue
+            if pos + 1 >= chunk_start + chunk_size:
+                break
+            copy_token = struct.unpack("<H", data[pos : pos + 2])[0]
+            length_mask, offset_mask, bit_count, _ = _copy_token_help(
+                len(decompressed),
+                decompressed_chunk_start,
+            )
+            length = (copy_token & length_mask) + 3
+            temp1 = copy_token & offset_mask
+            temp2 = 16 - bit_count
+            offset = (temp1 >> temp2) + 1
+            copy_source = len(decompressed) - offset
+            for index in range(copy_source, copy_source + length):
+                decompressed.append(decompressed[index])
+            pos += 2
+    return pos
+
+
+def decompress_stream(compressed_container: bytes | bytearray) -> bytes:
+    """Decompress a VBA stream using the minimal algorithm needed here."""
+    if not isinstance(compressed_container, bytearray):
+        compressed_container = bytearray(compressed_container)
+
+    if not compressed_container or compressed_container[0] != 0x01:
+        error_message = "invalid signature byte"
+        raise ValueError(error_message)
+
+    decompressed = bytearray()
+    pos = 1
+
+    while pos < len(compressed_container):
+        chunk_start = pos
+        chunk_size, chunk_signature, chunk_flag = _read_vba_chunk_header(
+            compressed_container,
+            chunk_start,
+        )
+        _validate_vba_chunk(chunk_size, chunk_signature, chunk_flag)
+
+        if chunk_start + chunk_size > len(compressed_container):
+            chunk_size = len(compressed_container) - chunk_start
+
+        pos = chunk_start + 2
+        if chunk_flag == 0:
+            decompressed.extend(compressed_container[pos : pos + 4096])
+            pos += 4096
+            continue
+
+        pos = _decompress_vba_tokens(
+            compressed_container,
+            chunk_start,
+            chunk_size,
+            decompressed,
+        )
+
+    return bytes(decompressed)
+
+
 def has_rubberduck_addin_references(office_file_path: Path) -> bool:
     """Check whether the office file includes active Rubberduck reference metadata."""
     try:
         with ZipFile(office_file_path) as zip_ref:
             project_bin = zip_ref.read(get_vba_project_path(office_file_path))
-    except BadZipFile, KeyError, OSError:
+        with olefile.OleFileIO(project_bin) as ole:
+            compressed_dir = ole.openstream(["VBA", "dir"]).read()
+        directory = decompress_stream(compressed_dir)
+    except BadZipFile, KeyError, OSError, ValueError, IndexError, OLE_FILE_ERROR:
         return False
-
-    arch_matches = re.findall(rb"rubberduck\.x(32|64)\.tlb", project_bin, re.IGNORECASE)
-    if not arch_matches:
-        return False
-
-    # Some modules may contain the detection regex as a source literal.
-    # Treat those as inactive references.
-    if b"rubberduck\\.x\\d+\\.tlb" in project_bin.lower():
-        return False
-
-    # Code modules can include multiple architecture fallback paths.
-    # Treat those as inactive references.
-    detected_arches = {match.lower() for match in arch_matches}
-    return len(detected_arches) == 1
+    return bool(re.search(rb"rubberduck\.x(32|64)\.tlb", directory, re.IGNORECASE))
 
 
 def configure_log_stream_encoding() -> None:
