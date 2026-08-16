@@ -12,6 +12,7 @@ import queue
 import re
 import runpy
 import shutil
+import struct
 import subprocess
 import tempfile
 import tomllib
@@ -652,6 +653,75 @@ class TestHasRubberduckAddinReferences:
         result = pre_commit_vba.has_rubberduck_addin_references(missing_workbook)
 
         assert result is False  # noqa: S101
+
+
+class TestVbaCompressedStreamHelpers:
+    """Tests for the VBA compressed-stream helpers."""
+
+    def test_validate_vba_chunk_raises_for_invalid_signature(self) -> None:
+        """Invalid compressed-chunk signatures should raise ValueError."""
+        with pytest.raises(ValueError, match="Invalid CompressedChunkSignature"):
+            pre_commit_vba._validate_vba_chunk(3, chunk_signature=0, chunk_flag=0)  # noqa: SLF001
+
+    def test_validate_vba_chunk_raises_for_raw_chunk_size_mismatch(self) -> None:
+        """Raw chunks must use the fixed 4098-byte size."""
+        with pytest.raises(ValueError, match="Invalid raw chunk size"):
+            pre_commit_vba._validate_vba_chunk(10, chunk_signature=0b011, chunk_flag=0)  # noqa: SLF001
+
+    def test_copy_token_help_uses_expected_masks(self) -> None:
+        """Copy-token masks should match the VBA specification."""
+        assert pre_commit_vba._copy_token_help(5, 0) == (4095, -4096, 4, 4098)  # noqa: S101, SLF001
+
+    def test_decompress_vba_tokens_handles_copy_token(self) -> None:
+        """Copy tokens should append bytes from the already decompressed buffer."""
+        data = bytearray([0, 0, 0b00000001, 0x00, 0x00])
+        decompressed = bytearray(b"ABCD")
+
+        pos = pre_commit_vba._decompress_vba_tokens(data, 0, len(data), decompressed)  # noqa: SLF001
+
+        assert pos == len(data)  # noqa: S101
+        assert decompressed == b"ABCD" + b"D" * 3  # noqa: S101
+
+    def test_decompress_vba_tokens_stops_when_copy_token_is_truncated(self) -> None:
+        """A trailing flag bit without a complete token should stop without crashing."""
+        data = bytearray([0, 0, 0b00000001, 0x00])
+        decompressed = bytearray(b"AB")
+
+        pos = pre_commit_vba._decompress_vba_tokens(data, 0, len(data), decompressed)  # noqa: SLF001
+
+        assert pos == len(data)  # noqa: S101
+        assert decompressed == b"AB"  # noqa: S101
+
+    def test_decompress_stream_rejects_invalid_signature(self) -> None:
+        """A stream with an invalid signature byte should fail fast."""
+        with pytest.raises(ValueError, match="invalid signature byte"):
+            pre_commit_vba.decompress_stream(b"")
+
+    def test_decompress_stream_handles_raw_chunk(self) -> None:
+        """Raw chunks should pass bytes through without decompression."""
+        stream = b"\x01" + struct.pack("<H", 0x3FFF) + b"AB"
+
+        assert pre_commit_vba.decompress_stream(stream) == b"AB"  # noqa: S101
+
+    def test_check_skips_files_without_vba_code(self, tmp_path: Path) -> None:
+        """Check should ignore office files that do not contain VBA code."""
+        target_dir = tmp_path / "target"
+        target_dir.mkdir()
+        (target_dir / "ignore.txt").write_text("hello", encoding="utf-8")
+
+        with (
+            mock.patch.object(
+                pre_commit_vba,
+                "get_version_from_branch_name",
+                return_value="0.0.1-alpha",
+            ),
+            mock.patch.object(pre_commit_vba, "has_vba_code", return_value=False),
+            mock.patch.object(pre_commit_vba, "is_office_file", return_value=True),
+            pytest.raises(SystemExit) as exc_info,
+        ):
+            pre_commit_vba.check(target_path=str(target_dir))
+
+        assert exc_info.value.code == 0  # noqa: S101
 
 
 class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
