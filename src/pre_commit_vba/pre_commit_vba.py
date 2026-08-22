@@ -109,7 +109,26 @@ class WordApplicationProtocol(Protocol):
     Quit: Callable[[], None]
 
 
-DispatchExFactory = Callable[[str], ExcelApplicationProtocol | WordApplicationProtocol]
+class PresentationsProtocol(Protocol):
+    """Protocol for the PowerPoint presentations collection."""
+
+    Open: Callable[..., WorkbookPropertiesProtocol]
+
+
+class PowerPointApplicationProtocol(Protocol):
+    """Protocol for the PowerPoint application object."""
+
+    Visible: bool
+    DisplayAlerts: bool
+    AutomationSecurity: int
+    Presentations: PresentationsProtocol
+    Quit: Callable[[], None]
+
+
+DispatchExFactory = Callable[
+    [str],
+    ExcelApplicationProtocol | WordApplicationProtocol | PowerPointApplicationProtocol,
+]
 
 
 def get_dispatch_ex() -> DispatchExFactory:
@@ -139,6 +158,19 @@ def get_noninteractive_word_app() -> WordApplicationProtocol:
     word_app.DisplayAlerts = False
     word_app.AutomationSecurity = constants.mso_automation_security_force_disable
     return word_app
+
+
+def get_noninteractive_powerpoint_app() -> PowerPointApplicationProtocol:
+    """Return a non-interactive PowerPoint application instance."""
+    dispatch_ex = get_dispatch_ex()
+    powerpoint_app = cast(
+        "PowerPointApplicationProtocol",
+        dispatch_ex("PowerPoint.Application"),
+    )
+    powerpoint_app.Visible = False
+    powerpoint_app.DisplayAlerts = False
+    powerpoint_app.AutomationSecurity = constants.mso_automation_security_force_disable
+    return powerpoint_app
 
 
 def cleanup_office_resource(
@@ -313,6 +345,8 @@ def get_vba_project_path(office_file_path: Path) -> str:
     """Return the path to the vbaProject.bin file inside the Office document."""
     if is_word_file(office_file_path):
         return "word/vbaProject.bin"
+    if is_powerpoint_file(office_file_path):
+        return "ppt/vbaProject.bin"
     return "xl/vbaProject.bin"
 
 
@@ -346,9 +380,22 @@ def is_word_file(office_file_path: Path) -> bool:
     }
 
 
+def is_powerpoint_file(office_file_path: Path) -> bool:
+    """Check if a path has a supported PowerPoint VBA file extension."""
+    return office_file_path.suffix.lower() in {
+        ".pptm",
+        ".potm",
+        ".ppam",
+    }
+
+
 def is_office_file(office_file_path: Path) -> bool:
     """Check if a path matches any supported Office file extension."""
-    return is_excel_file(office_file_path) or is_word_file(office_file_path)
+    return (
+        is_excel_file(office_file_path)
+        or is_word_file(office_file_path)
+        or is_powerpoint_file(office_file_path)
+    )
 
 
 class OfficeVbaExporter(ABC):
@@ -420,12 +467,44 @@ class WordVbaExporter(OfficeVbaExporter):
             cleanup_office_resource(app.Quit, "application", "Word")
 
 
+class PowerPointVbaExporter(OfficeVbaExporter):
+    """Export VBA components from a PowerPoint presentation."""
+
+    def __init__(self, settings: SettingsFoldersHandleOffice) -> None:
+        """Initialize with file path."""
+        app = get_noninteractive_powerpoint_app()
+        presentation = None
+        try:
+            presentation = app.Presentations.Open(
+                str(settings.office_file_path),
+                ReadOnly=True,
+                WithWindow=False,
+            )
+            settings.export_folder.mkdir(parents=True, exist_ok=True)
+            for vb_comp in presentation.VBProject.VBComponents:
+                vb_comp_file_name = vb_component_type_factory(
+                    vb_comp.Name,
+                    vb_comp.Type,
+                ).file_name
+                vb_comp.Export(Path(settings.export_folder, vb_comp_file_name))
+        finally:
+            if presentation is not None:
+                cleanup_office_resource(
+                    presentation.Close,
+                    "presentation",
+                    "PowerPoint",
+                )
+            cleanup_office_resource(app.Quit, "application", "PowerPoint")
+
+
 def office_vba_exporter_factory(
     settings: SettingsFoldersHandleOffice,
 ) -> OfficeVbaExporter:
     """Return an exporter suitable for the Office document type."""
     if is_word_file(settings.office_file_path):
         return WordVbaExporter(settings)
+    if is_powerpoint_file(settings.office_file_path):
+        return PowerPointVbaExporter(settings)
     return ExcelVbaExporter(settings)
 
 
