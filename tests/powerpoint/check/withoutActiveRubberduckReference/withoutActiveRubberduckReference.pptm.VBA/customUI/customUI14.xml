@@ -1,0 +1,19 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" xmlns:mso="http://schemas.microsoft.com/office/2009/07/customui" onLoad="CustomUI.OnLoad">
+  <ribbon>
+    <tabs>
+      <tab id="SampleTab" label="Sample Tab" getVisible="CustomUI.SampleTab_GetVisible">
+        <group id="SampleGroup" label="Sample Group" centerVertically="true">
+            <editBox id="SampleText" label="Sample Text" sizeString="wwwwwwwwwww" getText="SampleTabModule.SampleText_GetText" onChange="SampleTabModule.SampleText_OnChange"/>
+            <button id="SampleButton" label="Search" imageMso="FindDialog" size="normal" onAction="SampleTabModule.SampleButton_OnAction"/>
+        </group>
+        <group id="AppIntroductionGroup" label="App Introduction" centerVertically="true">
+            <button id="AppIntroductionButton" label="App Introduction" imageMso="ItemProperties" size="normal" onAction="SampleTabModule.AppIntroductionButton_OnAction"/>
+            <button id="AppVersionButton" label="App Version" imageMso="ItemProperties" size="normal" onAction="SampleTabModule.AppVersionButton_OnAction"/>
+        </group>
+        <group id="SetCompanyGroup" label="Set Company" centerVertically="true">
+            <button id="SetCompanyButton" label="Set Company" imageMso="FileProperties" size="normal" onAction="SampleTabModule.SetCompanyButton_OnAction"/>
+        </group>
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>
