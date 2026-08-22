@@ -118,7 +118,6 @@ class PresentationsProtocol(Protocol):
 class PowerPointApplicationProtocol(Protocol):
     """Protocol for the PowerPoint application object."""
 
-    Visible: bool
     DisplayAlerts: bool
     AutomationSecurity: int
     Presentations: PresentationsProtocol
@@ -161,13 +160,16 @@ def get_noninteractive_word_app() -> WordApplicationProtocol:
 
 
 def get_noninteractive_powerpoint_app() -> PowerPointApplicationProtocol:
-    """Return a non-interactive PowerPoint application instance."""
+    """Return a non-interactive PowerPoint application instance.
+
+    Unlike Excel/Word, PowerPoint refuses to set Application.Visible to False;
+    presentations are instead opened with WithWindow=False to stay hidden.
+    """
     dispatch_ex = get_dispatch_ex()
     powerpoint_app = cast(
         "PowerPointApplicationProtocol",
         dispatch_ex("PowerPoint.Application"),
     )
-    powerpoint_app.Visible = False
     powerpoint_app.DisplayAlerts = False
     powerpoint_app.AutomationSecurity = constants.mso_automation_security_force_disable
     return powerpoint_app

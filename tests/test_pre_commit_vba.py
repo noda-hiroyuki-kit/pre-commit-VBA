@@ -240,6 +240,55 @@ class TestWordDocumentExtraction:
         word_app.Quit.assert_called_once()
 
 
+class TestPowerPointPresentationExtraction:
+    """Tests for extracting VBA from PowerPoint macro-enabled presentations."""
+
+    def test_extract_command_exports_test_pptm(self, tmp_path: Path) -> None:
+        """The PowerPoint fixture should be extracted through PowerPoint.Application."""
+        fixture_path = Path("tests", "powerpoint", "extract", "test.pptm")
+        target_path = Path(tmp_path, fixture_path.name)
+        shutil.copy2(fixture_path, target_path)
+
+        component = mock.Mock()
+        component.Name = "Module1"
+        component.Type = pre_commit_vba.constants.vbext_ct_StdModule
+        component.Export.side_effect = lambda path: path.write_text(
+            'Attribute VB_Name = "Module1"\r\n',
+            encoding="cp932",
+        )
+        presentation = mock.Mock()
+        presentation.VBProject.VBComponents = [component]
+        powerpoint_app = mock.Mock()
+        powerpoint_app.Presentations.Open.return_value = presentation
+
+        with (
+            mock.patch.object(
+                pre_commit_vba,
+                "get_noninteractive_powerpoint_app",
+                return_value=powerpoint_app,
+            ),
+            mock.patch.object(pre_commit_vba, "add_to_staging"),
+        ):
+            result = runner.invoke(app, ["extract", "--target-path", str(tmp_path)])
+
+        assert result.exit_code == 0, result.output  # noqa: S101
+        powerpoint_app.Presentations.Open.assert_called_once_with(
+            str(target_path),
+            ReadOnly=True,
+            WithWindow=False,
+        )
+        component.Export.assert_called_once()
+        assert Path(tmp_path, "test.pptm.VBA", "code", "Module1.bas").is_file()  # noqa: S101
+        assert Path(  # noqa: S101
+            tmp_path,
+            "test.pptm.VBA",
+            "customUI",
+            "customUI14.xml",
+        ).is_file()
+        presentation.Close.assert_called_once_with()
+        powerpoint_app.Quit.assert_called_once()
+
+
 def _project_version() -> str:
     """Read the project version from pyproject.toml."""
     pyproject_path = Path(__file__).resolve().parents[1] / "pyproject.toml"
