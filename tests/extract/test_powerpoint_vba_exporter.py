@@ -97,6 +97,10 @@ class TestPowerPointVbaExporter:
         assert Path.is_file(expected_file)  # noqa: S101
 
 
+@pytest.mark.skipif(
+    pre_commit_vba.DispatchEx is None,
+    reason="pywin32 is only available on Windows",
+)
 class TestPowerPointAddinVbaExporter:
     """Tests for extracting VBA from a PowerPoint add-in."""
 
