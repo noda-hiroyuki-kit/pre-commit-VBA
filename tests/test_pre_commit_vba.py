@@ -211,6 +211,30 @@ class TestIsOfficeFile:
         assert pre_commit_vba.is_word_file(Path(f"document{suffix}")) is True  # noqa: S101
         assert pre_commit_vba.is_office_file(Path(f"document{suffix}")) is True  # noqa: S101
 
+    @pytest.mark.parametrize("suffix", [".pptm", ".PPTM", ".potm"])
+    def test_returns_true_for_supported_powerpoint_extension(
+        self,
+        suffix: str,
+    ) -> None:
+        """Supported PowerPoint extensions should be recognized regardless of case."""
+        assert (  # noqa: S101
+            pre_commit_vba.is_powerpoint_file(
+                Path(f"presentation{suffix}"),
+            )
+            is True
+        )
+        assert (  # noqa: S101
+            pre_commit_vba.is_office_file(
+                Path(f"presentation{suffix}"),
+            )
+            is True
+        )
+
+    def test_returns_false_for_unsupported_powerpoint_addin_extension(self) -> None:
+        """PowerPoint add-ins should not be treated as supported Office files."""
+        assert pre_commit_vba.is_powerpoint_file(Path("presentation.ppam")) is False  # noqa: S101
+        assert pre_commit_vba.is_office_file(Path("presentation.ppam")) is False  # noqa: S101
+
     @pytest.mark.parametrize("suffix", [".xlsx", ".docx", ".csv", ".xlsm.bak", ""])
     def test_returns_false_for_unsupported_extension(self, suffix: str) -> None:
         """Unsupported extensions should not be recognized as Office files."""
