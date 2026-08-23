@@ -144,7 +144,7 @@ class VbeProtocol(Protocol):
 class PowerPointApplicationProtocol(Protocol):
     """Protocol for the PowerPoint application object."""
 
-    DisplayAlerts: bool
+    DisplayAlerts: int
     AutomationSecurity: int
     Presentations: PresentationsProtocol
     AddIns: AddInsProtocol
@@ -198,7 +198,7 @@ def get_noninteractive_powerpoint_app() -> PowerPointApplicationProtocol:
         "PowerPointApplicationProtocol",
         dispatch_ex("PowerPoint.Application"),
     )
-    powerpoint_app.DisplayAlerts = False
+    powerpoint_app.DisplayAlerts = constants.ppAlertsNone
     powerpoint_app.AutomationSecurity = constants.mso_automation_security_force_disable
     return powerpoint_app
 
@@ -260,6 +260,7 @@ class Constants:
     vbext_ct_MSForm: int = 3  # from enum vbext_ComponentType  # noqa: N815
     vbext_ct_StdModule: int = 1  # from enum vbext_ComponentType  # noqa: N815
     mso_automation_security_force_disable: int = 3  # from enum MsoAutomationSecurity
+    ppAlertsNone: int = 1  # from enum PpAlertLevel  # noqa: N815
 
 
 class SettingsCommonFolder:

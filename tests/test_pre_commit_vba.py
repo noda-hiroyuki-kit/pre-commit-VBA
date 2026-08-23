@@ -120,6 +120,32 @@ class TestWordApplicationSetup:
         )
 
 
+class TestPowerPointApplicationSetup:
+    """Tests for non-interactive PowerPoint application setup."""
+
+    def test_get_noninteractive_powerpoint_app_configures_alerts(self) -> None:
+        """PowerPoint should use its no-alert enum value."""
+        powerpoint_app = mock.Mock()
+        dispatch_ex = mock.Mock(return_value=powerpoint_app)
+
+        with mock.patch.object(
+            pre_commit_vba,
+            "get_dispatch_ex",
+            return_value=dispatch_ex,
+        ):
+            result = pre_commit_vba.get_noninteractive_powerpoint_app()
+
+        assert result is powerpoint_app  # noqa: S101
+        dispatch_ex.assert_called_once_with("PowerPoint.Application")
+        assert (  # noqa: S101
+            powerpoint_app.DisplayAlerts == pre_commit_vba.constants.ppAlertsNone
+        )
+        assert (  # noqa: S101
+            powerpoint_app.AutomationSecurity
+            == pre_commit_vba.constants.mso_automation_security_force_disable
+        )
+
+
 class TestMainEntryPoint:
     """Tests for module main entry point behavior."""
 
