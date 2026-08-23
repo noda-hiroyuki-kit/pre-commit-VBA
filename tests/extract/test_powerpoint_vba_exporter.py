@@ -95,27 +95,3 @@ class TestPowerPointVbaExporter:
             "SetCompanyForm.frm",
         )
         assert Path.is_file(expected_file)  # noqa: S101
-
-
-@pytest.mark.skipif(
-    pre_commit_vba.DispatchEx is None,
-    reason="pywin32 is only available on Windows",
-)
-class TestPowerPointAddinVbaExporter:
-    """Tests for extracting VBA from a PowerPoint add-in."""
-
-    def test_exports_ppam_vba_component(self, tmp_path: Path) -> None:
-        """The PowerPoint add-in fixture should be extracted through the VBE."""
-        source = Path(Path.cwd(), "tests", "powerpoint", "extract", "test.ppam")
-        target = tmp_path / source.name
-        shutil.copy2(source, target)
-        settings = SettingsFoldersHandleOffice(
-            SettingsCommonFolder(target, ".VBA"),
-            "export",
-            "customUI",
-            "code",
-        )
-
-        PowerPointVbaExporter(settings)
-
-        assert not settings.export_folder.exists()  # noqa: S101

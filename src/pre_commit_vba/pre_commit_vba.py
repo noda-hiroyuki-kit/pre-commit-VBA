@@ -115,40 +115,12 @@ class PresentationsProtocol(Protocol):
     Open: Callable[..., WorkbookPropertiesProtocol]
 
 
-class AddInProtocol(Protocol):
-    """Protocol for a PowerPoint add-in."""
-
-    FullName: str
-    Loaded: bool
-
-
-class AddInsProtocol(Protocol):
-    """Protocol for the PowerPoint add-ins collection."""
-
-    Add: Callable[..., AddInProtocol]
-
-
-class VbeProjectProtocol(Protocol):
-    """Protocol for a VBA project exposed by the VBE."""
-
-    FileName: str
-    VBComponents: Iterable[VbComponentProtocol]
-
-
-class VbeProtocol(Protocol):
-    """Protocol for the Visual Basic Editor automation object."""
-
-    VBProjects: Iterable[VbeProjectProtocol]
-
-
 class PowerPointApplicationProtocol(Protocol):
     """Protocol for the PowerPoint application object."""
 
     DisplayAlerts: int
     AutomationSecurity: int
     Presentations: PresentationsProtocol
-    AddIns: AddInsProtocol
-    VBE: VbeProtocol
     Quit: Callable[[], None]
 
 
@@ -416,13 +388,7 @@ def is_powerpoint_file(office_file_path: Path) -> bool:
     return office_file_path.suffix.lower() in {
         ".pptm",
         ".potm",
-        ".ppam",
     }
-
-
-def is_powerpoint_addin_file(office_file_path: Path) -> bool:
-    """Check if a path has a supported PowerPoint add-in extension."""
-    return office_file_path.suffix.lower() == ".ppam"
 
 
 def is_office_file(office_file_path: Path) -> bool:
@@ -510,31 +476,13 @@ class PowerPointVbaExporter(OfficeVbaExporter):
         """Initialize with file path."""
         app = get_noninteractive_powerpoint_app()
         presentation = None
-        addin = None
         try:
-            if is_powerpoint_addin_file(settings.office_file_path):
-                addin = app.AddIns.Add(str(settings.office_file_path))
-                addin.Loaded = True
-                try:
-                    vb_components = next(
-                        project.VBComponents
-                        for project in app.VBE.VBProjects
-                        if Path(project.FileName).resolve()
-                        == settings.office_file_path.resolve()
-                    )
-                except com_error, AttributeError:
-                    logger.warning(
-                        "Skipping protected PowerPoint add-in: %s",
-                        settings.office_file_path,
-                    )
-                    return
-            else:
-                presentation = app.Presentations.Open(
-                    str(settings.office_file_path),
-                    ReadOnly=True,
-                    WithWindow=False,
-                )
-                vb_components = presentation.VBProject.VBComponents
+            presentation = app.Presentations.Open(
+                str(settings.office_file_path),
+                ReadOnly=True,
+                WithWindow=False,
+            )
+            vb_components = presentation.VBProject.VBComponents
             settings.export_folder.mkdir(parents=True, exist_ok=True)
             for vb_comp in vb_components:
                 vb_comp_file_name = vb_component_type_factory(
@@ -549,12 +497,7 @@ class PowerPointVbaExporter(OfficeVbaExporter):
                     "presentation",
                     "PowerPoint",
                 )
-            if addin is not None:
-                cleanup_office_resource(
-                    lambda: setattr(addin, "Loaded", False),
-                    "add-in",
-                    "PowerPoint",
-                )
+
             cleanup_office_resource(app.Quit, "application", "PowerPoint")
 
 
