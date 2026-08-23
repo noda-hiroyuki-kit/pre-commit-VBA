@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add VBA detection and extraction support for Word documents (`.docm`, `.dotm`) and PowerPoint presentations (`.pptm`, `.potm`). ([#139])
+- Add VBA detection and extraction support for Word documents (`.docm`, `.dotm`) and PowerPoint presentations (`.pptm`, `.potm`). ([#139])  
   Word 文書（`.docm`、`.dotm`）と PowerPoint プレゼンテーション（`.pptm`、`.potm`）のVBA検出・抽出に対応.
 
 ### Changed
