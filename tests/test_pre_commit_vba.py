@@ -481,6 +481,52 @@ class TestExcelCleanupLogging:
 class TestWordCleanupLogging:
     """Tests for debug logging during Word cleanup failures."""
 
+    def test_get_document_version_uses_word_application(self) -> None:
+        """Word files should use Documents.Open and document cleanup."""
+        document = mock.Mock()
+        document.BuiltinDocumentProperties.return_value = "0.3.11"
+        word_app = mock.Mock()
+        word_app.Documents.Open.return_value = document
+
+        with mock.patch.object(
+            pre_commit_vba,
+            "get_noninteractive_word_app",
+            return_value=word_app,
+        ):
+            result = pre_commit_vba.get_office_file_version(Path("dummy.docm"))
+
+        assert result == "0.3.11"  # noqa: S101
+        word_app.Documents.Open.assert_called_once_with(
+            "dummy.docm",
+            ReadOnly=True,
+            AddToRecentFiles=False,
+        )
+        document.Close.assert_called_once_with(SaveChanges=False)
+        word_app.Quit.assert_called_once_with()
+
+    def test_get_presentation_version_uses_powerpoint_application(self) -> None:
+        """PowerPoint files should use Presentations.Open and presentation cleanup."""
+        presentation = mock.Mock()
+        presentation.BuiltinDocumentProperties.return_value = "0.3.11"
+        powerpoint_app = mock.Mock()
+        powerpoint_app.Presentations.Open.return_value = presentation
+
+        with mock.patch.object(
+            pre_commit_vba,
+            "get_noninteractive_powerpoint_app",
+            return_value=powerpoint_app,
+        ):
+            result = pre_commit_vba.get_office_file_version(Path("dummy.pptm"))
+
+        assert result == "0.3.11"  # noqa: S101
+        powerpoint_app.Presentations.Open.assert_called_once_with(
+            "dummy.pptm",
+            ReadOnly=True,
+            WithWindow=False,
+        )
+        presentation.Close.assert_called_once_with()
+        powerpoint_app.Quit.assert_called_once_with()
+
     def test_exporter_logs_cleanup_failures(self, tmp_path: Path, caplog) -> None:  # noqa: ANN001
         """Word exporter cleanup failures should identify Word resources."""
         caplog.set_level(logging.DEBUG)

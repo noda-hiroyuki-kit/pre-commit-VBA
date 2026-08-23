@@ -859,22 +859,121 @@ def get_current_branch_name() -> str:
     return stdout_data.decode("utf-8").replace("\n", "")
 
 
-def get_office_file_version(workbook_path: Path) -> str:
-    """Get workbook version."""
-    app = get_noninteractive_excel_app()
-    workbook = None
-    try:
-        workbook = app.Workbooks.Open(workbook_path, ReadOnly=True)
-        version = str(workbook.BuiltinDocumentProperties("Document version"))
-    finally:
-        if workbook is not None:
-            cleanup_office_resource(
-                lambda: workbook.Close(SaveChanges=False),
-                "workbook",
-                "Excel",
+class OfficeFileVersion(ABC):
+    """Interface for retrieving an Office file version."""
+
+    @property
+    @abstractmethod
+    def version(self) -> str:
+        """Return the Office file version."""
+        raise NotImplementedError
+
+
+class ExcelOfficeFileVersion(OfficeFileVersion):
+    """Retrieve a version from an Excel workbook."""
+
+    def __init__(self, office_file_path: Path) -> None:
+        """Initialize and retrieve the workbook version."""
+        excel_app = get_noninteractive_excel_app()
+        workbook = None
+        try:
+            workbook = excel_app.Workbooks.Open(office_file_path, ReadOnly=True)
+            self.__version = str(
+                workbook.BuiltinDocumentProperties("Document version"),
             )
-        cleanup_office_resource(app.Quit, "application", "Excel")
-    return version
+        finally:
+            if workbook is not None:
+                cleanup_office_resource(
+                    lambda: workbook.Close(SaveChanges=False),
+                    "workbook",
+                    "Excel",
+                )
+            cleanup_office_resource(excel_app.Quit, "application", "Excel")
+
+    @property
+    def version(self) -> str:
+        """Return the workbook version."""
+        return self.__version
+
+
+class WordOfficeFileVersion(OfficeFileVersion):
+    """Retrieve a version from a Word document."""
+
+    def __init__(self, office_file_path: Path) -> None:
+        """Initialize and retrieve the document version."""
+        word_app = get_noninteractive_word_app()
+        document = None
+        try:
+            document = word_app.Documents.Open(
+                str(office_file_path),
+                ReadOnly=True,
+                AddToRecentFiles=False,
+            )
+            self.__version = str(
+                document.BuiltinDocumentProperties("Document version"),
+            )
+        finally:
+            if document is not None:
+                cleanup_office_resource(
+                    lambda: document.Close(SaveChanges=False),
+                    "document",
+                    "Word",
+                )
+            cleanup_office_resource(word_app.Quit, "application", "Word")
+
+    @property
+    def version(self) -> str:
+        """Return the document version."""
+        return self.__version
+
+
+class PowerPointOfficeFileVersion(OfficeFileVersion):
+    """Retrieve a version from a PowerPoint presentation."""
+
+    def __init__(self, office_file_path: Path) -> None:
+        """Initialize and retrieve the presentation version."""
+        powerpoint_app = get_noninteractive_powerpoint_app()
+        presentation = None
+        try:
+            presentation = powerpoint_app.Presentations.Open(
+                str(office_file_path),
+                ReadOnly=True,
+                WithWindow=False,
+            )
+            self.__version = str(
+                presentation.BuiltinDocumentProperties("Document version"),
+            )
+        finally:
+            if presentation is not None:
+                cleanup_office_resource(
+                    presentation.Close,
+                    "presentation",
+                    "PowerPoint",
+                )
+            cleanup_office_resource(
+                powerpoint_app.Quit,
+                "application",
+                "PowerPoint",
+            )
+
+    @property
+    def version(self) -> str:
+        """Return the presentation version."""
+        return self.__version
+
+
+def office_file_version_factory(office_file_path: Path) -> OfficeFileVersion:
+    """Return a version retriever suitable for the Office file type."""
+    if is_word_file(office_file_path):
+        return WordOfficeFileVersion(office_file_path)
+    if is_powerpoint_file(office_file_path):
+        return PowerPointOfficeFileVersion(office_file_path)
+    return ExcelOfficeFileVersion(office_file_path)
+
+
+def get_office_file_version(office_file_path: Path) -> str:
+    """Get the version of an Office file."""
+    return office_file_version_factory(office_file_path).version
 
 
 VBA_CHUNK_SIGNATURE = 0b011
