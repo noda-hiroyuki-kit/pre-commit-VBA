@@ -17,6 +17,7 @@ runner = CliRunner()
 RUBBERDUCK_WORKBOOK = Path(
     Path.cwd(),
     "tests",
+    "excel",
     "check",
     "withRubberduck",
     "WithRubberduckAddinReferences.xlsm",
@@ -24,6 +25,7 @@ RUBBERDUCK_WORKBOOK = Path(
 NORMAL_WORKBOOK = Path(
     Path.cwd(),
     "tests",
+    "excel",
     "check",
     "withoutRubberduck",
     "WithoutRubberduckAddinReferences.xlsm",
@@ -31,14 +33,16 @@ NORMAL_WORKBOOK = Path(
 WITHOUT_ACTIVE_RUBBERDUCK_WORKBOOK = Path(
     Path.cwd(),
     "tests",
+    "excel",
     "check",
     "withoutActiveRubberduckReference",
     "WithoutActiveRubberduckAddinReference.xlsm",
 )
-CHECK_DIR_WITH_RUBBERDUCK = Path("tests", "check", "withRubberduck")
-CHECK_DIR_WITHOUT_RUBBERDUCK = Path("tests", "check", "withoutRubberduck")
+CHECK_DIR_WITH_RUBBERDUCK = Path("tests", "excel", "check", "withRubberduck")
+CHECK_DIR_WITHOUT_RUBBERDUCK = Path("tests", "excel", "check", "withoutRubberduck")
 CHECK_DIR_WITHOUT_ACTIVE_RUBBERDUCK = Path(
     "tests",
+    "excel",
     "check",
     "withoutActiveRubberduckReference",
 )

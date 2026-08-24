@@ -33,7 +33,15 @@ class TestCustomUiExtractor:
     def sut(cls) -> Generator[CustomUiExtractor]:
         """Act first this tests."""
         common_folder = SettingsCommonFolder(
-            Path(Path.cwd(), "tests", "test.xlsm"),
+            Path(
+                Path.cwd(),
+                "tests",
+                "excel",
+                "extract",
+                "with_codes",
+                "v0.0.1-alpha",
+                "test.xlsm",
+            ),
             ".test",
             include_extension=True,
         )
@@ -53,6 +61,10 @@ class TestCustomUiExtractor:
         expected_file = Path(
             Path.cwd(),
             "tests",
+            "excel",
+            "extract",
+            "with_codes",
+            "v0.0.1-alpha",
             "test.xlsm.test",
             "customUI",
             "customUI14.xml",
@@ -63,8 +75,15 @@ class TestCustomUiExtractor:
         """Test that custom_ui_folder is not created
         when no custom UI files are present.
         """  # noqa: D205
-        workbook_path = Path("tests/extract/no_custom_ui.xlsm")
-        common_folder = SettingsCommonFolder(workbook_path, ".VBA")
+        workbook_path = Path(
+            "tests",
+            "excel",
+            "extract",
+            "with_codes",
+            "no_custom_ui",
+            "no_custom_ui.xlsm",
+        )
+        common_folder = SettingsCommonFolder(workbook_path, ".test")
         settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder,
             export_folder="",
@@ -83,8 +102,14 @@ class TestCustomUiExtractor:
         caplog: pytest.LogCaptureFixture,
     ) -> None:
         """Issue121: log output should keep Japanese workbook filename."""
-        workbook_path = Path("tests/fixtures/issue121/Issue121_日本語.xlsm")
-        common_folder = SettingsCommonFolder(workbook_path, ".VBA")
+        workbook_path = Path(
+            "tests",
+            "excel",
+            "fixtures",
+            "issue121",
+            "Issue121_日本語.xlsm",
+        )
+        common_folder = SettingsCommonFolder(workbook_path, ".test")
         settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder,
             export_folder="",
@@ -112,8 +137,14 @@ class TestCustomUiExtractor:
     )
     def test_japanese_filename_is_readable_by_utf8_consumers(self) -> None:
         """Issue121: UTF-8 consumers should read Japanese filename without mojibake."""
-        workbook_path = Path("tests/fixtures/issue121/Issue121_日本語.xlsm")
-        common_folder = SettingsCommonFolder(workbook_path, ".VBA")
+        workbook_path = Path(
+            "tests",
+            "excel",
+            "fixtures",
+            "issue121",
+            "Issue121_日本語.xlsm",
+        )
+        common_folder = SettingsCommonFolder(workbook_path, ".test")
         settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder,
             export_folder="",
@@ -129,8 +160,14 @@ class TestCustomUiExtractor:
                 SettingsFoldersHandleOffice,
             )
 
-            workbook_path = Path("tests/fixtures/issue121/Issue121_日本語.xlsm")
-            common_folder = SettingsCommonFolder(workbook_path, ".VBA")
+            workbook_path = Path(
+                "tests",
+                "excel",
+                "fixtures",
+                "issue121",
+                "Issue121_日本語.xlsm",
+            )
+            common_folder = SettingsCommonFolder(workbook_path, ".test")
             settings = SettingsFoldersHandleOffice(
                 settings_common_folder=common_folder,
                 export_folder="",

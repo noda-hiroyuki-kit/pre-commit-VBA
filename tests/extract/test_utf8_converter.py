@@ -35,7 +35,15 @@ class TestUtf8Converter:
     def sut(cls) -> Generator[Utf8Converter]:
         """Act first this tests."""
         common_folder = SettingsCommonFolder(
-            Path(Path.cwd(), "tests", "test.xlsm"),
+            Path(
+                Path.cwd(),
+                "tests",
+                "excel",
+                "extract",
+                "with_codes",
+                "v0.0.1-alpha",
+                "test.xlsm",
+            ),
             ".test",
             include_extension=True,
         )
@@ -60,6 +68,10 @@ class TestUtf8Converter:
         expected_file = Path(
             Path.cwd(),
             "tests",
+            "excel",
+            "extract",
+            "with_codes",
+            "v0.0.1-alpha",
             "test.xlsm.test",
             "code",
             "excel document modules",
@@ -73,6 +85,10 @@ class TestUtf8Converter:
         expected_file = Path(
             Path.cwd(),
             "tests",
+            "excel",
+            "extract",
+            "with_codes",
+            "v0.0.1-alpha",
             "test.xlsm.test",
             "code",
             "excel document modules",
@@ -86,6 +102,10 @@ class TestUtf8Converter:
         expected_file = Path(
             Path.cwd(),
             "tests",
+            "excel",
+            "extract",
+            "with_codes",
+            "v0.0.1-alpha",
             "test.xlsm.test",
             ".gitignore",
         )
@@ -94,7 +114,15 @@ class TestUtf8Converter:
     def test_not_create_gitignore_file_when_option_disabled(self) -> None:
         """Test that .gitignore is not created when disabled."""
         common_folder = SettingsCommonFolder(
-            Path(Path.cwd(), "tests", "test.xlsm"),
+            Path(
+                Path.cwd(),
+                "tests",
+                "excel",
+                "extract",
+                "with_codes",
+                "v0.0.1-alpha",
+                "test.xlsm",
+            ),
             ".no-gitignore",
             include_extension=True,
         )
@@ -117,6 +145,10 @@ class TestUtf8Converter:
             expected_file = Path(
                 Path.cwd(),
                 "tests",
+                "excel",
+                "extract",
+                "with_codes",
+                "v0.0.1-alpha",
                 "test.xlsm.no-gitignore",
                 ".gitignore",
             )
@@ -132,7 +164,15 @@ class TestUtf8ConverterFolderAnnotation:
     def test_disable_folder_annotation_keeps_file_in_code_root(self) -> None:
         """Disabled folder annotation should keep modules in code root."""
         common_folder = SettingsCommonFolder(
-            Path(Path.cwd(), "tests", "test.xlsm"),
+            Path(
+                Path.cwd(),
+                "tests",
+                "excel",
+                "extract",
+                "with_codes",
+                "v0.0.1-alpha",
+                "test.xlsm",
+            ),
             ".no-annotation",
             include_extension=True,
         )
@@ -155,6 +195,10 @@ class TestUtf8ConverterFolderAnnotation:
             expected_file = Path(
                 Path.cwd(),
                 "tests",
+                "excel",
+                "extract",
+                "with_codes",
+                "v0.0.1-alpha",
                 "test.xlsm.no-annotation",
                 "code",
                 "upperFolderQuotation.bas",

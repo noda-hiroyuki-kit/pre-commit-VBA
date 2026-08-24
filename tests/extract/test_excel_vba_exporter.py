@@ -33,7 +33,15 @@ class TestExcelVbaExporter:
     def sut(cls) -> Generator[ExcelVbaExporter]:
         """Act first this tests."""
         common_folder = SettingsCommonFolder(
-            Path(Path.cwd(), "tests", "test.xlsm"),
+            Path(
+                Path.cwd(),
+                "tests",
+                "excel",
+                "extract",
+                "with_codes",
+                "v0.0.1-alpha",
+                "test.xlsm",
+            ),
             ".test",
             include_extension=True,
         )
@@ -53,6 +61,10 @@ class TestExcelVbaExporter:
         expected_file = Path(
             Path.cwd(),
             "tests",
+            "excel",
+            "extract",
+            "with_codes",
+            "v0.0.1-alpha",
             "test.xlsm.test",
             "export",
             "ThisWorkbook.cls",
@@ -64,6 +76,10 @@ class TestExcelVbaExporter:
         expected_file = Path(
             Path.cwd(),
             "tests",
+            "excel",
+            "extract",
+            "with_codes",
+            "v0.0.1-alpha",
             "test.xlsm.test",
             "export",
             "sheet1.cls",

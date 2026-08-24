@@ -1,0 +1,14 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" xmlns:mso="http://schemas.microsoft.com/office/2009/07/customui" onLoad="CustomUI.OnLoad">
+  <ribbon>
+    <tabs>
+      <tab id="SampleTab" label="Sample Tab" getVisible="CustomUI.SampleTab_getVisible">
+        <group id="SampleGroup" label="Sample Group" centerVertically="true">
+          <box id="SampleBox" boxStyle="horizontal">
+            <editBox id="SampleText" label="Sample Text" sizeString="wwwwwwwwwww" getText="SampleTab.SampleText_getText" onChange="SampleTab.SampleText_onChange"/>
+            <button id="SampleButton" label="Search" imageMso="FindDialog" size="normal" onAction="SampleTab.SampleButton_onAction"/>
+          </box>
+        </group>
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>
