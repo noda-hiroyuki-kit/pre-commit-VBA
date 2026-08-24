@@ -1,7 +1,7 @@
 # Copyright (c) 2026 Noda Hiroyuki
 """pre-commit-vba script.
 
-extract code files from excel workbook/word document with codes.
+Extract VBA code from Excel workbooks, Word documents, and PowerPoint presentations.
 """
 
 # /// script
@@ -365,11 +365,13 @@ def has_vba_code(office_file_path: Path) -> bool:
 
 
 def is_excel_file(office_file_path: Path) -> bool:
-    """Check if a path has a supported Excel VBA file extension."""
+    """Check if a path has a supported Excel VBA file extension.
+
+    Legacy binary `.xls` files are not supported because they are OLE compound
+    documents and do not expose a VBA project ZIP stream.
+    """
     return office_file_path.suffix.lower() in {
-        ".xls",
         ".xlsm",
-        ".xlsb",
         ".xltm",
         ".xlam",
     }
@@ -918,6 +920,12 @@ def office_file_version_factory(office_file_path: Path) -> OfficeFileVersion:
 def get_office_file_version(office_file_path: Path) -> str:
     """Get the version of an Office file."""
     return office_file_version_factory(office_file_path).version
+
+
+SettingsFoldersHandleExcel = SettingsFoldersHandleOffice
+SettingsOptionsHandleExcel = SettingsOptionsHandleOffice
+ExcelCustomUiExtractor = CustomUiExtractor
+get_workbook_version = get_office_file_version
 
 
 VBA_CHUNK_SIGNATURE = 0b011

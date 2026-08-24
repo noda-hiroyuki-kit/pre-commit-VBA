@@ -59,10 +59,10 @@ uv run pre_commit_vba.py check
 
 - Constants: VBE の component type 定数を保持
 - SettingsCommonFolder: ブックごとの抽出先フォルダ名を決定
-- SettingsFoldersHandleExcel: export/customUI/code の各フォルダパスを管理
-- SettingsOptionsHandleExcel: extract 時のオプションフラグを保持
+- SettingsFoldersHandleOffice: export/customUI/code の各フォルダパスを管理
+- SettingsOptionsHandleOffice: extract 時のオプションフラグを保持
 - ExcelVbaExporter: COM経由で VBA コンポーネントを export
-- ExcelCustomUiExtractor: zipから customUI XML を抽出
+- CustomUiExtractor: zipから customUI XML を抽出
 - Utf8Converter: cp932 -> UTF-8 変換, 行末統一, フォルダ注釈反映
 - ITrailingWhiteSpaceRemover 系: メタデータ部分の trailing white space 処理
 

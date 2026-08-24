@@ -198,7 +198,7 @@ class TestIsOfficeFile:
 
     @pytest.mark.parametrize(
         "suffix",
-        [".xls", ".xlsm", ".xlsb", ".XLSM", ".XLSB", ".xltm", ".xlam"],
+        [".XLTM", ".xlsm", ".XLSM", ".xltm", ".xlam"],
     )
     def test_returns_true_for_supported_excel_extension(self, suffix: str) -> None:
         """Supported Excel extensions should be recognized regardless of case."""
@@ -235,10 +235,31 @@ class TestIsOfficeFile:
         assert pre_commit_vba.is_powerpoint_file(Path("presentation.ppam")) is False  # noqa: S101
         assert pre_commit_vba.is_office_file(Path("presentation.ppam")) is False  # noqa: S101
 
+    def test_returns_false_for_legacy_xls_extension(self) -> None:
+        """Legacy binary XLS should not be advertised as supported VBA input."""
+        assert pre_commit_vba.is_excel_file(Path("workbook.xls")) is False  # noqa: S101
+        assert pre_commit_vba.is_office_file(Path("workbook.xls")) is False  # noqa: S101
+
     @pytest.mark.parametrize("suffix", [".xlsx", ".docx", ".csv", ".xlsm.bak", ""])
     def test_returns_false_for_unsupported_extension(self, suffix: str) -> None:
         """Unsupported extensions should not be recognized as Office files."""
         assert pre_commit_vba.is_office_file(Path(f"workbook{suffix}")) is False  # noqa: S101
+
+    def test_legacy_excel_api_aliases_remain_available(self) -> None:
+        """Older public names should remain importable as compatibility aliases."""
+        assert (  # noqa: S101
+            pre_commit_vba.SettingsFoldersHandleExcel
+            is pre_commit_vba.SettingsFoldersHandleOffice
+        )
+        assert (  # noqa: S101
+            pre_commit_vba.SettingsOptionsHandleExcel
+            is pre_commit_vba.SettingsOptionsHandleOffice
+        )
+        assert pre_commit_vba.ExcelCustomUiExtractor is pre_commit_vba.CustomUiExtractor  # noqa: S101
+        assert (  # noqa: S101
+            pre_commit_vba.get_workbook_version
+            is pre_commit_vba.get_office_file_version
+        )
 
 
 class TestWordDocumentExtraction:
@@ -1111,6 +1132,8 @@ class TestExtractCommandExistenceFiles:
             _workbook.Close(SaveChanges=False)
             _excel_instance.Quit()
             shutil.rmtree(generated_folder, ignore_errors=True)
+            shutil.rmtree(Path(extract_folder, "test.xltm"), ignore_errors=True)
+            shutil.rmtree(Path(extract_folder, "test.xlam"), ignore_errors=True)
 
     @classmethod
     def sut(cls) -> CliRunner:

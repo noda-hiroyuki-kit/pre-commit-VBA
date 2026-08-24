@@ -59,10 +59,10 @@ uv run pre_commit_vba.py check
 
 - Constants: Holds VBE component type constants
 - SettingsCommonFolder: Determines the extraction destination folder name per workbook
-- SettingsFoldersHandleExcel: Manages folder paths for export/customUI/code
-- SettingsOptionsHandleExcel: Holds option flags used by `extract`
+- SettingsFoldersHandleOffice: Manages folder paths for export/customUI/code
+- SettingsOptionsHandleOffice: Holds option flags used by `extract`
 - ExcelVbaExporter: Exports VBA components via COM
-- ExcelCustomUiExtractor: Extracts customUI XML from zip
+- CustomUiExtractor: Extracts customUI XML from zip
 - Utf8Converter: Handles cp932 to UTF-8 conversion, line-ending normalization, and folder-annotation reflection
 - ITrailingWhiteSpaceRemover family: Handles trailing whitespace in metadata sections
 
