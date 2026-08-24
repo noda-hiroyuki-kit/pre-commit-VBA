@@ -935,6 +935,20 @@ class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
                 ),
                 ignore_errors=True,
             )
+            shutil.rmtree(
+                Path(
+                    test_target_path,
+                    "test.xltm.test",
+                ),
+                ignore_errors=True,
+            )
+            shutil.rmtree(
+                Path(
+                    test_target_path,
+                    "test.xlam.test",
+                ),
+                ignore_errors=True,
+            )
         return process, stdout_data
 
     def test_process_return_code_is_zero(
