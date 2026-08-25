@@ -39,6 +39,9 @@ icon: lucide/package-open
               - id: check-office-file-integrity
         ```
 
+        !!! info
+            `check-office-file-integrity` は旧 `check-excel-book-version` の後継IDです（`check-excel-book-version` は非推奨）.
+
 ### `pre_commit_vba.py` を直接使う
 
 1. `vba_root_folder` へ移動します.

@@ -39,6 +39,9 @@ Install `mise` using the [official instructions](https://mise.jdx.dev/getting-st
               - id: check-office-file-integrity
         ```
 
+        !!! info
+            `check-office-file-integrity` is the successor of the deprecated `check-excel-book-version` id.
+
 ### Use `pre_commit_vba.py` directly
 
 1. Move to `vba_root_folder`.
