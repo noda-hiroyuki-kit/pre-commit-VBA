@@ -1132,8 +1132,8 @@ class TestExtractCommandExistenceFiles:
             _workbook.Close(SaveChanges=False)
             _excel_instance.Quit()
             shutil.rmtree(generated_folder, ignore_errors=True)
-            shutil.rmtree(Path(extract_folder, "test.xltm"), ignore_errors=True)
-            shutil.rmtree(Path(extract_folder, "test.xlam"), ignore_errors=True)
+            shutil.rmtree(Path(extract_folder, "test.xltm.test"), ignore_errors=True)
+            shutil.rmtree(Path(extract_folder, "test.xlam.test"), ignore_errors=True)
 
     @classmethod
     def sut(cls) -> CliRunner:
