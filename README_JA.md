@@ -21,7 +21,7 @@ Pythonのスクリプトしても利用可能です.
     rev: v0.3.14
     hooks:
       - id: extract-vba-code
-      - id: check-excel-book-version
+      - id: check-office-file-integrity
 ```
 
 ### `pre_commit_vba.py`をコマンドで走らせて使用
@@ -73,7 +73,7 @@ Version check passed.
             rev: v0.3.14
             hooks:
               - id: extract-vba-code
-              - id: check-excel-book-version
+              - id: check-office-file-integrity
         ```
 ### `pre_commit_vba.py`をコマンドで走らせて使用
 

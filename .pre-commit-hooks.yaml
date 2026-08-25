@@ -5,12 +5,20 @@
   entry: pre-commit-vba
   args: [extract]
   language: python
-  files: \.xlsm$|\.xlsb$|\.xls$|\.xltm$|\.xlam$
-  exclude: ^(?!.*\.(xlsm|xlsb|xls|xltm|xlam)$).*$
+  files: \.xlsm$|\.xltm$|\.xlam$|\.docm$|\.dotm$|\.pptm$|\.potm$
+  exclude: ^(?!.*\.(xlsm|xltm|xlam|docm|dotm|pptm|potm)$).*$
+  pass_filenames: false
+- id: check-office-file-integrity
+  name: Check Office file integrity
+  description: Checks Excel/Word/PowerPoint file version against the current branch name and detects Rubberduck Addin references.
+  entry: pre-commit-vba
+  args: [check]
+  language: python
+  always_run: true
   pass_filenames: false
 - id: check-excel-book-version
-  name: Check Excel book version
-  description: Checks the version of Excel books to ensure compatibility with the current branch name.
+  name: "[DEPRECATED] Check Excel book version -> use check-office-file-integrity instead"
+  description: Deprecated. Use check-office-file-integrity instead. Checks the version of Excel books to ensure compatibility with the current branch name.
   entry: pre-commit-vba
   args: [check]
   language: python

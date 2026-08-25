@@ -36,7 +36,7 @@ icon: lucide/package-open
             rev: v{{project_version}}
             hooks:
               - id: extract-vba-code
-              - id: check-excel-book-version
+              - id: check-office-file-integrity
         ```
 
 ### `pre_commit_vba.py` を直接使う

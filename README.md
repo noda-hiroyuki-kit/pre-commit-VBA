@@ -21,7 +21,7 @@ Add the following to your `.pre-commit-config.yaml`:
     rev: v0.3.14
     hooks:
       - id: extract-vba-code
-      - id: check-excel-book-version
+      - id: check-office-file-integrity
 ```
 
 ### Usage by running `pre_commit_vba.py` as a command
@@ -72,7 +72,7 @@ If you can use `uv`, `mise` is not required.
             rev: v0.3.14
             hooks:
               - id: extract-vba-code
-              - id: check-excel-book-version
+              - id: check-office-file-integrity
         ```
 ### Usage by running `pre_commit_vba.py` as a command
 

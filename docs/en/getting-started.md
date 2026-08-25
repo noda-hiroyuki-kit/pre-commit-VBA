@@ -36,7 +36,7 @@ Install `mise` using the [official instructions](https://mise.jdx.dev/getting-st
             rev: v{{project_version}}
             hooks:
               - id: extract-vba-code
-              - id: check-excel-book-version
+              - id: check-office-file-integrity
         ```
 
 ### Use `pre_commit_vba.py` directly
