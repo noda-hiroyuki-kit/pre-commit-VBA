@@ -56,7 +56,7 @@ Install `mise` using the [official instructions](https://mise.jdx.dev/getting-st
 
 ### Use as a pre-commit hook
 
-1. Stage your macro workbook (for example, `sample-app.xlsm`).
+1. Stage your macro office file (for example, `sample-app.xlsm`).
     ```console
     git add sample-app.xlsm
     ```  

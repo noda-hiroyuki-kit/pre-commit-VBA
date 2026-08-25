@@ -36,7 +36,7 @@ uv run pre-commit install
             rev: v{{project_version}}
             hooks:
               - id: extract-vba-code
-              - id: check-excel-book-version
+              - id: check-office-file-integrity
           - repo: https://github.com/streetsidesoftware/cspell-cli
             rev: v10.0.1
             hooks:

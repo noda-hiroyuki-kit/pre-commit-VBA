@@ -4,7 +4,7 @@ icon: lucide/house
 
 # pre-commit-vba
 
-`pre-commit-vba` is a Python tool that extracts VBA code from Excel workbooks to make it easier to manage with Git.
+`pre-commit-vba` is a Python tool that extracts VBA code from Office files to make it easier to manage with Git.
 
 ## Language
 

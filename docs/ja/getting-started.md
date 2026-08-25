@@ -56,7 +56,7 @@ icon: lucide/package-open
 
 ### pre-commit フックとして使う
 
-1. マクロブック(例: sample-app.xlsm)をステージングします.
+1. マクロ付きOfficeファイル(例: sample-app.xlsm)をステージングします.
     ```console
     git add sample-app.xlsm
     ```  

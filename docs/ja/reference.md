@@ -49,16 +49,16 @@ uv run pre_commit_vba.py check
 1. 現在ブランチ名を取得します.
 2. ブランチ名が `release/v...` または `hotfix/v...` 以外ならログを出して正常終了します.
 3. セマンティックバージョンを抽出できない場合はエラー終了します.
-4. 対象ブックごとに以下を検査します.
+4. 対象ファイルごとに以下を検査します.
     - BuiltinDocumentProperties("Document version") とブランチ名 (`v{semver}`) の一致
     - Rubberduck Addin 参照設定がないか.
 5. 不一致または参照検出時はエラー終了します.
-6. 対象ブックが存在しない場合は警告ログで正常終了します.
+6. 対象ファイルが存在しない場合は警告ログで正常終了します.
 
 ## 主要クラス
 
 - Constants: VBE の component type 定数を保持
-- SettingsCommonFolder: ブックごとの抽出先フォルダ名を決定
+- SettingsCommonFolder: ファイルごとの抽出先フォルダ名を決定
 - SettingsFoldersHandleOffice: export/customUI/code の各フォルダパスを管理
 - SettingsOptionsHandleOffice: extract 時のオプションフラグを保持
 - ExcelVbaExporter: COM経由で VBA コンポーネントを export
