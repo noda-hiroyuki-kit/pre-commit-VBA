@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Noda Hiroyuki
 """Tests for Rubberduck Addin reference detection in check command."""
 
 from pathlib import Path
@@ -14,11 +15,17 @@ from src.pre_commit_vba.pre_commit_vba import (
 runner = CliRunner()
 
 RUBBERDUCK_WORKBOOK = Path(
-    Path.cwd(), "tests", "check", "withRubberduck", "WithRubberduckAddinReferences.xlsm"
+    Path.cwd(),
+    "tests",
+    "excel",
+    "check",
+    "withRubberduck",
+    "WithRubberduckAddinReferences.xlsm",
 )
 NORMAL_WORKBOOK = Path(
     Path.cwd(),
     "tests",
+    "excel",
     "check",
     "withoutRubberduck",
     "WithoutRubberduckAddinReferences.xlsm",
@@ -26,14 +33,18 @@ NORMAL_WORKBOOK = Path(
 WITHOUT_ACTIVE_RUBBERDUCK_WORKBOOK = Path(
     Path.cwd(),
     "tests",
+    "excel",
     "check",
     "withoutActiveRubberduckReference",
     "WithoutActiveRubberduckAddinReference.xlsm",
 )
-CHECK_DIR_WITH_RUBBERDUCK = Path("tests", "check", "withRubberduck")
-CHECK_DIR_WITHOUT_RUBBERDUCK = Path("tests", "check", "withoutRubberduck")
+CHECK_DIR_WITH_RUBBERDUCK = Path("tests", "excel", "check", "withRubberduck")
+CHECK_DIR_WITHOUT_RUBBERDUCK = Path("tests", "excel", "check", "withoutRubberduck")
 CHECK_DIR_WITHOUT_ACTIVE_RUBBERDUCK = Path(
-    "tests", "check", "withoutActiveRubberduckReference"
+    "tests",
+    "excel",
+    "check",
+    "withoutActiveRubberduckReference",
 )
 
 
@@ -71,7 +82,7 @@ class TestCheckCommandRubberduckAddin:
             ),
             mock.patch.object(
                 pre_commit_vba,
-                "get_workbook_version",
+                "get_office_file_version",
                 return_value="v0.0.1-alpha",
             ),
         ):
@@ -94,7 +105,7 @@ class TestCheckCommandRubberduckAddin:
             ),
             mock.patch.object(
                 pre_commit_vba,
-                "get_workbook_version",
+                "get_office_file_version",
                 return_value="v0.0.1-alpha",
             ),
         ):
@@ -117,7 +128,7 @@ class TestCheckCommandRubberduckAddin:
             ),
             mock.patch.object(
                 pre_commit_vba,
-                "get_workbook_version",
+                "get_office_file_version",
                 return_value="v0.0.1-alpha",
             ),
         ):

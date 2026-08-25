@@ -24,11 +24,11 @@ uv run pre_commit_vba.py extract
 ### 処理
 
 1. 実行前のステージング状態を取得します.
-2. `*.xls*` を走査します. 以下を除外しています.
+2. 対応する Office ファイルを走査します. 以下を除外しています.
     - `~$` で始まる一時ファイル
-    - VBAを含まないブック (zip内に `xl/vbaProject.bin` がない)
-3. ブックごとに保管フォルダを再作成します. (既にある場合は削除する.)
-4. Excel COM で VBA モジュールを抽出します.
+    - VBAを含まない Office ファイル
+3. Office ファイルごとに保管フォルダを再作成します. (既にある場合は削除する.)
+4. 対応する Office COM アプリケーションで VBA モジュールを抽出します.
 5. Custom UI XML (`customUI/customUI14.xml`, `customUI/customUI.xml`) を抽出します.
 6. 抽出したファイルを cp932 -> UTF-8 へ変換し, 行末を `LF` に統一します.
 7. フォームモジュールの先頭部メタデータの行末空白を除去します.
@@ -50,7 +50,7 @@ uv run pre_commit_vba.py check
 2. ブランチ名が `release/v...` または `hotfix/v...` 以外ならログを出して正常終了します.
 3. セマンティックバージョンを抽出できない場合はエラー終了します.
 4. 対象ブックごとに以下を検査します.
-    - Excel BuiltinDocumentProperties("Document version") とブランチ名 (`v{semver}`) の一致
+    - BuiltinDocumentProperties("Document version") とブランチ名 (`v{semver}`) の一致
     - Rubberduck Addin 参照設定がないか.
 5. 不一致または参照検出時はエラー終了します.
 6. 対象ブックが存在しない場合は警告ログで正常終了します.
@@ -59,10 +59,12 @@ uv run pre_commit_vba.py check
 
 - Constants: VBE の component type 定数を保持
 - SettingsCommonFolder: ブックごとの抽出先フォルダ名を決定
-- SettingsFoldersHandleExcel: export/customUI/code の各フォルダパスを管理
-- SettingsOptionsHandleExcel: extract 時のオプションフラグを保持
+- SettingsFoldersHandleOffice: export/customUI/code の各フォルダパスを管理
+- SettingsOptionsHandleOffice: extract 時のオプションフラグを保持
 - ExcelVbaExporter: COM経由で VBA コンポーネントを export
-- ExcelCustomUiExtractor: zipから customUI XML を抽出
+- WordVbaExporter: COM経由で VBA コンポーネントを export
+- PowerPointVbaExporter: COM経由で VBA コンポーネントを export
+- CustomUiExtractor: zipから customUI XML を抽出
 - Utf8Converter: cp932 -> UTF-8 変換, 行末統一, フォルダ注釈反映
 - ITrailingWhiteSpaceRemover 系: メタデータ部分の trailing white space 処理
 

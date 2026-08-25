@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Noda Hiroyuki
 """Zensical macros for syncing docs version with pyproject metadata."""
 
 import tomllib

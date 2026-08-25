@@ -1,4 +1,5 @@
-"""Tests for ExcelVbComponent class."""
+# Copyright (c) 2026 Noda Hiroyuki
+"""Tests for ExcelVbaExporter class."""
 
 from __future__ import annotations
 
@@ -16,12 +17,13 @@ from src.pre_commit_vba import pre_commit_vba
 from src.pre_commit_vba.pre_commit_vba import (
     ExcelVbaExporter,
     SettingsCommonFolder,
-    SettingsFoldersHandleExcel,
+    SettingsFoldersHandleOffice,
 )
 
 
 @pytest.mark.skipif(
-    pre_commit_vba.DispatchEx is None, reason="pywin32 is only available on Windows"
+    pre_commit_vba.DispatchEx is None,
+    reason="pywin32 is only available on Windows",
 )
 class TestExcelVbaExporter:
     """Tests for ExcelVbaExporter class."""
@@ -31,9 +33,19 @@ class TestExcelVbaExporter:
     def sut(cls) -> Generator[ExcelVbaExporter]:
         """Act first this tests."""
         common_folder = SettingsCommonFolder(
-            Path(Path.cwd(), "tests", "test.xlsm"), ".test", include_extension=True
+            Path(
+                Path.cwd(),
+                "tests",
+                "excel",
+                "extract",
+                "with_codes",
+                "v0.0.1-alpha",
+                "test.xlsm",
+            ),
+            ".test",
+            include_extension=True,
         )
-        settings = SettingsFoldersHandleExcel(
+        settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder,
             export_folder="export",
             custom_ui_folder="",
@@ -47,13 +59,29 @@ class TestExcelVbaExporter:
     def test_exists_this_workbook_file(self, sut: ExcelVbaExporter) -> None:  # noqa: ARG002
         """Test that ThisWorkbook component file exists."""
         expected_file = Path(
-            Path.cwd(), "tests", "test.xlsm.test", "export", "ThisWorkbook.cls"
+            Path.cwd(),
+            "tests",
+            "excel",
+            "extract",
+            "with_codes",
+            "v0.0.1-alpha",
+            "test.xlsm.test",
+            "export",
+            "ThisWorkbook.cls",
         )
         assert Path.is_file(expected_file)  # noqa: S101
 
     def test_exists_sheet1_file(self, sut: ExcelVbaExporter) -> None:  # noqa: ARG002
         """Test that Sheet1 component file exists."""
         expected_file = Path(
-            Path.cwd(), "tests", "test.xlsm.test", "export", "sheet1.cls"
+            Path.cwd(),
+            "tests",
+            "excel",
+            "extract",
+            "with_codes",
+            "v0.0.1-alpha",
+            "test.xlsm.test",
+            "export",
+            "sheet1.cls",
         )
         assert Path.is_file(expected_file)  # noqa: S101
