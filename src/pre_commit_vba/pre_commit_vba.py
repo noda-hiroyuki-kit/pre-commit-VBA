@@ -1088,7 +1088,7 @@ def version_callback(value: bool) -> None:  # noqa: FBT001
 
 
 @app.command("extract")
-def extract_vba_code_from_workbooks(  # noqa: PLR0913, C901
+def extract_vba_code_from_office_files(  # noqa: PLR0913, C901
     *,
     target_path: Annotated[str, typer.Option()] = ".",
     folder_suffix: Annotated[str, typer.Option()] = ".VBA",
@@ -1112,7 +1112,7 @@ def extract_vba_code_from_workbooks(  # noqa: PLR0913, C901
         typer.Option("--include-extension/--exclude-extension"),
     ] = True,
 ) -> None:
-    """Extract VBA code from Excel workbooks."""
+    """Extract VBA code from Office files."""
     logger.debug("Target path: %s", str(Path(target_path).resolve()).lower())
     logger.debug("folder-suffix: %s", folder_suffix)
     logger.debug("export-folder: %s", export_folder)
@@ -1185,7 +1185,7 @@ def check(
         typer.Option("--version", callback=version_callback, is_eager=True),
     ] = None,
 ) -> None:
-    """Check between workbook version and repository name."""
+    """Check Office file version and detect Rubberduck Addin references."""
     try:
         branch_version = get_version_from_branch_name()
         exist_office_file: bool = False
@@ -1221,6 +1221,9 @@ def check(
         logger.exception("Invalid semantic version in branch name")
         sys.exit(1)
     logger.info("Version check passed.")
+
+
+extract_vba_code_from_workbooks = extract_vba_code_from_office_files
 
 
 if __name__ == "__main__":

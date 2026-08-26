@@ -36,8 +36,11 @@ icon: lucide/package-open
             rev: v{{project_version}}
             hooks:
               - id: extract-vba-code
-              - id: check-excel-book-version
+              - id: check-office-file-integrity
         ```
+
+        !!! info
+            `check-office-file-integrity` は旧 `check-excel-book-version` の後継IDです（`check-excel-book-version` は非推奨）.
 
 ### `pre_commit_vba.py` を直接使う
 
@@ -56,7 +59,7 @@ icon: lucide/package-open
 
 ### pre-commit フックとして使う
 
-1. マクロブック(例: sample-app.xlsm)をステージングします.
+1. マクロ付きOfficeファイル(例: sample-app.xlsm)をステージングします.
     ```console
     git add sample-app.xlsm
     ```  

@@ -36,8 +36,11 @@ Install `mise` using the [official instructions](https://mise.jdx.dev/getting-st
             rev: v{{project_version}}
             hooks:
               - id: extract-vba-code
-              - id: check-excel-book-version
+              - id: check-office-file-integrity
         ```
+
+        !!! info
+            `check-office-file-integrity` is the successor of the deprecated `check-excel-book-version` id.
 
 ### Use `pre_commit_vba.py` directly
 
@@ -56,7 +59,7 @@ Install `mise` using the [official instructions](https://mise.jdx.dev/getting-st
 
 ### Use as a pre-commit hook
 
-1. Stage your macro workbook (for example, `sample-app.xlsm`).
+1. Stage your macro-enabled Office file (for example, `sample-app.xlsm`).
     ```console
     git add sample-app.xlsm
     ```  

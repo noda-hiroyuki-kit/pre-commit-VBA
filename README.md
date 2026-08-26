@@ -9,7 +9,7 @@
 
 ## Overview
 
-This is a pre-commit hook that extracts VBA code from Excel files to manage Excel VBA code with git.  
+This is a pre-commit hook that extracts VBA code from Office files to manage VBA code with git.  
 It can also be used as a Python script.
 
 ### Usage as a pre-commit hook
@@ -21,7 +21,7 @@ Add the following to your `.pre-commit-config.yaml`:
     rev: v0.3.14
     hooks:
       - id: extract-vba-code
-      - id: check-excel-book-version
+      - id: check-office-file-integrity
 ```
 
 ### Usage by running `pre_commit_vba.py` as a command
@@ -30,13 +30,13 @@ After installing uv,
 ```console
 uv run pre_commit_vba.py extract
 ```
-will output the code from Excel files in UTF-8 format.
+will output the code from Office files in UTF-8 format.
 
 Also, when working on a Git release branch,
 ```console
 uv run pre_commit_vba.py check
 ```
-will compare the document version of the Excel file and the branch name. If they match, it will output:
+will compare the document version of the Office file and the branch name. If they match, it will output:
 ```console
 Version check passed.
 ```
@@ -72,7 +72,7 @@ If you can use `uv`, `mise` is not required.
             rev: v0.3.14
             hooks:
               - id: extract-vba-code
-              - id: check-excel-book-version
+              - id: check-office-file-integrity
         ```
 ### Usage by running `pre_commit_vba.py` as a command
 
@@ -140,12 +140,12 @@ $ [OPTIONS] COMMAND [ARGS]...
 
 **Commands**:
 
-* `extract`: Extract VBA code from Excel workbooks.
-* `check`: Check between workbook version and...
+* `extract`: Extract VBA code from Office files.
+* `check`: Check Office file version and detect...
 
 ## `extract`
 
-Extract VBA code from Excel workbooks.
+Extract VBA code from Office files.
 
 **Usage**:
 
@@ -155,20 +155,20 @@ $ extract [OPTIONS]
 
 **Options**:
 
-* `--target-path TEXT`: [default: .]
-* `--folder-suffix TEXT`: [default: .VBA]
-* `--export-folder TEXT`: [default: export]
-* `--custom-ui-folder TEXT`: [default: customUI]
-* `--code-folder TEXT`: [default: code]
+* `--target-path <str>`: [default: .]
+* `--folder-suffix <str>`: [default: .VBA]
+* `--export-folder <str>`: [default: export]
+* `--custom-ui-folder <str>`: [default: customUI]
+* `--code-folder <str>`: [default: code]
 * `--version`
 * `--enable-folder-annotation / --disable-folder-annotation`: [default: enable-folder-annotation]
-* `--create-gitignore / --not-create-gitignore`: [default: create-gitignore]  
+* `--create-gitignore / --not-create-gitignore`: [default: create-gitignore]
 * `--include-extension / --exclude-extension`: [default: include-extension]
 * `--help`: Show this message and exit.
 
 ## `check`
 
-Check between workbook version and repository name.
+Check Office file version and detect Rubberduck Addin references.
 
 **Usage**:
 
@@ -178,9 +178,10 @@ $ check [OPTIONS]
 
 **Options**:
 
-* `--target-path TEXT`: [default: .]
+* `--target-path <str>`: [default: .]
 * `--version`
 * `--help`: Show this message and exit.
+
 
 ## Community
 

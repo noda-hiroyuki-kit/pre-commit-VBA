@@ -7,7 +7,7 @@ icon: lucide/house
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/noda-hiroyuki-kit/pre-commit-VBA/blob/main/LICENSE)
 
-`pre-commit-vba` is a Python tool that extracts VBA code from Excel workbooks to make source code management with Git easier.
+`pre-commit-vba` is a Python tool that extracts VBA code from Office files to make source code management with Git easier.
 
 ## What you can do with this documentation
 
@@ -20,6 +20,6 @@ icon: lucide/house
 
 ## Overview
 
-This project improves the efficiency of Excel VBA source code management.  
+This project improves the efficiency of VBA source code management.  
 It can run as a pre-commit hook.  
 It can automatically execute code extraction and release-time validation.

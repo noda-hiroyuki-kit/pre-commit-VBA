@@ -9,7 +9,7 @@ icon: lucide/sliders-horizontal
 ## コマンド
 
 - `extract`: VBA コードを抽出します.
-- `check`: ブランチ名とブックのバージョンを照合します.
+- `check`: ブランチ名とOfficeファイルのバージョンを照合します.
 
 ## 規定値
 
@@ -36,7 +36,7 @@ icon: lucide/sliders-horizontal
 
 ### --target-path
 
-- 何をする: Excelブックを探索するフォルダを指定します.
+- 何をする: Officeファイルを探索するフォルダを指定します.
 - いつ使う: リポジトリのルート以外にブックを置いているとき. (テストに利用するブックなど)
 - 規定値: .
 
@@ -113,10 +113,10 @@ uv run pre_commit_vba.py extract --not-create-gitignore
 
 ### --include-extension / --exclude-extension
 
-- 何をする: 出力フォルダ名に元ブックの拡張子を含めるかを切り替えます.
+- 何をする: 出力フォルダ名に元ファイルの拡張子を含めるかを切り替えます.
 - いつ使う:
-    - 含める: target-folderに `app.xlsm`, `app.xlam` のように拡張子のみが異なるブックが複数あるとき.
-    - 除外する: target-folderに拡張子ちがいのブックがないとき.
+    - 含める: target-folderに `app.xlsm`, `app.xlam` のように拡張子のみが異なるOfficeファイルが複数あるとき.
+    - 除外する: target-folderに拡張子ちがいのファイルがないとき.
 - 規定値: --include-extension（含める）
 
 ```console
@@ -137,8 +137,8 @@ uv run pre_commit_vba.py extract --version
 
 ### --target-path
 
-- 何をする: チェック対象のExcelブック探索ディレクトリを指定します.
-- いつ使う: リリース対象ブックがサブフォルダにあるとき.
+- 何をする: チェック対象のOfficeファイル探索ディレクトリを指定します.
+- いつ使う: リリース対象ファイルがサブフォルダにあるとき.
 - 規定値: .
 
 ```console
