@@ -37,7 +37,7 @@ If you only want to see the specification list, refer to [Reference](reference.m
 ### --target-path
 
 - What it does: Specifies the folder to search for Office files.
-- When to use it: When office files are stored outside the repository root (for example, test workbooks).
+- When to use it: When Office files are stored outside the repository root (for example, test workbooks).
 - Default: `.`
 
 ```console
@@ -115,8 +115,8 @@ uv run pre_commit_vba.py extract --not-create-gitignore
 
 - What it does: Toggles whether to include the original file extension in the output folder name.
 - When to use it:
-    - Include: When multiple office files in the target folder differ only by extension, such as `app.xlsm` and `app.xlam`.
-    - Exclude: When there are no same-name office files with different extensions in the target folder.
+    - Include: When multiple Office files in the target folder differ only by extension, such as `app.xlsm` and `app.xlam`.
+    - Exclude: When there are no same-name Office files with different extensions in the target folder.
 - Default: `--include-extension` (include)
 
 ```console
@@ -138,7 +138,7 @@ uv run pre_commit_vba.py extract --version
 ### --target-path
 
 - What it does: Specifies the directory to search for Office files to check.
-- When to use it: When release-target office files are in a subfolder.
+- When to use it: When release-target Office files are in a subfolder.
 - Default: `.`
 
 ```console

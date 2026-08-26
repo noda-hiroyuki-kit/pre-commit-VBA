@@ -1185,7 +1185,7 @@ def check(
         typer.Option("--version", callback=version_callback, is_eager=True),
     ] = None,
 ) -> None:
-    """Check office file version and detect Rubberduck Addin references."""
+    """Check Office file version and detect Rubberduck Addin references."""
     try:
         branch_version = get_version_from_branch_name()
         exist_office_file: bool = False

@@ -142,7 +142,7 @@ $ [OPTIONS] COMMAND [ARGS]...
 **Commands**:
 
 * `extract`: Extract VBA code from Office files.
-* `check`: Check office file version and detect...
+* `check`: Check Office file version and detect...
 
 ## `extract`
 
@@ -169,7 +169,7 @@ $ extract [OPTIONS]
 
 ## `check`
 
-Check office file version and detect Rubberduck Addin references.
+Check Office file version and detect Rubberduck Addin references.
 
 **Usage**:
 
