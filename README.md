@@ -18,7 +18,7 @@ Add the following to your `.pre-commit-config.yaml`:
 
 ```
   - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
-    rev: v0.3.14
+    rev: v0.4.0
     hooks:
       - id: extract-vba-code
       - id: check-office-file-integrity
@@ -69,7 +69,7 @@ If you can use `uv`, `mise` is not required.
         ---
         repos:
           - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
-            rev: v0.3.14
+            rev: v0.4.0
             hooks:
               - id: extract-vba-code
               - id: check-office-file-integrity

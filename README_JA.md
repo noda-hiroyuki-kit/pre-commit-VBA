@@ -18,7 +18,7 @@ Pythonのスクリプトしても利用可能です.
 
 ```
   - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
-    rev: v0.3.14
+    rev: v0.4.0
     hooks:
       - id: extract-vba-code
       - id: check-office-file-integrity
@@ -70,7 +70,7 @@ Version check passed.
         ---
         repos:
           - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
-            rev: v0.3.14
+            rev: v0.4.0
             hooks:
               - id: extract-vba-code
               - id: check-office-file-integrity

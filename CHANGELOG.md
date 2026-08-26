@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-08-26
+
 ### Added
 
 - Add VBA detection and extraction support for Word documents (`.docm`, `.dotm`) and PowerPoint presentations (`.pptm`, `.potm`). ([#139])  
@@ -327,7 +329,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release as first version
 
-[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.14...HEAD
+[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.14...v0.4.0
 [0.3.14]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.13...v0.3.14
 [0.3.13]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.12...v0.3.13
 [0.3.12]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.11...v0.3.12
