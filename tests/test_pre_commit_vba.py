@@ -260,6 +260,10 @@ class TestIsOfficeFile:
             pre_commit_vba.get_workbook_version
             is pre_commit_vba.get_office_file_version
         )
+        assert (  # noqa: S101
+            pre_commit_vba.extract_vba_code_from_workbooks
+            is pre_commit_vba.extract_vba_code_from_office_files
+        )
 
 
 class TestWordDocumentExtraction:

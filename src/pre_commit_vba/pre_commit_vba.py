@@ -1223,5 +1223,8 @@ def check(
     logger.info("Version check passed.")
 
 
+extract_vba_code_from_workbooks = extract_vba_code_from_office_files
+
+
 if __name__ == "__main__":
     app()
