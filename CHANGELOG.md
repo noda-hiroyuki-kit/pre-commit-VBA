@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Rename the hook id from `check-excel-book-version` to `check-office-file-integrity` and keep the former id as a deprecated compatibility alias. ([#153])  
+  hook id を `check-excel-book-version` から `check-office-file-integrity` に変更し, 旧 id は非推奨の互換 alias として維持.
 - Raise the minimum `typer` requirement from 0.27.0 to 0.27.1. ([#147])  
   `typer` の最小要件を 0.27.0 から 0.27.1 へ引き上げ.
 - Bump minimum `pre-commit` requirement from 4.6.1 to 4.6.2. ([#149])  
@@ -378,3 +380,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#150]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/150
 [#151]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/151
 [#152]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/152
+[#153]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/153
