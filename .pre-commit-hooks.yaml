@@ -5,8 +5,7 @@
   entry: pre-commit-vba
   args: [extract]
   language: python
-  files: \.xlsm$|\.xltm$|\.xlam$|\.docm$|\.dotm$|\.pptm$|\.potm$
-  exclude: ^(?!.*\.(xlsm|xltm|xlam|docm|dotm|pptm|potm)$).*$
+  files: (?i)\.(xlsm|xltm|xlam|docm|dotm|pptm|potm)$
   pass_filenames: false
 - id: check-office-file-integrity
   name: Check Office file integrity
