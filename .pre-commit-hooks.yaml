@@ -9,7 +9,7 @@
   pass_filenames: false
 - id: check-office-file-integrity
   name: Check Office file integrity
-  description: Checks Excel/Word/PowerPoint file version against the current branch name and detects Rubberduck Addin references.
+  description: Checks Office file versions against the current branch name and detects Rubberduck Addin references.
   entry: pre-commit-vba
   args: [check]
   language: python
