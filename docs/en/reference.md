@@ -49,7 +49,7 @@ uv run pre_commit_vba.py check
 1. Get the current branch name.
 2. If the branch name is not `release/v...` or `hotfix/v...`, output a log and exit successfully.
 3. If a semantic version cannot be extracted, exit with an error.
-4. For each target office files, validate the following.
+4. For each target Office file, validate the following.
     - Whether BuiltinDocumentProperties("Document version") matches the branch name (`v{semver}`)
     - Whether a Rubberduck Addin reference exists
 5. If a mismatch or reference detection occurs, exit with an error.
