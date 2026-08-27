@@ -9,7 +9,7 @@
 
 ## 概要
 
-ExcelのVBAコードをgitで管理するため, ExcelファイルよりVBAコードを抽出するpre-commit フックです.  
+VBAコードをgitで管理するため, OfficeファイルよりVBAコードを抽出するpre-commit フックです.  
 Pythonのスクリプトしても利用可能です.  
 
 ### pre-commitで, pre-commit-hookとして使用
@@ -18,10 +18,10 @@ Pythonのスクリプトしても利用可能です.
 
 ```
   - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
-    rev: v0.3.14
+    rev: v0.4.0
     hooks:
       - id: extract-vba-code
-      - id: check-excel-book-version
+      - id: check-office-file-integrity
 ```
 
 ### `pre_commit_vba.py`をコマンドで走らせて使用
@@ -30,13 +30,13 @@ uvをインストールしたのち,
 ```console
 uv run pre_commit_vba.py extract
 ```
-でExcelファイルよりコードをutf-8形式で出力します.
+でOfficeファイルよりコードをutf-8形式で出力します.
 
 また, Gitのreleaseブランチで作業している際に,
 ```console
 uv run pre_commit_vba.py check
 ```
-を実行すると, Excelファイルの文書のバージョンとブランチ名を比較して一致している場合は
+を実行すると, Officeファイルの文書のバージョンとブランチ名を比較して一致している場合は
 ```console
 Version check passed.
 ```
@@ -50,7 +50,7 @@ Version check passed.
 
 ### pre-commitで, pre-commit-hookとして使用
 
-1. `git`管理するマクロ付きブックのあるフォルダ(以下, vba_root_folderという)に移動する.
+1. `git`管理するマクロ付き Office ファイルのあるフォルダ(以下, vba_root_folderという)に移動する.
 2. `.pre-commit`をインストールする.
     1. `uv`を`mise`を使ってインストールする.
         ```
@@ -70,14 +70,14 @@ Version check passed.
         ---
         repos:
           - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
-            rev: v0.3.14
+            rev: v0.4.0
             hooks:
               - id: extract-vba-code
-              - id: check-excel-book-version
+              - id: check-office-file-integrity
         ```
 ### `pre_commit_vba.py`をコマンドで走らせて使用
 
-1. `git`管理するマクロ付きブックのあるフォルダ(以下, vba_root_folderという)に移動する.
+1. `git`管理するマクロ付き Office ファイルのあるフォルダ(以下, vba_root_folderという)に移動する.
 2. `mise`で `uv`をインストールする.
     ```console
     mise use uv@latest
@@ -93,7 +93,7 @@ Version check passed.
 
 ### pre-commitで, pre-commit-hookとして使用
 
-1. 対象のマクロブックを`git`でステージングする.
+1. 対象のマクロ付き Office ファイルを`git`でステージングする.
     ```
     git add .
     ```
@@ -108,14 +108,14 @@ Version check passed.
 
 ### `pre_commit_vba.py`をコマンドで走らせて使用
 
-#### ブックにあるコードを抽出する場合
+#### Office ファイルにあるコードを抽出する場合
 
 vba_root_folderにて, 以下のコマンドを実行.
 ```console
 uv run pre_commit_vba.py extract
 ```
 
-#### releaseブランチ名とワークブックのバージョン情報を比較チェックする場合
+#### releaseブランチ名とOffice ファイルのバージョン情報を比較チェックする場合
 
 vba_root_folderにて, 以下のコマンドを実行.
 ```PowerShell
@@ -141,12 +141,12 @@ $ [OPTIONS] COMMAND [ARGS]...
 
 **Commands**:
 
-* `extract`: Extract VBA code from Excel workbooks.
-* `check`: Check between workbook version and...
+* `extract`: Extract VBA code from Office files.
+* `check`: Check Office file version and detect...
 
 ## `extract`
 
-Extract VBA code from Excel workbooks.
+Extract VBA code from Office files.
 
 **Usage**:
 
@@ -156,20 +156,20 @@ $ extract [OPTIONS]
 
 **Options**:
 
-* `--target-path TEXT`: [default: .]
-* `--folder-suffix TEXT`: [default: .VBA]
-* `--export-folder TEXT`: [default: export]
-* `--custom-ui-folder TEXT`: [default: customUI]
-* `--code-folder TEXT`: [default: code]
+* `--target-path <str>`: [default: .]
+* `--folder-suffix <str>`: [default: .VBA]
+* `--export-folder <str>`: [default: export]
+* `--custom-ui-folder <str>`: [default: customUI]
+* `--code-folder <str>`: [default: code]
 * `--version`
 * `--enable-folder-annotation / --disable-folder-annotation`: [default: enable-folder-annotation]
-* `--create-gitignore / --not-create-gitignore`: [default: create-gitignore]  
+* `--create-gitignore / --not-create-gitignore`: [default: create-gitignore]
 * `--include-extension / --exclude-extension`: [default: include-extension]
 * `--help`: Show this message and exit.
 
 ## `check`
 
-Check between workbook version and repository name.
+Check Office file version and detect Rubberduck Addin references.
 
 **Usage**:
 
@@ -179,7 +179,7 @@ $ check [OPTIONS]
 
 **Options**:
 
-* `--target-path TEXT`: [default: .]
+* `--target-path <str>`: [default: .]
 * `--version`
 * `--help`: Show this message and exit.
 

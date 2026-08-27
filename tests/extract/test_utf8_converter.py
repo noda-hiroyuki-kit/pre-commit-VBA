@@ -1,4 +1,5 @@
-"""Test for Utf8Converter."""
+# Copyright (c) 2026 Noda Hiroyuki
+"""Tests for Utf8Converter class."""
 
 from __future__ import annotations
 
@@ -16,32 +17,43 @@ from src.pre_commit_vba import pre_commit_vba
 from src.pre_commit_vba.pre_commit_vba import (
     ExcelVbaExporter,
     SettingsCommonFolder,
-    SettingsFoldersHandleExcel,
-    SettingsOptionsHandleExcel,
+    SettingsFoldersHandleOffice,
+    SettingsOptionsHandleOffice,
     Utf8Converter,
 )
 
 
 @pytest.mark.skipif(
-    pre_commit_vba.DispatchEx is None, reason="pywin32 is only available on Windows"
+    pre_commit_vba.DispatchEx is None,
+    reason="pywin32 is only available on Windows",
 )
-class TestExcelVbaExporter:
-    """Tests for ExcelVbaExporter class."""
+class TestUtf8Converter:
+    """Tests for Utf8Converter class."""
 
     @pytest.fixture(scope="class")
     @classmethod
     def sut(cls) -> Generator[Utf8Converter]:
         """Act first this tests."""
         common_folder = SettingsCommonFolder(
-            Path(Path.cwd(), "tests", "test.xlsm"), ".test", include_extension=True
+            Path(
+                Path.cwd(),
+                "tests",
+                "excel",
+                "extract",
+                "with_codes",
+                "v0.0.1-alpha",
+                "test.xlsm",
+            ),
+            ".test",
+            include_extension=True,
         )
-        settings = SettingsFoldersHandleExcel(
+        settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder,
             export_folder="export",
             custom_ui_folder="customUI",
             code_folder="code",
         )
-        options = SettingsOptionsHandleExcel(
+        options = SettingsOptionsHandleOffice(
             enable_folder_annotation=True,
             create_gitignore=True,
         )
@@ -56,6 +68,10 @@ class TestExcelVbaExporter:
         expected_file = Path(
             Path.cwd(),
             "tests",
+            "excel",
+            "extract",
+            "with_codes",
+            "v0.0.1-alpha",
             "test.xlsm.test",
             "code",
             "excel document modules",
@@ -65,10 +81,14 @@ class TestExcelVbaExporter:
         assert Path.is_file(expected_file)  # noqa: S101
 
     def test_exists_sheet1_file(self, sut: Utf8Converter) -> None:  # noqa: ARG002
-        """Test that ThisWorkbook component file exists."""
+        """Test that Sheet1 component file exists."""
         expected_file = Path(
             Path.cwd(),
             "tests",
+            "excel",
+            "extract",
+            "with_codes",
+            "v0.0.1-alpha",
             "test.xlsm.test",
             "code",
             "excel document modules",
@@ -78,10 +98,14 @@ class TestExcelVbaExporter:
         assert Path.is_file(expected_file)  # noqa: S101
 
     def test_exists_gitignore_file(self, sut: Utf8Converter) -> None:  # noqa: ARG002
-        """Test that ThisWorkbook component file exists."""
+        """Test that .gitignore file exists."""
         expected_file = Path(
             Path.cwd(),
             "tests",
+            "excel",
+            "extract",
+            "with_codes",
+            "v0.0.1-alpha",
             "test.xlsm.test",
             ".gitignore",
         )
@@ -90,17 +114,25 @@ class TestExcelVbaExporter:
     def test_not_create_gitignore_file_when_option_disabled(self) -> None:
         """Test that .gitignore is not created when disabled."""
         common_folder = SettingsCommonFolder(
-            Path(Path.cwd(), "tests", "test.xlsm"),
+            Path(
+                Path.cwd(),
+                "tests",
+                "excel",
+                "extract",
+                "with_codes",
+                "v0.0.1-alpha",
+                "test.xlsm",
+            ),
             ".no-gitignore",
             include_extension=True,
         )
-        settings = SettingsFoldersHandleExcel(
+        settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder,
             export_folder="export",
             custom_ui_folder="customUI",
             code_folder="code",
         )
-        options = SettingsOptionsHandleExcel(
+        options = SettingsOptionsHandleOffice(
             enable_folder_annotation=True,
             create_gitignore=False,
         )
@@ -113,6 +145,10 @@ class TestExcelVbaExporter:
             expected_file = Path(
                 Path.cwd(),
                 "tests",
+                "excel",
+                "extract",
+                "with_codes",
+                "v0.0.1-alpha",
                 "test.xlsm.no-gitignore",
                 ".gitignore",
             )
@@ -128,17 +164,25 @@ class TestUtf8ConverterFolderAnnotation:
     def test_disable_folder_annotation_keeps_file_in_code_root(self) -> None:
         """Disabled folder annotation should keep modules in code root."""
         common_folder = SettingsCommonFolder(
-            Path(Path.cwd(), "tests", "test.xlsm"),
+            Path(
+                Path.cwd(),
+                "tests",
+                "excel",
+                "extract",
+                "with_codes",
+                "v0.0.1-alpha",
+                "test.xlsm",
+            ),
             ".no-annotation",
             include_extension=True,
         )
-        settings = SettingsFoldersHandleExcel(
+        settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder,
             export_folder="export",
             custom_ui_folder="customUI",
             code_folder="code",
         )
-        options = SettingsOptionsHandleExcel(
+        options = SettingsOptionsHandleOffice(
             enable_folder_annotation=False,
             create_gitignore=False,
         )
@@ -151,6 +195,10 @@ class TestUtf8ConverterFolderAnnotation:
             expected_file = Path(
                 Path.cwd(),
                 "tests",
+                "excel",
+                "extract",
+                "with_codes",
+                "v0.0.1-alpha",
                 "test.xlsm.no-annotation",
                 "code",
                 "upperFolderQuotation.bas",
@@ -170,7 +218,7 @@ class TestUtf8ConverterFolderAnnotation:
             ".tmp",
             include_extension=True,
         )
-        settings = SettingsFoldersHandleExcel(
+        settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder,
             export_folder="export",
             custom_ui_folder="customUI",
@@ -182,7 +230,7 @@ class TestUtf8ConverterFolderAnnotation:
             encoding="cp932",
             newline="\n",
         )
-        options = SettingsOptionsHandleExcel(
+        options = SettingsOptionsHandleOffice(
             enable_folder_annotation=True,
             create_gitignore=False,
         )
@@ -203,7 +251,7 @@ class TestUtf8ConverterFolderAnnotation:
             ".open-error",
             include_extension=True,
         )
-        settings = SettingsFoldersHandleExcel(
+        settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder,
             export_folder="export",
             custom_ui_folder="customUI",
@@ -216,7 +264,7 @@ class TestUtf8ConverterFolderAnnotation:
             encoding="cp932",
             newline="\n",
         )
-        options = SettingsOptionsHandleExcel(
+        options = SettingsOptionsHandleOffice(
             enable_folder_annotation=False,
             create_gitignore=False,
         )

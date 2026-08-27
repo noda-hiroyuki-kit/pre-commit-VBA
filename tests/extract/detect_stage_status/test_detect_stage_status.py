@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Noda Hiroyuki
 """Tests for staging state detection during extract command."""
 
 from __future__ import annotations
@@ -24,7 +25,11 @@ MODULE_TEXT = 'Attribute VB_Name = "Module1"\n'
 
 class _DummyProcess:
     def __init__(
-        self, *, returncode: int, stdout_data: bytes, stderr_data: bytes
+        self,
+        *,
+        returncode: int,
+        stdout_data: bytes,
+        stderr_data: bytes,
     ) -> None:
         self.returncode = returncode
         self._stdout_data = stdout_data
@@ -45,31 +50,34 @@ def _create_workbook_with_vba(workbook_path: Path) -> None:
 
 
 class _DummyExcelVbaExporter:
-    def __init__(self, settings: pre_commit_vba.SettingsFoldersHandleExcel) -> None:
+    def __init__(self, settings: pre_commit_vba.SettingsFoldersHandleOffice) -> None:
         settings.export_folder.mkdir(parents=True, exist_ok=True)
         Path(settings.export_folder, "Module1.bas").write_text(
-            MODULE_TEXT, encoding="utf-8"
+            MODULE_TEXT,
+            encoding="utf-8",
         )
 
 
 class _DummyExcelCustomUiExtractor:
-    def __init__(self, _settings: pre_commit_vba.SettingsFoldersHandleExcel) -> None:
+    def __init__(self, _settings: pre_commit_vba.SettingsFoldersHandleOffice) -> None:
         pass
 
 
 class _DummyUtf8Converter:
     def __init__(
         self,
-        settings: pre_commit_vba.SettingsFoldersHandleExcel,
-        options: pre_commit_vba.SettingsOptionsHandleExcel,
+        settings: pre_commit_vba.SettingsFoldersHandleOffice,
+        options: pre_commit_vba.SettingsOptionsHandleOffice,
     ) -> None:
         settings.code_folder.mkdir(parents=True, exist_ok=True)
         Path(settings.code_folder, "Module1.bas").write_text(
-            MODULE_TEXT, encoding="utf-8"
+            MODULE_TEXT,
+            encoding="utf-8",
         )
         if options.create_gitignore():
             Path(settings.common_folder, ".gitignore").write_text(
-                f"{settings.export_folder.name}/\n", encoding="utf-8"
+                f"{settings.export_folder.name}/\n",
+                encoding="utf-8",
             )
 
 
@@ -91,7 +99,7 @@ def _patch_extract_dependencies(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr(pre_commit_vba, "ExcelVbaExporter", _DummyExcelVbaExporter)
     monkeypatch.setattr(
         pre_commit_vba,
-        "ExcelCustomUiExtractor",
+        "CustomUiExtractor",
         _DummyExcelCustomUiExtractor,
     )
     monkeypatch.setattr(pre_commit_vba, "Utf8Converter", _DummyUtf8Converter)
@@ -114,7 +122,8 @@ def test_get_staging_status_uses_git_write_tree(monkeypatch: MonkeyPatch) -> Non
 
 
 def test_get_staging_status_raises_error_when_git_write_tree_fails(
-    monkeypatch: MonkeyPatch, caplog: pytest.LogCaptureFixture
+    monkeypatch: MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
 ) -> None:
     """`get_staging_status` should raise and log stderr when git write-tree fails."""
 
@@ -133,7 +142,8 @@ def test_get_staging_status_raises_error_when_git_write_tree_fails(
 
 
 def test_add_to_staging_raises_error_when_git_add_fails(
-    monkeypatch: MonkeyPatch, caplog: pytest.LogCaptureFixture
+    monkeypatch: MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
 ) -> None:
     """`add_to_staging` should raise and log stderr when git add fails."""
 
@@ -143,7 +153,7 @@ def test_add_to_staging_raises_error_when_git_add_fails(
     monkeypatch.setattr(pre_commit_vba.subprocess, "Popen", _mock_popen)
 
     common_settings = pre_commit_vba.SettingsCommonFolder(Path("test.xlsm"), ".VBA")
-    folder_settings = pre_commit_vba.SettingsFoldersHandleExcel(
+    folder_settings = pre_commit_vba.SettingsFoldersHandleOffice(
         settings_common_folder=common_settings,
         export_folder="export",
         custom_ui_folder="customUI",
@@ -160,7 +170,8 @@ def test_add_to_staging_raises_error_when_git_add_fails(
 
 
 def test_extract_returns_non_zero_when_add_to_staging_fails(
-    monkeypatch: MonkeyPatch, tmp_path: Path
+    monkeypatch: MonkeyPatch,
+    tmp_path: Path,
 ) -> None:
     """Extract should fail fast when add_to_staging fails."""
     _init_git_repo(tmp_path)
@@ -170,7 +181,7 @@ def test_extract_returns_non_zero_when_add_to_staging_fails(
     _create_workbook_with_vba(workbook_path)
 
     def _raise_add_to_staging_error(
-        _settings: pre_commit_vba.SettingsFoldersHandleExcel,
+        _settings: pre_commit_vba.SettingsFoldersHandleOffice,
     ) -> None:
         raise pre_commit_vba.AddToStagingError
 
@@ -183,7 +194,8 @@ def test_extract_returns_non_zero_when_add_to_staging_fails(
 
 
 def test_extract_returns_non_zero_when_staging_status_retrieval_fails(
-    monkeypatch: MonkeyPatch, tmp_path: Path
+    monkeypatch: MonkeyPatch,
+    tmp_path: Path,
 ) -> None:
     """Extract should fail fast when staging status cannot be retrieved."""
     _init_git_repo(tmp_path)
@@ -196,7 +208,9 @@ def test_extract_returns_non_zero_when_staging_status_retrieval_fails(
         raise pre_commit_vba.StagingStatusError
 
     monkeypatch.setattr(
-        pre_commit_vba, "get_staging_status", _raise_staging_status_error
+        pre_commit_vba,
+        "get_staging_status",
+        _raise_staging_status_error,
     )
 
     monkeypatch.chdir(tmp_path)
@@ -206,7 +220,8 @@ def test_extract_returns_non_zero_when_staging_status_retrieval_fails(
 
 
 def test_extract_returns_non_zero_when_staging_state_changes(
-    monkeypatch: MonkeyPatch, tmp_path: Path
+    monkeypatch: MonkeyPatch,
+    tmp_path: Path,
 ) -> None:
     """Issue #47: extract should fail if staging state changes during the run."""
     _init_git_repo(tmp_path)
@@ -222,7 +237,8 @@ def test_extract_returns_non_zero_when_staging_state_changes(
 
 
 def test_extract_returns_zero_when_staging_state_does_not_change(
-    monkeypatch: MonkeyPatch, tmp_path: Path
+    monkeypatch: MonkeyPatch,
+    tmp_path: Path,
 ) -> None:
     """Issue #47: extract should pass when staging state is unchanged."""
     _init_git_repo(tmp_path)
@@ -235,10 +251,12 @@ def test_extract_returns_zero_when_staging_state_does_not_change(
     Path(baseline_common, "export").mkdir(parents=True, exist_ok=True)
     Path(baseline_common, "code").mkdir(parents=True, exist_ok=True)
     Path(baseline_common, "export", "Module1.bas").write_text(
-        MODULE_TEXT, encoding="utf-8"
+        MODULE_TEXT,
+        encoding="utf-8",
     )
     Path(baseline_common, "code", "Module1.bas").write_text(
-        MODULE_TEXT, encoding="utf-8"
+        MODULE_TEXT,
+        encoding="utf-8",
     )
     Path(baseline_common, ".gitignore").write_text("export/\n", encoding="utf-8")
 

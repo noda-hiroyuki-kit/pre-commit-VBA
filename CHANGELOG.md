@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-08-28
+
+### Added
+
+- Add VBA detection and extraction support for Word documents (`.docm`, `.dotm`) and PowerPoint presentations (`.pptm`, `.potm`). ([#139])  
+  Word 文書（`.docm`、`.dotm`）と PowerPoint プレゼンテーション（`.pptm`、`.potm`）のVBA検出・抽出に対応.
+
+### Changed
+
+- Rename the hook id from `check-excel-book-version` to `check-office-file-integrity` and keep the former id as a deprecated compatibility alias. ([#153])  
+  hook id を `check-excel-book-version` から `check-office-file-integrity` に変更し, 旧 id は非推奨の互換 alias として維持.
+- Raise the minimum `uv_build` requirement from 0.12.1 to 0.12.5.
+  `uv_build` の最小要件を 0.12.1 から 0.12.5 へ引き上げ.
+- Raise the minimum `mypy` requirement from 2.3.0 to 2.3.1.
+  `mypy` の最小要件を 2.3.0 から 2.3.1 へ引き上げ.
+- Raise the minimum `typer` requirement from 0.27.0 to 0.27.1. ([#147])  
+  `typer` の最小要件を 0.27.0 から 0.27.1 へ引き上げ.
+- Bump minimum `pre-commit` requirement from 4.6.1 to 4.6.2. ([#149])  
+  `pre-commit` の最小要件を 4.6.1 から 4.6.2 へ引き上げ.
+- Bump minimum `zensical` requirement from 0.0.53 to 0.0.55.
+  `zensical` の最小要件を 0.0.53 から 0.0.55 へ引き上げ.
+- Bump minimum `zensical` requirement from 0.0.52 to 0.0.53. ([#150])  
+  `zensical` の最小要件を 0.0.52 から 0.0.53 へ引き上げ.
+- Bump minimum `ruff` requirement from 0.16.2 to 0.16.3.
+  `ruff` の最小要件を 0.16.2 から 0.16.3 へ引き上げ.
+- Bump minimum `ruff` requirement from 0.16.1 to 0.16.2. ([#151])  
+  `ruff` の最小要件を 0.16.1 から 0.16.2 へ引き上げ.
+- Bump minimum `tox` requirement from 4.59.0 to 4.60.0.
+  `tox` の最小要件を 4.59.0 から 4.60.0 へ引き上げ.
+- Bump minimum `tox` requirement from 4.58.0 to 4.59.0. ([#152])  
+  `tox` の最小要件を 4.58.0 から 4.59.0 へ引き上げ.
+
 ## [0.3.14] - 2026-08-12
 
 ### Changed
@@ -297,7 +329,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release as first version
 
-[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.14...HEAD
+[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.14...v0.4.0
 [0.3.14]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.13...v0.3.14
 [0.3.13]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.12...v0.3.13
 [0.3.12]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.11...v0.3.12
@@ -354,3 +387,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#113]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/113
 [#114]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/114
 [#126]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/126
+[#139]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/139
+[#147]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/147
+[#149]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/149
+[#150]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/150
+[#151]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/151
+[#152]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/152
+[#153]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/153

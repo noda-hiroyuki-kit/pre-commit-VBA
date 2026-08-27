@@ -1,3 +1,4 @@
+# Copyright (c) 2026 Noda Hiroyuki
 """Test module for IVbComponentType class."""
 
 from dataclasses import FrozenInstanceError

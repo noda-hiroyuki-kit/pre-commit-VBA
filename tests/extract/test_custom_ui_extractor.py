@@ -1,4 +1,5 @@
-"""Tests for ExcelCustomUiExtractor class."""
+# Copyright (c) 2026 Noda Hiroyuki
+"""Tests for CustomUiExtractor class."""
 
 from __future__ import annotations
 
@@ -18,23 +19,33 @@ from pathlib import Path
 import pytest
 
 from src.pre_commit_vba.pre_commit_vba import (
-    ExcelCustomUiExtractor,
+    CustomUiExtractor,
     SettingsCommonFolder,
-    SettingsFoldersHandleExcel,
+    SettingsFoldersHandleOffice,
 )
 
 
-class TestExcelCustomUiExtractor:
-    """Tests for ExcelCustomUiExtractor class."""
+class TestCustomUiExtractor:
+    """Tests for CustomUiExtractor class."""
 
     @pytest.fixture(scope="class")
     @classmethod
-    def sut(cls) -> Generator[ExcelCustomUiExtractor]:
+    def sut(cls) -> Generator[CustomUiExtractor]:
         """Act first this tests."""
         common_folder = SettingsCommonFolder(
-            Path(Path.cwd(), "tests", "test.xlsm"), ".test", include_extension=True
+            Path(
+                Path.cwd(),
+                "tests",
+                "excel",
+                "extract",
+                "with_codes",
+                "v0.0.1-alpha",
+                "test.xlsm",
+            ),
+            ".test",
+            include_extension=True,
         )
-        settings = SettingsFoldersHandleExcel(
+        settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder,
             export_folder="",
             custom_ui_folder="customUI",
@@ -42,13 +53,21 @@ class TestExcelCustomUiExtractor:
         )
         if Path.is_dir(settings.common_folder):
             shutil.rmtree(settings.common_folder)
-        yield ExcelCustomUiExtractor(settings)
+        yield CustomUiExtractor(settings)
         shutil.rmtree(settings.common_folder)
 
-    def test_exists_custom_ui_14_xml_file(self, sut: ExcelCustomUiExtractor) -> None:  # noqa: ARG002
+    def test_exists_custom_ui_14_xml_file(self, sut: CustomUiExtractor) -> None:  # noqa: ARG002
         """Test that customUI14.xml file exists."""
         expected_file = Path(
-            Path.cwd(), "tests", "test.xlsm.test", "customUI", "customUI14.xml"
+            Path.cwd(),
+            "tests",
+            "excel",
+            "extract",
+            "with_codes",
+            "v0.0.1-alpha",
+            "test.xlsm.test",
+            "customUI",
+            "customUI14.xml",
         )
         assert Path.is_file(expected_file)  # noqa: S101
 
@@ -56,9 +75,16 @@ class TestExcelCustomUiExtractor:
         """Test that custom_ui_folder is not created
         when no custom UI files are present.
         """  # noqa: D205
-        workbook_path = Path("tests/extract/no_custom_ui.xlsm")
-        common_folder = SettingsCommonFolder(workbook_path, ".VBA")
-        settings = SettingsFoldersHandleExcel(
+        workbook_path = Path(
+            "tests",
+            "excel",
+            "extract",
+            "with_codes",
+            "no_custom_ui",
+            "no_custom_ui.xlsm",
+        )
+        common_folder = SettingsCommonFolder(workbook_path, ".test")
+        settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder,
             export_folder="",
             custom_ui_folder="customUI",
@@ -67,17 +93,24 @@ class TestExcelCustomUiExtractor:
         if settings.common_folder.exists():
             shutil.rmtree(settings.common_folder)
 
-        ExcelCustomUiExtractor(settings)
+        CustomUiExtractor(settings)
 
         assert not settings.custom_ui_folder.exists()  # noqa: S101
 
     def test_logs_japanese_workbook_filename_without_mojibake(
-        self, caplog: pytest.LogCaptureFixture
+        self,
+        caplog: pytest.LogCaptureFixture,
     ) -> None:
         """Issue121: log output should keep Japanese workbook filename."""
-        workbook_path = Path("tests/fixtures/issue121/Issue121_日本語.xlsm")
-        common_folder = SettingsCommonFolder(workbook_path, ".VBA")
-        settings = SettingsFoldersHandleExcel(
+        workbook_path = Path(
+            "tests",
+            "excel",
+            "fixtures",
+            "issue121",
+            "Issue121_日本語.xlsm",
+        )
+        common_folder = SettingsCommonFolder(workbook_path, ".test")
+        settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder,
             export_folder="",
             custom_ui_folder="customUI",
@@ -88,7 +121,7 @@ class TestExcelCustomUiExtractor:
 
         try:
             caplog.set_level(logging.INFO)
-            ExcelCustomUiExtractor(settings)
+            CustomUiExtractor(settings)
 
             expected_log_14 = "customUI14.xml does not exists in Issue121_日本語.xlsm"
             expected_log = "customUI.xml does not exists in Issue121_日本語.xlsm"
@@ -99,13 +132,20 @@ class TestExcelCustomUiExtractor:
                 shutil.rmtree(settings.common_folder)
 
     @pytest.mark.skipif(
-        sys.platform != "win32", reason="Windows specific encoding behavior"
+        sys.platform != "win32",
+        reason="Windows specific encoding behavior",
     )
     def test_japanese_filename_is_readable_by_utf8_consumers(self) -> None:
         """Issue121: UTF-8 consumers should read Japanese filename without mojibake."""
-        workbook_path = Path("tests/fixtures/issue121/Issue121_日本語.xlsm")
-        common_folder = SettingsCommonFolder(workbook_path, ".VBA")
-        settings = SettingsFoldersHandleExcel(
+        workbook_path = Path(
+            "tests",
+            "excel",
+            "fixtures",
+            "issue121",
+            "Issue121_日本語.xlsm",
+        )
+        common_folder = SettingsCommonFolder(workbook_path, ".test")
+        settings = SettingsFoldersHandleOffice(
             settings_common_folder=common_folder,
             export_folder="",
             custom_ui_folder="customUI",
@@ -115,14 +155,20 @@ class TestExcelCustomUiExtractor:
             """
             from pathlib import Path
             from src.pre_commit_vba.pre_commit_vba import (
-                ExcelCustomUiExtractor,
+                CustomUiExtractor,
                 SettingsCommonFolder,
-                SettingsFoldersHandleExcel,
+                SettingsFoldersHandleOffice,
             )
 
-            workbook_path = Path("tests/fixtures/issue121/Issue121_日本語.xlsm")
-            common_folder = SettingsCommonFolder(workbook_path, ".VBA")
-            settings = SettingsFoldersHandleExcel(
+            workbook_path = Path(
+                "tests",
+                "excel",
+                "fixtures",
+                "issue121",
+                "Issue121_日本語.xlsm",
+            )
+            common_folder = SettingsCommonFolder(workbook_path, ".test")
+            settings = SettingsFoldersHandleOffice(
                 settings_common_folder=common_folder,
                 export_folder="",
                 custom_ui_folder="customUI",
@@ -132,8 +178,8 @@ class TestExcelCustomUiExtractor:
                 import shutil
 
                 shutil.rmtree(settings.common_folder)
-            ExcelCustomUiExtractor(settings)
-            """
+            CustomUiExtractor(settings)
+            """,
         )
         env = os.environ.copy()
         env["PYTHONUTF8"] = "0"
