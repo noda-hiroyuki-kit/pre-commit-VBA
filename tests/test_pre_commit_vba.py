@@ -892,6 +892,11 @@ class TestVbaCompressedStreamHelpers:
         with pytest.raises(ValueError, match="invalid signature byte"):
             pre_commit_vba.decompress_stream(b"")
 
+    def test_decompress_stream_rejects_truncated_chunk_header(self) -> None:
+        """A stream ending in a partial chunk header should fail cleanly."""
+        with pytest.raises(ValueError, match="Truncated VBA compressed chunk header"):
+            pre_commit_vba.decompress_stream(b"\x01\x00")
+
     def test_decompress_stream_handles_raw_chunk(self) -> None:
         """Raw chunks should pass bytes through without decompression."""
         stream = b"\x01" + struct.pack("<H", 0x3FFF) + b"AB"

@@ -946,12 +946,17 @@ get_workbook_version = get_office_file_version
 
 
 VBA_CHUNK_SIGNATURE = 0b011
+VBA_CHUNK_HEADER_SIZE = 2
 RAW_CHUNK_SIZE = 4098
 
 
 def _read_vba_chunk_header(data: bytes | bytearray, pos: int) -> tuple[int, int, int]:
     """Return the chunk size, signature, and flag for a VBA compressed chunk."""
-    header = struct.unpack("<H", data[pos : pos + 2])[0]
+    header_data = data[pos : pos + VBA_CHUNK_HEADER_SIZE]
+    if len(header_data) < VBA_CHUNK_HEADER_SIZE:
+        error_message = "Truncated VBA compressed chunk header"
+        raise ValueError(error_message)
+    header = struct.unpack("<H", header_data)[0]
     chunk_size = (header & 0x0FFF) + 3
     chunk_signature = (header >> 12) & 0x07
     chunk_flag = (header >> 15) & 0x01
