@@ -294,9 +294,14 @@ class TestIsOfficeFile:
 class TestWordDocumentExtraction:
     """Tests for extracting VBA from Word macro-enabled documents."""
 
-    def test_extract_command_exports_test_docm(self, tmp_path: Path) -> None:
-        """The Word fixture should be extracted through Word.Application."""
-        fixture_path = Path("tests", "word", "extract", "with_codes", "test-doc.docm")
+    @pytest.mark.parametrize("fixture_name", ["test-doc.docm", "test-doc.dotm"])
+    def test_extract_command_exports_word_fixture(
+        self,
+        fixture_name: str,
+        tmp_path: Path,
+    ) -> None:
+        """The Word fixtures should be extracted through Word.Application."""
+        fixture_path = Path("tests", "word", "extract", "with_codes", fixture_name)
         target_path = Path(tmp_path, fixture_path.name)
         shutil.copy2(fixture_path, target_path)
 
@@ -329,10 +334,10 @@ class TestWordDocumentExtraction:
             AddToRecentFiles=False,
         )
         component.Export.assert_called_once()
-        assert Path(tmp_path, "test-doc.docm.VBA", "code", "Module1.bas").is_file()  # noqa: S101
+        assert Path(tmp_path, f"{fixture_name}.VBA", "code", "Module1.bas").is_file()  # noqa: S101
         assert Path(  # noqa: S101
             tmp_path,
-            "test-doc.docm.VBA",
+            f"{fixture_name}.VBA",
             "customUI",
             "customUI14.xml",
         ).is_file()
