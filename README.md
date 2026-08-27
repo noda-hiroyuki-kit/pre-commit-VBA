@@ -49,7 +49,7 @@ If you can use `uv`, `mise` is not required.
 
 ### Usage as a pre-commit hook
 
-1. Move to the folder containing the macro-enabled workbook you want to manage with `git` (hereafter referred to as vba_root_folder).
+1. Move to the folder containing the macro-enabled Office file you want to manage with `git` (hereafter referred to as vba_root_folder).
 2. Install `.pre-commit`.
     1. Install `uv` using `mise`.
         ```
@@ -76,7 +76,7 @@ If you can use `uv`, `mise` is not required.
         ```
 ### Usage by running `pre_commit_vba.py` as a command
 
-1. Move to the folder containing the macro-enabled workbook you want to manage with `git` (hereafter referred to as vba_root_folder).
+1. Move to the folder containing the macro-enabled Office file you want to manage with `git` (hereafter referred to as vba_root_folder).
 2. Install `uv` with `mise`.
     ```console
     mise use uv@latest
@@ -92,7 +92,7 @@ If you can use `uv`, `mise` is not required.
 
 ### Usage as a pre-commit hook
 
-1. Stage the target macro workbook with `git`.
+1. Stage the target macro-enabled Office file with `git`.
     ```
     git add .
     ```
@@ -107,14 +107,14 @@ If you can use `uv`, `mise` is not required.
 
 ### Usage by running `pre_commit_vba.py` as a command
 
-#### To extract code from a workbook
+#### To extract code from an Office file
 
 In vba_root_folder, run:
 ```console
 uv run pre_commit_vba.py extract
 ```
 
-#### To compare the release branch name and workbook version information
+#### To compare the release branch name and Office file version information
 
 In vba_root_folder, run:
 ```PowerShell
