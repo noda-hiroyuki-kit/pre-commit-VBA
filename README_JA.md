@@ -50,7 +50,7 @@ Version check passed.
 
 ### pre-commitで, pre-commit-hookとして使用
 
-1. `git`管理するマクロ付きブックのあるフォルダ(以下, vba_root_folderという)に移動する.
+1. `git`管理するマクロ付き Office ファイルのあるフォルダ(以下, vba_root_folderという)に移動する.
 2. `.pre-commit`をインストールする.
     1. `uv`を`mise`を使ってインストールする.
         ```
@@ -77,7 +77,7 @@ Version check passed.
         ```
 ### `pre_commit_vba.py`をコマンドで走らせて使用
 
-1. `git`管理するマクロ付きブックのあるフォルダ(以下, vba_root_folderという)に移動する.
+1. `git`管理するマクロ付き Office ファイルのあるフォルダ(以下, vba_root_folderという)に移動する.
 2. `mise`で `uv`をインストールする.
     ```console
     mise use uv@latest
@@ -93,7 +93,7 @@ Version check passed.
 
 ### pre-commitで, pre-commit-hookとして使用
 
-1. 対象のマクロブックを`git`でステージングする.
+1. 対象のマクロ付き Office ファイルを`git`でステージングする.
     ```
     git add .
     ```
@@ -108,14 +108,14 @@ Version check passed.
 
 ### `pre_commit_vba.py`をコマンドで走らせて使用
 
-#### ブックにあるコードを抽出する場合
+#### Office ファイルにあるコードを抽出する場合
 
 vba_root_folderにて, 以下のコマンドを実行.
 ```console
 uv run pre_commit_vba.py extract
 ```
 
-#### releaseブランチ名とワークブックのバージョン情報を比較チェックする場合
+#### releaseブランチ名とOffice ファイルのバージョン情報を比較チェックする場合
 
 vba_root_folderにて, 以下のコマンドを実行.
 ```PowerShell
