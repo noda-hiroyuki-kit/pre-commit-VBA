@@ -240,10 +240,11 @@ class SettingsCommonFolder:
 
     def __init__(
         self,
-        office_file_path: Path,
-        folder_suffix: str,
+        office_file_path: Path | None = None,
+        folder_suffix: str = "",
         *,
         include_extension: bool = True,
+        workbook_path: Path | None = None,
     ) -> None:
         """Initialize settings.
 
@@ -254,8 +255,14 @@ class SettingsCommonFolder:
                 If True, use full filename with extension(e.g., "test.xlsm.VBA").
                 If False, use basename only (e.g., "test.VBA").
                 Default is True (include extension).
+            workbook_path: Legacy alias for office_file_path.
 
         """
+        if office_file_path is None:
+            office_file_path = workbook_path
+        if office_file_path is None:
+            raise TypeError
+
         self.__office_file_path = office_file_path
         self.__folder_suffix = folder_suffix
         self.__include_extension = include_extension
@@ -275,6 +282,11 @@ class SettingsCommonFolder:
     def office_file_path(self) -> Path:
         """Return Office file path."""
         return self.__office_file_path
+
+    @property
+    def workbook_path(self) -> Path:
+        """Return Office file path using the legacy property name."""
+        return self.office_file_path
 
 
 class SettingsFoldersHandleOffice:
@@ -315,6 +327,11 @@ class SettingsFoldersHandleOffice:
     def office_file_path(self) -> Path:
         """Return Office file path."""
         return self.__settings_common_folder.office_file_path
+
+    @property
+    def workbook_path(self) -> Path:
+        """Return Office file path using the legacy property name."""
+        return self.office_file_path
 
     @property
     def common_folder(self) -> Path:

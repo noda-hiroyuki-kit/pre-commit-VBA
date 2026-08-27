@@ -181,6 +181,16 @@ class TestMainEntryPoint:
 class TestSettingsCommonFolder:
     """Tests for SettingsCommonFolder path generation."""
 
+    def test_legacy_workbook_path_keyword_is_supported(self) -> None:
+        """The former constructor keyword should remain supported."""
+        settings = pre_commit_vba.SettingsCommonFolder(
+            workbook_path=Path("tests", "sample.xlsm"),
+            folder_suffix=".VBA",
+        )
+
+        assert settings.office_file_path == Path("tests", "sample.xlsm")  # noqa: S101
+        assert settings.workbook_path == Path("tests", "sample.xlsm")  # noqa: S101
+
     def test_common_folder_uses_stem_when_include_extension_is_false(self) -> None:
         """When include_extension is False, extension should be excluded."""
         settings = pre_commit_vba.SettingsCommonFolder(
@@ -264,6 +274,21 @@ class TestIsOfficeFile:
             pre_commit_vba.extract_vba_code_from_workbooks
             is pre_commit_vba.extract_vba_code_from_office_files
         )
+
+    def test_legacy_settings_handle_workbook_path_property_is_supported(self) -> None:
+        """The former settings handle property should remain supported."""
+        common_folder = pre_commit_vba.SettingsCommonFolder(
+            workbook_path=Path("tests", "sample.xlsm"),
+            folder_suffix=".VBA",
+        )
+        settings = pre_commit_vba.SettingsFoldersHandleExcel(
+            common_folder,
+            "export",
+            "customUI",
+            "code",
+        )
+
+        assert settings.workbook_path == Path("tests", "sample.xlsm")  # noqa: S101
 
 
 class TestWordDocumentExtraction:
