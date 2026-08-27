@@ -903,15 +903,19 @@ class TestVbaCompressedStreamHelpers:
                 decompressed,
             )
 
-    def test_decompress_vba_tokens_stops_when_copy_token_is_truncated(self) -> None:
-        """A trailing flag bit without a complete token should stop without crashing."""
+    def test_decompress_vba_tokens_rejects_truncated_copy_token(self) -> None:
+        """A trailing flag bit without a complete token should be rejected.
+
+        The token should be treated as corruption instead of a valid stop.
+        """
         data = bytearray([0, 0, 0b00000001, 0x00])
         decompressed = bytearray(b"AB")
 
-        pos = pre_commit_vba._decompress_vba_tokens(data, 0, len(data), decompressed)  # noqa: SLF001
-
-        assert pos == len(data)  # noqa: S101
-        assert decompressed == b"AB"  # noqa: S101
+        with pytest.raises(
+            ValueError,
+            match=r"Truncated.*copy token|copy token.*truncated",
+        ):
+            pre_commit_vba._decompress_vba_tokens(data, 0, len(data), decompressed)  # noqa: SLF001
 
     def test_decompress_stream_rejects_invalid_signature(self) -> None:
         """A stream with an invalid signature byte should fail fast."""

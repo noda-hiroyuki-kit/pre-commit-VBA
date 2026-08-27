@@ -1007,7 +1007,8 @@ def _decompress_vba_tokens(
                 pos += 1
                 continue
             if pos + 1 >= chunk_start + chunk_size:
-                break
+                error_message = "Truncated VBA copy token"
+                raise ValueError(error_message)
             copy_token = struct.unpack("<H", data[pos : pos + 2])[0]
             length_mask, offset_mask, bit_count, _ = _copy_token_help(
                 len(decompressed),
