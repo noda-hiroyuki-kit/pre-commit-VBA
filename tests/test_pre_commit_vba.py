@@ -348,9 +348,17 @@ class TestWordDocumentExtraction:
 class TestPowerPointPresentationExtraction:
     """Tests for extracting VBA from PowerPoint macro-enabled presentations."""
 
-    def test_extract_command_exports_test_pptm(self, tmp_path: Path) -> None:
-        """The PowerPoint fixture should be extracted through PowerPoint.Application."""
-        fixture_path = Path("tests", "powerpoint", "extract", "test.pptm")
+    @pytest.mark.parametrize("fixture_name", ["test.pptm", "test.potm"])
+    def test_extract_command_exports_powerpoint_fixture(
+        self,
+        fixture_name: str,
+        tmp_path: Path,
+    ) -> None:
+        """The PowerPoint fixtures should be extracted.
+
+        Use PowerPoint.Application for extraction.
+        """
+        fixture_path = Path("tests", "powerpoint", "extract", fixture_name)
         target_path = Path(tmp_path, fixture_path.name)
         shutil.copy2(fixture_path, target_path)
 
@@ -383,10 +391,10 @@ class TestPowerPointPresentationExtraction:
             WithWindow=False,
         )
         component.Export.assert_called_once()
-        assert Path(tmp_path, "test.pptm.VBA", "code", "Module1.bas").is_file()  # noqa: S101
+        assert Path(tmp_path, f"{fixture_name}.VBA", "code", "Module1.bas").is_file()  # noqa: S101
         assert Path(  # noqa: S101
             tmp_path,
-            "test.pptm.VBA",
+            f"{fixture_name}.VBA",
             "customUI",
             "customUI14.xml",
         ).is_file()
