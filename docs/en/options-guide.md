@@ -9,7 +9,7 @@ If you only want to see the specification list, refer to [Reference](reference.m
 ## Commands
 
 - `extract`: Extracts VBA code.
-- `check`: Compares the branch name and the office file version.
+- `check`: Compares the branch name and the Office file version.
 
 ## Default Values
 
