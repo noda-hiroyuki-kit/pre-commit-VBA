@@ -1,7 +1,7 @@
 [project]
 name = "pre-commit-vba"
 version = "0.4.0"
-description = "Extracts VBA code from Excel files for managing VBA code in git and checks workbook version."
+description = "Extracts VBA code from Office files for managing VBA code in git and checks Office file integrity."
 readme = "README.md"
 requires-python = ">=3.14,<3.15"
 dependencies = [
