@@ -1018,6 +1018,9 @@ def _decompress_vba_tokens(
             temp2 = 16 - bit_count
             offset = (temp1 >> temp2) + 1
             copy_source = len(decompressed) - offset
+            if copy_source < decompressed_chunk_start:
+                error_message = "VBA copy token references a previous chunk"
+                raise ValueError(error_message)
             for index in range(copy_source, copy_source + length):
                 decompressed.append(decompressed[index])
             pos += 2

@@ -880,15 +880,28 @@ class TestVbaCompressedStreamHelpers:
         """Copy-token masks should match the VBA specification."""
         assert pre_commit_vba._copy_token_help(5, 0) == (4095, -4096, 4, 4098)  # noqa: S101, SLF001
 
-    def test_decompress_vba_tokens_handles_copy_token(self) -> None:
-        """Copy tokens should append bytes from the already decompressed buffer."""
-        data = bytearray([0, 0, 0b00000001, 0x00, 0x00])
-        decompressed = bytearray(b"ABCD")
+    def test_decompress_vba_tokens_handles_copy_token_within_chunk(self) -> None:
+        """Copy tokens should append bytes produced in the current chunk."""
+        data = bytearray([0, 0, 0b00000010, 0x41, 0x00, 0x00])
+        decompressed = bytearray()
 
         pos = pre_commit_vba._decompress_vba_tokens(data, 0, len(data), decompressed)  # noqa: SLF001
 
         assert pos == len(data)  # noqa: S101
-        assert decompressed == b"ABCD" + b"D" * 3  # noqa: S101
+        assert decompressed == b"A" * 4  # noqa: S101
+
+    def test_decompress_vba_tokens_rejects_copy_token_from_previous_chunk(self) -> None:
+        """Copy tokens must not reference bytes from a previous chunk."""
+        data = bytearray([0, 0, 0b00000001, 0x00, 0x00])
+        decompressed = bytearray(b"ABCD")
+
+        with pytest.raises(ValueError, match="previous chunk"):
+            pre_commit_vba._decompress_vba_tokens(  # noqa: SLF001
+                data,
+                0,
+                len(data),
+                decompressed,
+            )
 
     def test_decompress_vba_tokens_stops_when_copy_token_is_truncated(self) -> None:
         """A trailing flag bit without a complete token should stop without crashing."""
