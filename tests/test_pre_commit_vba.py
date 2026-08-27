@@ -910,11 +910,12 @@ class TestVbaCompressedStreamHelpers:
         with pytest.raises(ValueError, match="Truncated VBA compressed chunk header"):
             pre_commit_vba.decompress_stream(b"\x01\x00")
 
-    def test_decompress_stream_handles_raw_chunk(self) -> None:
-        """Raw chunks should pass bytes through without decompression."""
+    def test_decompress_stream_rejects_truncated_raw_chunk(self) -> None:
+        """A raw chunk shorter than its declared size should fail cleanly."""
         stream = b"\x01" + struct.pack("<H", 0x3FFF) + b"AB"
 
-        assert pre_commit_vba.decompress_stream(stream) == b"AB"  # noqa: S101
+        with pytest.raises(ValueError, match="exceeds container"):
+            pre_commit_vba.decompress_stream(stream)
 
     def test_check_skips_files_without_vba_code(self, tmp_path: Path) -> None:
         """Check should ignore office files that do not contain VBA code."""

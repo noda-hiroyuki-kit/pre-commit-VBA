@@ -1045,7 +1045,8 @@ def decompress_stream(compressed_container: bytes | bytearray) -> bytes:
         _validate_vba_chunk(chunk_size, chunk_signature, chunk_flag)
 
         if chunk_start + chunk_size > len(compressed_container):
-            chunk_size = len(compressed_container) - chunk_start
+            error_message = "VBA compressed chunk exceeds container"
+            raise ValueError(error_message)
 
         pos = chunk_start + 2
         if chunk_flag == 0:
