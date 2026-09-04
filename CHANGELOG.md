@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Bump minimum `zensical` requirement from 0.0.55 to 0.0.57. ([#155])  
+  `zensical` の最小要件を 0.0.55 から 0.0.57 へ引き上げ.
+- Bump minimum `tox` requirement from 4.60.0 to 4.60.1. ([#156])  
+  `tox` の最小要件を 4.60.0 から 4.60.1 へ引き上げ.
+- Bump minimum `ruff` requirement from 0.16.3 to 0.16.4. ([#157])  
+  `ruff` の最小要件を 0.16.3 から 0.16.4 へ引き上げ.
+
 ## [0.4.0] - 2026-08-28
 
 ### Added
@@ -353,6 +362,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.1.0]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.0.2...v0.1.0
 [0.0.2]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.0.1...v0.0.2
 [0.0.1]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/releases/tag/v0.0.1
+[#139]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/139
 [#121]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/121
 [#107]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/107
 [#55]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/55
@@ -387,10 +397,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#113]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/113
 [#114]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/114
 [#126]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/126
-[#139]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/139
 [#147]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/147
 [#149]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/149
 [#150]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/150
 [#151]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/151
 [#152]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/152
 [#153]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/153
+[#155]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/155
+[#156]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/156
+[#157]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/157
