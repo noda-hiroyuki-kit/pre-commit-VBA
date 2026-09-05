@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Update the `cspell` pre-commit hook from `v10.0.1` to `v10.2.0`.  
+- Update the `cspell` pre-commit hook from `v10.0.1` to `v10.2.0`.
   `cspell` の pre-commit フックを `v10.0.1` から `v10.2.0` へ更新.
 - Bump minimum `zensical` requirement from 0.0.55 to 0.0.57. ([#155])  
   `zensical` の最小要件を 0.0.55 から 0.0.57 へ引き上げ.
