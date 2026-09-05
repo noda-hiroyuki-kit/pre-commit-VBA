@@ -25,11 +25,11 @@ dev = [
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
     "pytest-randomly>=4.1.0",
-    "ruff>=0.16.3",
+    "ruff>=0.16.4",
     "termynal>=0.14.0",
-    "tox>=4.60.0",
+    "tox>=4.60.1",
     "tox-uv>=1.36.0",
-    "zensical>=0.0.55",
+    "zensical>=0.0.57",
 ]
 
 [tool.uv]
