@@ -1,7 +1,7 @@
 ---
 - id: extract-vba-code
-  name: Extract VBA code from Excel files
-  description: Extracts VBA code from Excel files and saves it in a specified directory.
+  name: Extract VBA code from Office files
+  description: Extracts VBA code from Office files and saves it in a specified directory.
   entry: pre-commit-vba
   args: [extract]
   language: python

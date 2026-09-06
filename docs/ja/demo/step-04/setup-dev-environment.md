@@ -38,7 +38,7 @@ uv run pre-commit install
               - id: extract-vba-code
               - id: check-office-file-integrity
           - repo: https://github.com/streetsidesoftware/cspell-cli
-            rev: v10.0.1
+            rev: v10.2.0
             hooks:
               - id: cspell  # Spell check changed files
               - id: cspell  # Spell check the commit message

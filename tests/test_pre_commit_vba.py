@@ -181,6 +181,16 @@ class TestMainEntryPoint:
 class TestSettingsCommonFolder:
     """Tests for SettingsCommonFolder path generation."""
 
+    def test_legacy_workbook_path_keyword_is_supported(self) -> None:
+        """The former constructor keyword should remain supported."""
+        settings = pre_commit_vba.SettingsCommonFolder(
+            workbook_path=Path("tests", "sample.xlsm"),
+            folder_suffix=".VBA",
+        )
+
+        assert settings.office_file_path == Path("tests", "sample.xlsm")  # noqa: S101
+        assert settings.workbook_path == Path("tests", "sample.xlsm")  # noqa: S101
+
     def test_common_folder_uses_stem_when_include_extension_is_false(self) -> None:
         """When include_extension is False, extension should be excluded."""
         settings = pre_commit_vba.SettingsCommonFolder(
@@ -265,13 +275,33 @@ class TestIsOfficeFile:
             is pre_commit_vba.extract_vba_code_from_office_files
         )
 
+    def test_legacy_settings_handle_workbook_path_property_is_supported(self) -> None:
+        """The former settings handle property should remain supported."""
+        common_folder = pre_commit_vba.SettingsCommonFolder(
+            workbook_path=Path("tests", "sample.xlsm"),
+            folder_suffix=".VBA",
+        )
+        settings = pre_commit_vba.SettingsFoldersHandleExcel(
+            common_folder,
+            "export",
+            "customUI",
+            "code",
+        )
+
+        assert settings.workbook_path == Path("tests", "sample.xlsm")  # noqa: S101
+
 
 class TestWordDocumentExtraction:
     """Tests for extracting VBA from Word macro-enabled documents."""
 
-    def test_extract_command_exports_test_docm(self, tmp_path: Path) -> None:
-        """The Word fixture should be extracted through Word.Application."""
-        fixture_path = Path("tests", "word", "extract", "with_codes", "test-doc.docm")
+    @pytest.mark.parametrize("fixture_name", ["test-doc.docm", "test-doc.dotm"])
+    def test_extract_command_exports_word_fixture(
+        self,
+        fixture_name: str,
+        tmp_path: Path,
+    ) -> None:
+        """The Word fixtures should be extracted through Word.Application."""
+        fixture_path = Path("tests", "word", "extract", "with_codes", fixture_name)
         target_path = Path(tmp_path, fixture_path.name)
         shutil.copy2(fixture_path, target_path)
 
@@ -304,10 +334,10 @@ class TestWordDocumentExtraction:
             AddToRecentFiles=False,
         )
         component.Export.assert_called_once()
-        assert Path(tmp_path, "test-doc.docm.VBA", "code", "Module1.bas").is_file()  # noqa: S101
+        assert Path(tmp_path, f"{fixture_name}.VBA", "code", "Module1.bas").is_file()  # noqa: S101
         assert Path(  # noqa: S101
             tmp_path,
-            "test-doc.docm.VBA",
+            f"{fixture_name}.VBA",
             "customUI",
             "customUI14.xml",
         ).is_file()
@@ -318,9 +348,17 @@ class TestWordDocumentExtraction:
 class TestPowerPointPresentationExtraction:
     """Tests for extracting VBA from PowerPoint macro-enabled presentations."""
 
-    def test_extract_command_exports_test_pptm(self, tmp_path: Path) -> None:
-        """The PowerPoint fixture should be extracted through PowerPoint.Application."""
-        fixture_path = Path("tests", "powerpoint", "extract", "test.pptm")
+    @pytest.mark.parametrize("fixture_name", ["test.pptm", "test.potm"])
+    def test_extract_command_exports_powerpoint_fixture(
+        self,
+        fixture_name: str,
+        tmp_path: Path,
+    ) -> None:
+        """The PowerPoint fixtures should be extracted.
+
+        Use PowerPoint.Application for extraction.
+        """
+        fixture_path = Path("tests", "powerpoint", "extract", fixture_name)
         target_path = Path(tmp_path, fixture_path.name)
         shutil.copy2(fixture_path, target_path)
 
@@ -353,10 +391,10 @@ class TestPowerPointPresentationExtraction:
             WithWindow=False,
         )
         component.Export.assert_called_once()
-        assert Path(tmp_path, "test.pptm.VBA", "code", "Module1.bas").is_file()  # noqa: S101
+        assert Path(tmp_path, f"{fixture_name}.VBA", "code", "Module1.bas").is_file()  # noqa: S101
         assert Path(  # noqa: S101
             tmp_path,
-            "test.pptm.VBA",
+            f"{fixture_name}.VBA",
             "customUI",
             "customUI14.xml",
         ).is_file()
@@ -842,36 +880,59 @@ class TestVbaCompressedStreamHelpers:
         """Copy-token masks should match the VBA specification."""
         assert pre_commit_vba._copy_token_help(5, 0) == (4095, -4096, 4, 4098)  # noqa: S101, SLF001
 
-    def test_decompress_vba_tokens_handles_copy_token(self) -> None:
-        """Copy tokens should append bytes from the already decompressed buffer."""
+    def test_decompress_vba_tokens_handles_copy_token_within_chunk(self) -> None:
+        """Copy tokens should append bytes produced in the current chunk."""
+        data = bytearray([0, 0, 0b00000010, 0x41, 0x00, 0x00])
+        decompressed = bytearray()
+
+        pos = pre_commit_vba._decompress_vba_tokens(data, 0, len(data), decompressed)  # noqa: SLF001
+
+        assert pos == len(data)  # noqa: S101
+        assert decompressed == b"A" * 4  # noqa: S101
+
+    def test_decompress_vba_tokens_rejects_copy_token_from_previous_chunk(self) -> None:
+        """Copy tokens must not reference bytes from a previous chunk."""
         data = bytearray([0, 0, 0b00000001, 0x00, 0x00])
         decompressed = bytearray(b"ABCD")
 
-        pos = pre_commit_vba._decompress_vba_tokens(data, 0, len(data), decompressed)  # noqa: SLF001
+        with pytest.raises(ValueError, match="previous chunk"):
+            pre_commit_vba._decompress_vba_tokens(  # noqa: SLF001
+                data,
+                0,
+                len(data),
+                decompressed,
+            )
 
-        assert pos == len(data)  # noqa: S101
-        assert decompressed == b"ABCD" + b"D" * 3  # noqa: S101
+    def test_decompress_vba_tokens_rejects_truncated_copy_token(self) -> None:
+        """A trailing flag bit without a complete token should be rejected.
 
-    def test_decompress_vba_tokens_stops_when_copy_token_is_truncated(self) -> None:
-        """A trailing flag bit without a complete token should stop without crashing."""
+        The token should be treated as corruption instead of a valid stop.
+        """
         data = bytearray([0, 0, 0b00000001, 0x00])
         decompressed = bytearray(b"AB")
 
-        pos = pre_commit_vba._decompress_vba_tokens(data, 0, len(data), decompressed)  # noqa: SLF001
-
-        assert pos == len(data)  # noqa: S101
-        assert decompressed == b"AB"  # noqa: S101
+        with pytest.raises(
+            ValueError,
+            match=r"Truncated.*copy token|copy token.*truncated",
+        ):
+            pre_commit_vba._decompress_vba_tokens(data, 0, len(data), decompressed)  # noqa: SLF001
 
     def test_decompress_stream_rejects_invalid_signature(self) -> None:
         """A stream with an invalid signature byte should fail fast."""
         with pytest.raises(ValueError, match="invalid signature byte"):
             pre_commit_vba.decompress_stream(b"")
 
-    def test_decompress_stream_handles_raw_chunk(self) -> None:
-        """Raw chunks should pass bytes through without decompression."""
+    def test_decompress_stream_rejects_truncated_chunk_header(self) -> None:
+        """A stream ending in a partial chunk header should fail cleanly."""
+        with pytest.raises(ValueError, match="Truncated VBA compressed chunk header"):
+            pre_commit_vba.decompress_stream(b"\x01\x00")
+
+    def test_decompress_stream_rejects_truncated_raw_chunk(self) -> None:
+        """A raw chunk shorter than its declared size should fail cleanly."""
         stream = b"\x01" + struct.pack("<H", 0x3FFF) + b"AB"
 
-        assert pre_commit_vba.decompress_stream(stream) == b"AB"  # noqa: S101
+        with pytest.raises(ValueError, match="exceeds container"):
+            pre_commit_vba.decompress_stream(stream)
 
     def test_check_skips_files_without_vba_code(self, tmp_path: Path) -> None:
         """Check should ignore office files that do not contain VBA code."""

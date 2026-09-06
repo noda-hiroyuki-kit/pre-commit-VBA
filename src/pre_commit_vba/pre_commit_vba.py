@@ -196,7 +196,7 @@ def cleanup_office_resource(
         )
 
 
-__version__ = "0.3.14"
+__version__ = "0.4.0"
 
 
 class UndefineTypeError(Exception):
@@ -240,10 +240,11 @@ class SettingsCommonFolder:
 
     def __init__(
         self,
-        office_file_path: Path,
-        folder_suffix: str,
+        office_file_path: Path | None = None,
+        folder_suffix: str = "",
         *,
         include_extension: bool = True,
+        workbook_path: Path | None = None,
     ) -> None:
         """Initialize settings.
 
@@ -254,8 +255,14 @@ class SettingsCommonFolder:
                 If True, use full filename with extension(e.g., "test.xlsm.VBA").
                 If False, use basename only (e.g., "test.VBA").
                 Default is True (include extension).
+            workbook_path: Legacy alias for office_file_path.
 
         """
+        if office_file_path is None:
+            office_file_path = workbook_path
+        if office_file_path is None:
+            raise TypeError
+
         self.__office_file_path = office_file_path
         self.__folder_suffix = folder_suffix
         self.__include_extension = include_extension
@@ -275,6 +282,11 @@ class SettingsCommonFolder:
     def office_file_path(self) -> Path:
         """Return Office file path."""
         return self.__office_file_path
+
+    @property
+    def workbook_path(self) -> Path:
+        """Return Office file path using the legacy property name."""
+        return self.office_file_path
 
 
 class SettingsFoldersHandleOffice:
@@ -315,6 +327,11 @@ class SettingsFoldersHandleOffice:
     def office_file_path(self) -> Path:
         """Return Office file path."""
         return self.__settings_common_folder.office_file_path
+
+    @property
+    def workbook_path(self) -> Path:
+        """Return Office file path using the legacy property name."""
+        return self.office_file_path
 
     @property
     def common_folder(self) -> Path:
@@ -929,12 +946,17 @@ get_workbook_version = get_office_file_version
 
 
 VBA_CHUNK_SIGNATURE = 0b011
+VBA_CHUNK_HEADER_SIZE = 2
 RAW_CHUNK_SIZE = 4098
 
 
 def _read_vba_chunk_header(data: bytes | bytearray, pos: int) -> tuple[int, int, int]:
     """Return the chunk size, signature, and flag for a VBA compressed chunk."""
-    header = struct.unpack("<H", data[pos : pos + 2])[0]
+    header_data = data[pos : pos + VBA_CHUNK_HEADER_SIZE]
+    if len(header_data) < VBA_CHUNK_HEADER_SIZE:
+        error_message = "Truncated VBA compressed chunk header"
+        raise ValueError(error_message)
+    header = struct.unpack("<H", header_data)[0]
     chunk_size = (header & 0x0FFF) + 3
     chunk_signature = (header >> 12) & 0x07
     chunk_flag = (header >> 15) & 0x01
@@ -985,7 +1007,8 @@ def _decompress_vba_tokens(
                 pos += 1
                 continue
             if pos + 1 >= chunk_start + chunk_size:
-                break
+                error_message = "Truncated VBA copy token"
+                raise ValueError(error_message)
             copy_token = struct.unpack("<H", data[pos : pos + 2])[0]
             length_mask, offset_mask, bit_count, _ = _copy_token_help(
                 len(decompressed),
@@ -996,6 +1019,9 @@ def _decompress_vba_tokens(
             temp2 = 16 - bit_count
             offset = (temp1 >> temp2) + 1
             copy_source = len(decompressed) - offset
+            if copy_source < decompressed_chunk_start:
+                error_message = "VBA copy token references a previous chunk"
+                raise ValueError(error_message)
             for index in range(copy_source, copy_source + length):
                 decompressed.append(decompressed[index])
             pos += 2
@@ -1023,7 +1049,8 @@ def decompress_stream(compressed_container: bytes | bytearray) -> bytes:
         _validate_vba_chunk(chunk_size, chunk_signature, chunk_flag)
 
         if chunk_start + chunk_size > len(compressed_container):
-            chunk_size = len(compressed_container) - chunk_start
+            error_message = "VBA compressed chunk exceeds container"
+            raise ValueError(error_message)
 
         pos = chunk_start + 2
         if chunk_flag == 0:
