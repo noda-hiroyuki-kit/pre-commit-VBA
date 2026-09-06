@@ -181,6 +181,11 @@ class TestMainEntryPoint:
 class TestSettingsCommonFolder:
     """Tests for SettingsCommonFolder path generation."""
 
+    def test_constructor_requires_an_office_file_path(self) -> None:
+        """The constructor should reject missing path arguments."""
+        with pytest.raises(TypeError):
+            pre_commit_vba.SettingsCommonFolder()
+
     def test_legacy_workbook_path_keyword_is_supported(self) -> None:
         """The former constructor keyword should remain supported."""
         settings = pre_commit_vba.SettingsCommonFolder(
@@ -289,6 +294,17 @@ class TestIsOfficeFile:
         )
 
         assert settings.workbook_path == Path("tests", "sample.xlsm")  # noqa: S101
+
+
+class TestHasVbaCode:
+    """Tests for VBA project presence detection."""
+
+    def test_returns_false_for_an_invalid_zip_file(self, tmp_path: Path) -> None:
+        """Invalid Office containers should be treated as VBA-free."""
+        invalid_file = tmp_path / "invalid.xlsm"
+        invalid_file.write_bytes(b"not a zip archive")
+
+        assert pre_commit_vba.has_vba_code(invalid_file) is False  # noqa: S101
 
 
 class TestWordDocumentExtraction:
@@ -934,6 +950,13 @@ class TestVbaCompressedStreamHelpers:
         with pytest.raises(ValueError, match="exceeds container"):
             pre_commit_vba.decompress_stream(stream)
 
+    def test_decompress_stream_returns_data_from_raw_chunk(self) -> None:
+        """Raw chunks should be copied without token decompression."""
+        raw_data = bytes(index % 256 for index in range(4096))
+        stream = b"\x01" + struct.pack("<H", 0x3FFF) + raw_data
+
+        assert pre_commit_vba.decompress_stream(stream) == raw_data  # noqa: S101
+
     def test_check_skips_files_without_vba_code(self, tmp_path: Path) -> None:
         """Check should ignore office files that do not contain VBA code."""
         target_dir = Path(tmp_path, "target")
@@ -953,6 +976,51 @@ class TestVbaCompressedStreamHelpers:
             pre_commit_vba.check(target_path=str(target_dir))
 
         assert exc_info.value.code == 0  # noqa: S101
+
+    def test_check_skips_temporary_office_files(self, tmp_path: Path) -> None:
+        """Check should ignore Office lock files."""
+        temporary_file = Path(tmp_path, "~$workbook.xlsm")
+        temporary_file.write_bytes(b"")
+
+        with (
+            mock.patch.object(
+                pre_commit_vba,
+                "get_version_from_branch_name",
+                return_value="0.0.1-alpha",
+            ),
+            mock.patch.object(pre_commit_vba, "is_office_file") as is_office_file,
+            pytest.raises(SystemExit) as exc_info,
+        ):
+            pre_commit_vba.check(target_path=str(tmp_path))
+
+        assert exc_info.value.code == 0  # noqa: S101
+        is_office_file.assert_not_called()
+
+
+def test_extract_skips_temporary_office_files(tmp_path: Path) -> None:
+    """Extract should ignore Office lock files."""
+    temporary_file = Path(tmp_path, "~$workbook.xlsm")
+    temporary_file.write_bytes(b"")
+
+    with mock.patch.object(pre_commit_vba, "is_office_file") as is_office_file:
+        result = runner.invoke(app, ["extract", "--target-path", str(tmp_path)])
+
+    assert result.exit_code == 0, result.output  # noqa: S101
+    is_office_file.assert_not_called()
+
+
+def test_extract_skips_office_files_without_vba_code(tmp_path: Path) -> None:
+    """Extract should ignore Office files without a VBA project."""
+    office_file = Path(tmp_path, "workbook.xlsm")
+    office_file.write_bytes(b"")
+
+    with (
+        mock.patch.object(pre_commit_vba, "is_office_file", return_value=True),
+        mock.patch.object(pre_commit_vba, "has_vba_code", return_value=False),
+    ):
+        result = runner.invoke(app, ["extract", "--target-path", str(tmp_path)])
+
+    assert result.exit_code == 0, result.output  # noqa: S101
 
 
 class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:

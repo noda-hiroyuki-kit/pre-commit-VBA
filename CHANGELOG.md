@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `tox` の最小要件を 4.60.0 から 4.60.1 へ引き上げ.
 - Bump minimum `ruff` requirement from 0.16.3 to 0.16.4. ([#157])  
   `ruff` の最小要件を 0.16.3 から 0.16.4 へ引き上げ.
+- Expand automated test coverage for CLI and helper branches to 100%.  
+  CLI とヘルパーの分岐に対する自動テストカバレッジを100%に拡張.
 
 ## [0.4.0] - 2026-08-28
 
