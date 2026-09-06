@@ -1002,9 +1002,11 @@ def test_extract_skips_temporary_office_files(tmp_path: Path) -> None:
     temporary_file = Path(tmp_path, "~$workbook.xlsm")
     temporary_file.write_bytes(b"")
 
-    result = runner.invoke(app, ["extract", "--target-path", str(tmp_path)])
+    with mock.patch.object(pre_commit_vba, "is_office_file") as is_office_file:
+        result = runner.invoke(app, ["extract", "--target-path", str(tmp_path)])
 
     assert result.exit_code == 0, result.output  # noqa: S101
+    is_office_file.assert_not_called()
 
 
 def test_extract_skips_office_files_without_vba_code(tmp_path: Path) -> None:
