@@ -9,7 +9,7 @@ Extract VBA code from Excel workbooks, Word documents, and PowerPoint presentati
 # dependencies = [
 #   "pywin32>=312",
 #   "olefile>=0.47",
-#   "typer>=0.27.1",
+#   "typer>=0.27.2",
 # ]
 # ///
 import re
