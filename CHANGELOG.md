@@ -9,8 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.4.1] - 2026-09-13
 
+### Added
+
+- Add a scheduled GitHub Actions workflow to automatically update pre-commit hooks and open a pull request for the changes.  
+  pre-commit フックを自動更新し, 変更時にプルリクエストを作成する GitHub Actions workflow を追加.
+
 ### Changed
 
+- Update the documentation workflow dependencies, including GitHub Actions versions and `uv`.  
+  GitHub Actions と `uv` を含むドキュメント workflow の依存関係を更新.
 - Group Dependabot updates for development dependencies under `python-packages`.  
   Dependabot の開発依存関係の更新を `python-packages` グループにまとめるよう変更.
 - Expand automated test coverage for CLI and helper branches to 100%.  
