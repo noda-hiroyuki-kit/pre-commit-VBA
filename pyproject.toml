@@ -191,6 +191,7 @@ testpaths = [
 markers=["develop_research"]
 
 [tool.coverage.report]
+fail_under = 80
 exclude_also = [
     "raise NotImplementedError",
 ]
