@@ -7,18 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-09-13
+
+### Added
+
+- Add a scheduled GitHub Actions workflow to automatically update pre-commit hooks and open a pull request for the changes.  
+  pre-commit フックを自動更新し, 変更時にプルリクエストを作成する GitHub Actions workflow を追加.
+
 ### Changed
 
-- Update the `cspell` pre-commit hook from `v10.0.1` to `v10.2.0`.  
-  `cspell` の pre-commit フックを `v10.0.1` から `v10.2.0` へ更新.
-- Bump minimum `zensical` requirement from 0.0.55 to 0.0.57. ([#155])  
-  `zensical` の最小要件を 0.0.55 から 0.0.57 へ引き上げ.
-- Bump minimum `tox` requirement from 4.60.0 to 4.60.1. ([#156])  
-  `tox` の最小要件を 4.60.0 から 4.60.1 へ引き上げ.
-- Bump minimum `ruff` requirement from 0.16.3 to 0.16.4. ([#157])  
-  `ruff` の最小要件を 0.16.3 から 0.16.4 へ引き上げ.
+- Update the documentation workflow dependencies, including GitHub Actions versions and `uv`.  
+  GitHub Actions と `uv` を含むドキュメント workflow の依存関係を更新.
+- Group Dependabot updates for development dependencies under `python-packages`.  
+  Dependabot の開発依存関係の更新を `python-packages` グループにまとめるよう変更.
+- Bump `astral-sh/setup-uv` GitHub Action from v9.0.0 to v10.0.1 in documentation and pre-commit autoupdate workflows. ([#167])  
+  ドキュメンテーションと pre-commit 自動更新 workflow で `astral-sh/setup-uv` GitHub Action を v9.0.0 から v10.0.1 へ引き上げ.
 - Expand automated test coverage for CLI and helper branches to 100%.  
   CLI とヘルパーの分岐に対する自動テストカバレッジを100%に拡張.
+- Raise the minimum `typer` requirement from 0.27.1 to 0.27.2. ([#163])  
+  `typer` の最小要件を 0.27.1 から 0.27.2 へ引き上げ.
+- Raise the minimum `uv_build` requirement from 0.12.5 to 0.12.9.
+  `uv_build` の最小要件を 0.12.5 から 0.12.9 へ引き上げ.
+- Raise the minimum `pytest-randomly` requirement from 4.1.0 to 5.0.0.
+  `pytest-randomly` の最小要件を 4.1.0 から 5.0.0 へ引き上げ.
+- Update the `cspell` pre-commit hook from `v10.0.1` to `v10.2.0`.  
+  `cspell` の pre-commit フックを `v10.0.1` から `v10.2.0` へ更新.
+- Bump minimum `zensical` requirement from 0.0.57 to 0.0.58. ([#168])  
+  `zensical` の最小要件を 0.0.57 から 0.0.58 へ引き上げ.
+- Bump minimum `zensical` requirement from 0.0.55 to 0.0.57. ([#155])  
+  `zensical` の最小要件を 0.0.55 から 0.0.57 へ引き上げ.
+- Bump minimum `tox` requirement from 4.60.1 to 4.61.2. ([#165])  
+  `tox` の最小要件を 4.60.1 から 4.61.2 へ引き上げ.
+- Bump minimum `tox` requirement from 4.60.0 to 4.60.1. ([#156])  
+  `tox` の最小要件を 4.60.0 から 4.60.1 へ引き上げ.
+- Bump minimum `ruff` requirement from 0.16.4 to 0.16.5. ([#164])  
+  `ruff` の最小要件を 0.16.4 から 0.16.5 へ引き上げ.
+- Bump minimum `ruff` requirement from 0.16.3 to 0.16.4. ([#157])  
+  `ruff` の最小要件を 0.16.3 から 0.16.4 へ引き上げ.
 
 ## [0.4.0] - 2026-08-28
 
@@ -342,7 +367,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release as first version
 
-[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.4.0...HEAD
+[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.14...v0.4.0
 [0.3.14]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.13...v0.3.14
 [0.3.13]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.12...v0.3.13
@@ -410,3 +436,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#155]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/155
 [#156]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/156
 [#157]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/157
+[#163]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/163
+[#164]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/164
+[#165]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/165
+[#167]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/167
+[#168]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/168

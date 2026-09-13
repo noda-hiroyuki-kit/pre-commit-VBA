@@ -9,7 +9,7 @@ Extract VBA code from Excel workbooks, Word documents, and PowerPoint presentati
 # dependencies = [
 #   "pywin32>=312",
 #   "olefile>=0.47",
-#   "typer>=0.27.1",
+#   "typer>=0.27.2",
 # ]
 # ///
 import re
@@ -196,7 +196,7 @@ def cleanup_office_resource(
         )
 
 
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 
 
 class UndefineTypeError(Exception):
