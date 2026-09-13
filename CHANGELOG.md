@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   CLI とヘルパーの分岐に対する自動テストカバレッジを100%に拡張.
 - Raise the minimum `typer` requirement from 0.27.1 to 0.27.2. ([#163])  
   `typer` の最小要件を 0.27.1 から 0.27.2 へ引き上げ.
+- Raise the minimum `uv_build` requirement from 0.12.5 to 0.12.9.
+  `uv_build` の最小要件を 0.12.5 から 0.12.9 へ引き上げ.
+- Raise the minimum `pytest-randomly` requirement from 4.1.0 to 5.0.0.
+  `pytest-randomly` の最小要件を 4.1.0 から 5.0.0 へ引き上げ.
 - Update the `cspell` pre-commit hook from `v10.0.1` to `v10.2.0`.  
   `cspell` の pre-commit フックを `v10.0.1` から `v10.2.0` へ更新.
 - Bump minimum `zensical` requirement from 0.0.55 to 0.0.57. ([#155])  
