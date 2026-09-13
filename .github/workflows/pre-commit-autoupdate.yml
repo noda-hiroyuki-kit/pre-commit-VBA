@@ -3,10 +3,7 @@ name: pre-commit autoupdate
 
 "on":
   schedule:
-    interval: "weekly"
-    day: "friday"
-    time: "18:00"
-    timezone: "Asia/Tokyo"
+    - cron: "0 9 * * 5"
   workflow_dispatch:
 
 permissions:
