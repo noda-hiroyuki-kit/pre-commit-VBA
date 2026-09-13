@@ -1,0 +1,45 @@
+---
+name: pre-commit autoupdate
+
+"on":
+  schedule:
+    - cron: "0 9 * * 5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  autoupdate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7.0.1
+
+      - name: Setup Python
+        uses: actions/setup-python@v7.0.0
+        with:
+          python-version-file: .python-version
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v9.0.0
+
+      - name: Update pre-commit hooks
+        run: uv run --group dev pre-commit autoupdate
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v8.1.1
+        with:
+          commit-message: "chore: pre-commit autoupdate"
+          title: "chore: pre-commit autoupdate"
+          body: |
+            Automated update of `.pre-commit-config.yaml` by GitHub Actions.
+
+            - Ran `uv run --group dev pre-commit autoupdate`
+            - Schedule: every Friday 18:00 Asia/Tokyo
+          branch: chore/pre-commit-autoupdate
+          delete-branch: true
+          add-paths: |
+            .pre-commit-config.yaml

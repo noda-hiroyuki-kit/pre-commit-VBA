@@ -34,7 +34,7 @@ repos:
         args: [--strict, -d, " {rules: {indentation: {spaces: 2}}}"]
         files: \.(yaml|yml)$
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.16.4
+    rev: v0.16.5
     hooks:
       # Run the linter.
       - id: ruff-check

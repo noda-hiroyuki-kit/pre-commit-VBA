@@ -1,20 +1,20 @@
 [project]
 name = "pre-commit-vba"
-version = "0.4.0"
+version = "0.4.1"
 description = "Extracts VBA code from Office files for managing VBA code in git and checks Office file integrity."
 readme = "README.md"
 requires-python = ">=3.14,<3.15"
 dependencies = [
     "olefile>=0.47",
     "pywin32>=312;platform_system == 'Windows'",
-    "typer>=0.27.1",
+    "typer>=0.27.2",
 ]
 
 [project.scripts]
 pre-commit-vba = "pre_commit_vba.pre_commit_vba:app"
 
 [build-system]
-requires = ["uv_build>=0.12.5,<0.13"]
+requires = ["uv_build>=0.12.9,<0.13"]
 build-backend = "uv_build"
 
 [dependency-groups]
@@ -24,10 +24,10 @@ dev = [
     "pre-commit-uv>=4.3.0",
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
-    "pytest-randomly>=4.1.0",
-    "ruff>=0.16.4",
+    "pytest-randomly>=5.0.0",
+    "ruff>=0.16.5",
     "termynal>=0.14.0",
-    "tox>=4.60.1",
+    "tox>=4.61.2",
     "tox-uv>=1.36.0",
     "zensical>=0.0.57",
 ]
@@ -191,6 +191,7 @@ testpaths = [
 markers=["develop_research"]
 
 [tool.coverage.report]
+fail_under = 80
 exclude_also = [
     "raise NotImplementedError",
 ]
