@@ -13,9 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Raise the minimum `uv_build` requirement from 0.12.9 to 0.12.10.
   `uv_build` の最小要件を 0.12.9 から 0.12.10 へ引き上げ.
-- Bump minimum `ruff` requirement from 0.16.5 to 0.16.6. ([#172])  
+- Bump minimum `ruff` requirement from 0.16.5 to 0.16.6. ([#172])
   `ruff` の最小要件を 0.16.5 から 0.16.6 へ引き上げ.
-- Bump minimum `zensical` requirement from 0.0.58 to 0.0.59. ([#172])  
+- Bump minimum `zensical` requirement from 0.0.59 to 0.0.60.
+  `zensical` の最小要件を 0.0.59 から 0.0.60 へ引き上げ.
+- Bump minimum `zensical` requirement from 0.0.58 to 0.0.59. ([#172])
   `zensical` の最小要件を 0.0.58 から 0.0.59 へ引き上げ.
 
 ## [0.4.1] - 2026-09-13
