@@ -14,7 +14,7 @@ dependencies = [
 pre-commit-vba = "pre_commit_vba.pre_commit_vba:app"
 
 [build-system]
-requires = ["uv_build>=0.12.9,<0.13"]
+requires = ["uv_build>=0.12.10,<0.13"]
 build-backend = "uv_build"
 
 [dependency-groups]
@@ -25,11 +25,11 @@ dev = [
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
     "pytest-randomly>=5.0.0",
-    "ruff>=0.16.5",
+    "ruff>=0.16.6",
     "termynal>=0.14.0",
     "tox>=4.61.2",
     "tox-uv>=1.36.0",
-    "zensical>=0.0.58",
+    "zensical>=0.0.59",
 ]
 
 [tool.uv]
