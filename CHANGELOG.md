@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-09-19
+
+### Changed
+
+- Raise the minimum `uv_build` requirement from 0.12.9 to 0.12.10.  
+  `uv_build` の最小要件を 0.12.9 から 0.12.10 へ引き上げ.
+- Bump minimum `ruff` requirement from 0.16.5 to 0.16.6. ([#172])  
+  `ruff` の最小要件を 0.16.5 から 0.16.6 へ引き上げ.
+- Bump minimum `zensical` requirement from 0.0.59 to 0.0.60.  
+  `zensical` の最小要件を 0.0.59 から 0.0.60 へ引き上げ.
+- Bump minimum `zensical` requirement from 0.0.58 to 0.0.59. ([#172])  
+  `zensical` の最小要件を 0.0.58 から 0.0.59 へ引き上げ.
+
 ## [0.4.1] - 2026-09-13
 
 ### Added
@@ -26,9 +39,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   CLI とヘルパーの分岐に対する自動テストカバレッジを100%に拡張.
 - Raise the minimum `typer` requirement from 0.27.1 to 0.27.2. ([#163])  
   `typer` の最小要件を 0.27.1 から 0.27.2 へ引き上げ.
-- Raise the minimum `uv_build` requirement from 0.12.5 to 0.12.9.
+- Raise the minimum `uv_build` requirement from 0.12.5 to 0.12.9.  
   `uv_build` の最小要件を 0.12.5 から 0.12.9 へ引き上げ.
-- Raise the minimum `pytest-randomly` requirement from 4.1.0 to 5.0.0.
+- Raise the minimum `pytest-randomly` requirement from 4.1.0 to 5.0.0.  
   `pytest-randomly` の最小要件を 4.1.0 から 5.0.0 へ引き上げ.
 - Update the `cspell` pre-commit hook from `v10.0.1` to `v10.2.0`.  
   `cspell` の pre-commit フックを `v10.0.1` から `v10.2.0` へ更新.
@@ -56,23 +69,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Rename the hook id from `check-excel-book-version` to `check-office-file-integrity` and keep the former id as a deprecated compatibility alias. ([#153])  
   hook id を `check-excel-book-version` から `check-office-file-integrity` に変更し, 旧 id は非推奨の互換 alias として維持.
-- Raise the minimum `uv_build` requirement from 0.12.1 to 0.12.5.
+- Raise the minimum `uv_build` requirement from 0.12.1 to 0.12.5.  
   `uv_build` の最小要件を 0.12.1 から 0.12.5 へ引き上げ.
-- Raise the minimum `mypy` requirement from 2.3.0 to 2.3.1.
+- Raise the minimum `mypy` requirement from 2.3.0 to 2.3.1.  
   `mypy` の最小要件を 2.3.0 から 2.3.1 へ引き上げ.
 - Raise the minimum `typer` requirement from 0.27.0 to 0.27.1. ([#147])  
   `typer` の最小要件を 0.27.0 から 0.27.1 へ引き上げ.
 - Bump minimum `pre-commit` requirement from 4.6.1 to 4.6.2. ([#149])  
   `pre-commit` の最小要件を 4.6.1 から 4.6.2 へ引き上げ.
-- Bump minimum `zensical` requirement from 0.0.53 to 0.0.55.
+- Bump minimum `zensical` requirement from 0.0.53 to 0.0.55.  
   `zensical` の最小要件を 0.0.53 から 0.0.55 へ引き上げ.
 - Bump minimum `zensical` requirement from 0.0.52 to 0.0.53. ([#150])  
   `zensical` の最小要件を 0.0.52 から 0.0.53 へ引き上げ.
-- Bump minimum `ruff` requirement from 0.16.2 to 0.16.3.
+- Bump minimum `ruff` requirement from 0.16.2 to 0.16.3.  
   `ruff` の最小要件を 0.16.2 から 0.16.3 へ引き上げ.
 - Bump minimum `ruff` requirement from 0.16.1 to 0.16.2. ([#151])  
   `ruff` の最小要件を 0.16.1 から 0.16.2 へ引き上げ.
-- Bump minimum `tox` requirement from 4.59.0 to 4.60.0.
+- Bump minimum `tox` requirement from 4.59.0 to 4.60.0.  
   `tox` の最小要件を 4.59.0 から 4.60.0 へ引き上げ.
 - Bump minimum `tox` requirement from 4.58.0 to 4.59.0. ([#152])  
   `tox` の最小要件を 4.58.0 から 4.59.0 へ引き上げ.
@@ -367,7 +380,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release as first version
 
-[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.4.1...HEAD
+[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.4.2...HEAD
+[0.4.2]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.14...v0.4.0
 [0.3.14]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.13...v0.3.14
@@ -441,3 +455,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#165]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/165
 [#167]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/167
 [#168]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/168
+[#172]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/172
