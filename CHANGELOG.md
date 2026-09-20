@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Replace the legacy pre-commit configuration and tooling references with prek for local hook execution and project automation.  
+  pre-commit の legacy 設定とツール参照を prek に置き換え, ローカル hook 実行とプロジェクトの自動化を統一.
+- Add `zizmor` and `pinact` to validate and pin GitHub Actions workflow dependencies, including disabling checkout credential persistence.  
+  GitHub Actions workflow の依存関係を検証・固定するため, `zizmor` と `pinact` を追加し, checkout の認証情報永続化を無効化.
+
+
 ## [0.4.2] - 2026-09-19
 
 ### Changed
