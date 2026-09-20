@@ -34,7 +34,7 @@ jobs:
             uv.lock
 
       - name: Update pre-commit hooks
-        run: uv run prek auto-update --freeze --cooldown-days 10
+        run: uv run prek update --cooldown-days 10
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
@@ -44,7 +44,7 @@ jobs:
           body: |
             Automated update of `.pre-commit-config.yaml` by GitHub Actions.
 
-            - Ran `uv run prek auto-update --freeze --cooldown-days 10`
+            - Ran `uv run prek update --cooldown-days 10`
             - Schedule: every Friday 18:00 Asia/Tokyo
           branch: chore/pre-commit-autoupdate
           delete-branch: true
