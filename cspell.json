@@ -81,6 +81,7 @@
         "nosetests",
         "openstream",
         "pathspec",
+        "pinact",
         "pipenv",
         "Pipfile",
         "platformdirs",
