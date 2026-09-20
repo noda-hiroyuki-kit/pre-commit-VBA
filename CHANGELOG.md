@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Replace the legacy pre-commit configuration and tooling references with prek for local hook execution and project automation.
+  pre-commit の legacy 設定とツール参照を prek に置き換え, ローカル hook 実行とプロジェクトの自動化を統一.
+
+
 ## [0.4.2] - 2026-09-19
 
 ### Changed

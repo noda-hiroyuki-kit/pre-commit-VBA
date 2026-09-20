@@ -25,9 +25,14 @@ jobs:
 
       - name: Setup uv
         uses: astral-sh/setup-uv@v10.0.1
+        with:
+          version: "latest-known"
+          cache-dependency-glob: |
+            pyproject.toml
+            uv.lock
 
       - name: Update pre-commit hooks
-        run: uv run --group dev pre-commit autoupdate
+        run: uv run prek auto-update --freeze --cooldown-days 10
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v8.1.1
@@ -37,7 +42,7 @@ jobs:
           body: |
             Automated update of `.pre-commit-config.yaml` by GitHub Actions.
 
-            - Ran `uv run --group dev pre-commit autoupdate`
+            - Ran `uv run prek auto-update --freeze --cooldown-days 10`
             - Schedule: every Friday 18:00 Asia/Tokyo
           branch: chore/pre-commit-autoupdate
           delete-branch: true
