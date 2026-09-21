@@ -1,3 +1,9 @@
+# This file is derived from FastAPI's scripts/docs.py:
+# https://github.com/fastapi/fastapi/blob/master/scripts/docs.py
+# Copyright (c) 2018 Sebastián Ramírez
+# SPDX-License-Identifier: MIT
+# See LICENSE in the repository root for the full license text.
+
 import json
 import logging
 import os
