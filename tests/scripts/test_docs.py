@@ -444,6 +444,14 @@ def test_permalink_states_validation_and_delegates(
     monkeypatch.chdir(tmp_path)
     docs.add_permalinks_page(Path("docs/ja/docs/api.md"))
     assert page.read_text(encoding="utf-8") == "# API\n"
+    tilde_page = docs_root / "tilde.md"
+    tilde_page.write_text(
+        "# Visible\n\n~~~markdown\n## Hidden\n~~~\n", encoding="utf-8"
+    )
+    docs.add_permalinks_page(tilde_page)
+    assert tilde_page.read_text(encoding="utf-8") == (
+        "# Visible { #visible }\n\n~~~markdown\n## Hidden\n~~~\n"
+    )
     page_a = tmp_path / "a.md"
     page_b = tmp_path / "b.md"
     page_a.write_text("", encoding="utf-8")
