@@ -260,7 +260,7 @@ def stage_translated_docs(
             )
 
     for translated_file in lang_docs_path.rglob("*"):
-        if not translated_file.is_file():
+        if not translated_file.is_file() or translated_file.suffix == ".bkp":
             continue
         relative_path = translated_file.relative_to(lang_docs_path)
         if relative_path.name == "translation-banner.md":
@@ -415,7 +415,21 @@ def update_alternate_languages(
     alternate: list[dict[str, str]],
 ) -> str:
     """Update only the alternate array while preserving the rest of the TOML."""
-    alternate_text = str(tomli_w.dumps({"alternate": alternate})).rstrip("\n")
+    if not alternate:
+        alternate_text = "alternate = []"
+    else:
+        alternate_items = []
+        for item in alternate:
+            values = ", ".join(
+                f"{key} = {tomli_w.dumps({key: value}).split('=', 1)[1].strip()}"
+                for key, value in item.items()
+            )
+            alternate_items.append(f"{{ {values} }},")
+        alternate_text = (
+            "alternate = [\n"
+            + "\n".join(f"    {item}" for item in alternate_items)
+            + "\n]"
+        )
     alternate_pattern = re.compile(
         r"^alternate\s*=\s*\[\n.*?^\](?=\n)",
         re.MULTILINE | re.DOTALL,
@@ -497,7 +511,9 @@ def live() -> None:
 def get_updated_config_content() -> dict[str, Any]:
     """Return the Japanese Zensical config with the alternate language links added."""
     config = get_ja_config()
-    languages = [{"ja": site_url}]
+    # Alternate links are root-relative so local previews stay on the local
+    # site instead of jumping to the deployed production docs.
+    languages = [{"ja": "/"}]
     new_alternate: list[dict[str, str]] = []
     #
     # Language names sourced from https://quickref.me/iso-639-1
@@ -513,7 +529,7 @@ def get_updated_config_content() -> dict[str, Any]:
             # Skip languages that are not yet ready
             continue
         code = lang_path.name
-        languages.append({code: f"{site_url}{code}/"})
+        languages.append({code: f"/{code}/"})
     for lang_dict in languages:
         code = next(iter(lang_dict.keys()))
         url = lang_dict[code]

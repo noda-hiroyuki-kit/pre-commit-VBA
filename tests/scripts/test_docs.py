@@ -192,10 +192,16 @@ def test_asset_and_alternate_config_helpers() -> None:
     config = {"theme": "invalid"}
     docs.make_root_asset_paths(config)
     assert config == {"theme": {}, "extra_css": [], "extra_javascript": []}
-    alternate = [{"name": "ja - Japanese", "link": "/", "lang": "ja"}]
+    alternate = [
+        {"name": "ja - Japanese", "link": "/", "lang": "ja"},
+        {"name": "en - English", "link": "/en/", "lang": "en"},
+    ]
     source = 'title = "Docs"\nalternate = [\n  { name = "old" }\n]\nfooter = true\n'
     result = docs.update_alternate_languages(source, alternate)
     assert 'name = "ja - Japanese"' in result and 'title = "Docs"' in result
+    assert "alternate = [" in result
+    assert "[[alternate]]" not in result
+    assert tomllib.loads(result)["alternate"] == alternate
     with pytest.raises(ValueError, match="exactly one"):
         docs.update_alternate_languages('title = "Docs"\n', alternate)
     with pytest.raises(ValueError, match="exactly one"):
@@ -260,10 +266,12 @@ def test_stage_translated_docs_skips_directories(
     staged.mkdir()
     translated.mkdir()
     (translated / "nested").mkdir()
+    (translated / "editor.bkp").write_text("temporary", encoding="utf-8")
 
     docs.stage_translated_docs(staged, translated, "Needs translation")
 
     assert not (staged / "nested").exists()
+    assert not (staged / "editor.bkp").exists()
 
 
 def test_config_build_and_copy_helpers(
@@ -366,8 +374,8 @@ def test_updated_config_cleanup_and_build_all(
     )
     result = docs.get_updated_config_content()
     alternate = result["project"]["extra"]["alternate"]
-    assert alternate[0]["link"] == docs.site_url
-    assert alternate[-1]["link"] == f"{docs.site_url}en/"
+    assert alternate[0]["link"] == "/"
+    assert alternate[-1]["link"] == "/en/"
     assert alternate[-1]["lang"] == "en"
     names.write_text("en: English\n", encoding="utf-8")
     with pytest.raises(typer.Abort):
