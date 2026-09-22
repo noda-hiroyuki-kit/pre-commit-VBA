@@ -573,8 +573,8 @@ def add_permalinks_page(path: Path, *, update_existing: bool = False) -> None:
     for current_line in lines:
         in_code_block3, in_code_block4 = _update_code_block_state(
             current_line,
-            in_code_block3,
-            in_code_block4,
+            in_code_block3=in_code_block3,
+            in_code_block4=in_code_block4,
         )
         if in_code_block3 or in_code_block4:
             updated_lines.append(current_line)
