@@ -82,11 +82,13 @@
         "nosetests",
         "openstream",
         "pathspec",
+        "pinact",
         "pipenv",
         "Pipfile",
         "platformdirs",
         "pluggy",
         "Predeclared",
+        "prek",
         "pybuilder",
         "pycache",
         "pycodestyle",
@@ -136,6 +138,7 @@
         "virtualenv",
         "webassets",
         "xlsb",
-        "zensical"
+        "zensical",
+        "zizmor"
     ]
 }
