@@ -313,7 +313,11 @@ def stage_zensical_docs(lang: str) -> Path:
 
 def get_zensical_executable() -> Path:
     """Return the path to the executable Zensical binary."""
-    return Path(shutil.which("zensical"))
+    executable = shutil.which("zensical")
+    if executable is None:
+        message = "Zensical executable was not found on PATH"
+        raise FileNotFoundError(message)
+    return Path(executable)
 
 
 def build_zensical_config(config_path: Path) -> None:
