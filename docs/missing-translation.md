@@ -2,8 +2,7 @@
 
 This page hasn’t been translated into your language yet. 🌍
 
-We’re currently switching to an automated translation system 🤖, which will help keep all translations complete and up to date.
-
-Learn more: [Contributing - Translations](https://fastapi.tiangolo.com/contributing/#translations){.internal-link target=_blank}
+You can help by translating this page and submitting a pull request.
+Please see our [Contributing Guide](https://github.com/noda-hiroyuki-kit/pre-commit-vba/blob/develop/CONTRIBUTING.md){target=_blank} for details.
 
 ///
