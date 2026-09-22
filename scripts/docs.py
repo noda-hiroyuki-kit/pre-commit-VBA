@@ -381,7 +381,10 @@ def build_all() -> None:
 
 @app.command()
 def update_languages() -> None:
-    """Update the docs config Languages section including all the available languages."""
+    """Update the docs config Languages section.
+
+    Includes all the available languages.
+    """
     old_config = get_ja_config()
     updated_config = get_updated_config_content()
     if old_config != updated_config:
