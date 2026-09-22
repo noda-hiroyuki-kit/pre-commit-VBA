@@ -351,7 +351,9 @@ def test_updated_config_cleanup_and_build_all(
         ],
     )
     result = docs.get_updated_config_content()
-    assert result["project"]["extra"]["alternate"][-1]["lang"] == "en"
+    alternate = result["project"]["extra"]["alternate"]
+    assert alternate[0]["link"] == docs.site_url
+    assert alternate[-1]["lang"] == "en"
     names.write_text("en: English\n", encoding="utf-8")
     with pytest.raises(typer.Abort):
         docs.get_updated_config_content()
