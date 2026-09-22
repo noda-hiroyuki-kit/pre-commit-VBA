@@ -470,8 +470,10 @@ def test_callback_live_and_serve(monkeypatch: pytest.MonkeyPatch) -> None:
     assert run.called
 
     class StopServer:
-        def __init__(self, *_: object) -> None:
-            pass
+        address: tuple[str, int]
+
+        def __init__(self, server_address: tuple[str, int], *_: object) -> None:
+            type(self).address = server_address
 
         def serve_forever(self) -> None:
             raise RuntimeError("stop")
