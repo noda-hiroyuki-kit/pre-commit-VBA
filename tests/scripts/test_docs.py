@@ -252,6 +252,20 @@ def test_stage_translation_and_japanese_config(
     assert config["project"]["site_url"] == docs.site_url
 
 
+def test_stage_translated_docs_skips_directories(
+    tmp_path: Path,
+) -> None:
+    staged = tmp_path / "staged"
+    translated = tmp_path / "translated"
+    staged.mkdir()
+    translated.mkdir()
+    (translated / "nested").mkdir()
+
+    docs.stage_translated_docs(staged, translated, "Needs translation")
+
+    assert not (staged / "nested").exists()
+
+
 def test_config_build_and_copy_helpers(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -401,6 +415,11 @@ def test_permalink_states_validation_and_delegates(
     assert docs._update_code_block_state(
         "text\n", in_code_block3=True, in_code_block4=False
     ) == (True, False)
+    assert docs._update_code_block_state(
+        "text\n", in_code_block3=False, in_code_block4=False
+    ) == (False, False)
+    assert docs._detect_fence("  ``\n") is None
+    assert docs._detect_fence("heading\n") is None
     extractor = docs.VisibleTextExtractor()
     permalinks = {"title"}
     assert (
