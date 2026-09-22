@@ -444,6 +444,12 @@ def test_permalink_states_validation_and_delegates(
     monkeypatch.chdir(tmp_path)
     docs.add_permalinks_page(Path("docs/ja/docs/api.md"))
     assert page.read_text(encoding="utf-8") == "# API\n"
+    nested_api = docs_root / "api" / "index.md"
+    nested_api.parent.mkdir()
+    nested_api.write_text("# Nested API\n", encoding="utf-8")
+    monkeypatch.setattr(docs, "non_translated_sections", ("api/",))
+    docs.add_permalinks_page(Path("docs/ja/docs/api/index.md"))
+    assert nested_api.read_text(encoding="utf-8") == "# Nested API\n"
     tilde_page = docs_root / "tilde.md"
     tilde_page.write_text(
         "# Visible\n\n~~~markdown\n## Hidden\n~~~\n", encoding="utf-8"
