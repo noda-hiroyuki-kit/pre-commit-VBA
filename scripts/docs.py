@@ -262,7 +262,10 @@ def make_root_asset_paths(project_config: dict[str, object]) -> None:
 
 
 def stage_zensical_docs(lang: str) -> Path:
-    """Stage the English docs tree into the Zensical output for a target language."""
+    """Stage the Japanese source docs tree into the Zensical output.
+
+    The target language determines which translations overwrite the staged pages.
+    """
     lang_docs_path = docs_path / lang / "docs"
     if not lang_docs_path.is_dir():
         typer.echo(f"The language translation doesn't seem to exist yet: {lang}")
@@ -300,7 +303,7 @@ def stage_zensical_docs(lang: str) -> Path:
     config.setdefault("theme", {})
     project_config["theme"]["language"] = get_zensical_theme_language(lang)
     if lang != "ja":
-        # The root English build owns shared static assets; translated builds should
+        # The root Japanese build owns shared static assets; translated builds should
         # reference those root paths instead of emitting language-local copies.
         make_root_asset_paths(project_config)
     config_path = lang_stage_path / zensical_name
@@ -444,7 +447,7 @@ def live() -> None:
 
 
 def get_updated_config_content() -> dict[str, Any]:
-    """Return the Japanese MkDocs config with the alternate language links added."""
+    """Return the Japanese Zensical config with the alternate language links added."""
     config = get_ja_config()
     languages = [{"ja": "/"}]
     new_alternate: list[dict[str, str]] = []
@@ -605,7 +608,7 @@ def add_permalinks_pages(
         help="Update existing permalinks.",
     ),
 ) -> None:
-    """Add or update header permalinks in specific pages of En docs."""
+    """Add or update header permalinks in specific pages of Japanese docs."""
     for md_file in pages:
         add_permalinks_page(md_file, update_existing=update_existing)
 
