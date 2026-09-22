@@ -583,7 +583,8 @@ def _make_permalink_line(
 @app.command()
 def add_permalinks_page(path: Path, *, update_existing: bool = False) -> None:
     """Add or update header permalinks in specific page of Ja docs."""
-    docs_root = ja_docs_path / "docs"
+    docs_root = (ja_docs_path / "docs").resolve()
+    path = path.resolve()
     if not path.is_relative_to(docs_root):
         message = f"Path must be inside {docs_root}"
         raise RuntimeError(message)

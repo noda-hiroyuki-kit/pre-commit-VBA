@@ -428,7 +428,8 @@ def test_permalink_states_validation_and_delegates(
     page = docs_root / "api.md"
     page.write_text("# API\n", encoding="utf-8")
     monkeypatch.setattr(docs, "non_translated_sections", ("api.md",))
-    docs.add_permalinks_page(page)
+    monkeypatch.chdir(tmp_path)
+    docs.add_permalinks_page(Path("docs/ja/docs/api.md"))
     assert page.read_text(encoding="utf-8") == "# API\n"
     page_a = tmp_path / "a.md"
     page_b = tmp_path / "b.md"
