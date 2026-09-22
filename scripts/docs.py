@@ -258,10 +258,7 @@ def make_root_asset_paths(project_config: dict[str, object]) -> None:
         paths = project_config.get(key, [])
         if not isinstance(paths, list):
             paths = []
-        project_config[key] = [
-            "/" + str(path).lstrip("/")
-            for path in paths
-        ]
+        project_config[key] = ["/" + str(path).lstrip("/") for path in paths]
 
 
 def stage_zensical_docs(lang: str) -> Path:
@@ -526,45 +523,46 @@ def add_permalinks_page(path: Path, *, update_existing: bool = False) -> None:
     with path.open("r", encoding="utf-8") as f:
         lines = f.readlines()
 
+    def update_code_block_state(line: str) -> tuple[bool, bool]:
+        if in_code_block4:
+            return False, not code_block4_pattern.match(line)
+        if in_code_block3:
+            return not code_block3_pattern.match(line), False
+        if code_block4_pattern.match(line):
+            return False, True
+        return code_block3_pattern.match(line) is not None, False
+
+    def make_permalink_line(line: str) -> str:
+        match = header_pattern.match(line)
+        if not match:
+            return line
+
+        hashes, title, existing_permalink = match.groups()
+        if existing_permalink and not update_existing:
+            return line
+
+        slug = slugify(
+            visible_text_extractor.extract_visible_text(strip_markdown_links(title)),
+        )
+        if slug in permalinks:
+            original_slug = slug
+            count = 1
+            while slug in permalinks:
+                slug = f"{original_slug}_{count}"
+                count += 1
+        permalinks.add(slug)
+        return f"{hashes} {title} {{ #{slug} }}\n"
+
     for current_line in lines:
         # Handle codeblocks start and end
-        if not (in_code_block3 or in_code_block4):
-            if code_block4_pattern.match(current_line):
-                in_code_block4 = True
-            elif code_block3_pattern.match(current_line):
-                in_code_block3 = True
-        elif in_code_block4 and code_block4_pattern.match(current_line):
-            in_code_block4 = False
-        elif in_code_block3 and code_block3_pattern.match(current_line):
-            in_code_block3 = False
+        in_code_block3, in_code_block4 = update_code_block_state(current_line)
 
         # Process Headers only outside codeblocks
         if in_code_block3 or in_code_block4:
             updated_lines.append(current_line)
             continue
 
-        match = header_pattern.match(current_line)
-        if not match:
-            updated_lines.append(current_line)
-            continue
-
-        hashes, title, _permalink = match.groups()
-        if _permalink and not update_existing:
-            updated_lines.append(current_line)
-            continue
-
-        slug = slugify(
-            visible_text_extractor.extract_visible_text(strip_markdown_links(title)),
-        )
-        if slug in permalinks:
-            # If the slug is already used, append a number to make it unique
-            count = 1
-            original_slug = slug
-            while slug in permalinks:
-                slug = f"{original_slug}_{count}"
-                count += 1
-        permalinks.add(slug)
-        updated_lines.append(f"{hashes} {title} {{ #{slug} }}\n")
+        updated_lines.append(make_permalink_line(current_line))
 
     with path.open("w", encoding="utf-8") as f:
         f.writelines(updated_lines)
