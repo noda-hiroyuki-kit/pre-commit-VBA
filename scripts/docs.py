@@ -87,14 +87,16 @@ class VisibleTextExtractor(HTMLParser):
 
 def slugify(text: str) -> str:
     """Generate a URL-safe slug from markdown-like text."""
-    return py_slugify(
-        text,
-        replacements=[
-            ("`", ""),  # `dict`s -> dicts
-            ("'s", "s"),  # it's -> its
-            ("'t", "t"),  # don't -> dont
-            ("**", ""),  # **FastAPI**s -> FastAPIs
-        ],
+    return str(
+        py_slugify(
+            text,
+            replacements=[
+                ("`", ""),  # `dict`s -> dicts
+                ("'s", "s"),  # it's -> its
+                ("'t", "t"),  # don't -> dont
+                ("**", ""),  # **FastAPI**s -> FastAPIs
+            ],
+        ),
     )
 
 
@@ -448,6 +450,7 @@ def get_updated_config_content() -> dict[str, Any]:
     config = get_ja_config()
     languages = [{"ja": "/"}]
     new_alternate: list[dict[str, str]] = []
+    #
     # Language names sourced from https://quickref.me/iso-639-1
     # Contributors may wish to update or change these, e.g. to fix capitalization.
     language_names_path = Path(docs_path, "language_names.yml")
