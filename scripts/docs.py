@@ -417,9 +417,13 @@ def serve() -> None:
 @app.command()
 def live() -> None:
     """Serve the Japanese docs with live reload from the source files."""
-    subprocess.run(  # nosec B603, S603: the executable is validated and arguments are fixed.
+    executable = get_zensical_executable()
+    if not executable.is_file():
+        message = "The Zensical executable could not be found."
+        raise RuntimeError(message)
+    subprocess.run(  # noqa: S603 - executable is validated and arguments are fixed
         [  # nosec S607
-            get_zensical_executable(),
+            executable,
             "serve",
             "--config-file",
             zensical_name,
@@ -428,6 +432,7 @@ def live() -> None:
         ],
         cwd=ja_docs_path,
         check=True,
+        shell=False,
     )
 
 
