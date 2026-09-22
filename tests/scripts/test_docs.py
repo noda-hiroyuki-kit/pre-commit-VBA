@@ -499,6 +499,7 @@ def test_callback_live_and_serve(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(docs.os, "chdir", Mock())
     with pytest.raises(RuntimeError, match="stop"):
         docs.serve()
+    assert StopServer.address == ("127.0.0.1", 8008)
 
 
 def test_remaining_cli_paths(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

@@ -52,6 +52,7 @@ header_pattern = re.compile(r"^(#{1,6}) (.+?)(?:\s*\{\s*(#.*)\s*\})?\s*$")
 header_with_permalink_pattern = re.compile(r"^(#{1,6}) (.+?)(\s*\{\s*#.*\s*\})\s*$")
 code_block3_pattern = re.compile(r"^\s*```")
 code_block4_pattern = re.compile(r"^\s*````")
+minimum_fence_length = 3
 
 
 # Pattern to match markdown links: [text](url) → text
@@ -496,7 +497,7 @@ def live() -> None:
 def get_updated_config_content() -> dict[str, Any]:
     """Return the Japanese Zensical config with the alternate language links added."""
     config = get_ja_config()
-    languages = [{"ja": "/"}]
+    languages = [{"ja": site_url}]
     new_alternate: list[dict[str, str]] = []
     #
     # Language names sourced from https://quickref.me/iso-639-1
@@ -512,7 +513,7 @@ def get_updated_config_content() -> dict[str, Any]:
             # Skip languages that are not yet ready
             continue
         code = lang_path.name
-        languages.append({code: f"/{code}/"})
+        languages.append({code: f"{site_url}{code}/"})
     for lang_dict in languages:
         code = next(iter(lang_dict.keys()))
         url = lang_dict[code]
@@ -579,6 +580,20 @@ def _update_code_block_state(
     return code_block3_pattern.match(line) is not None, False
 
 
+def _detect_fence(line: str) -> tuple[str, int] | None:
+    """Return the fence character and length for a Markdown code fence."""
+    stripped = line.lstrip()
+    if not stripped:
+        return None
+    first_char = stripped[0]
+    if first_char not in {"`", "~"}:
+        return None
+    fence_length = len(stripped) - len(stripped.lstrip(first_char))
+    if fence_length >= minimum_fence_length:
+        return first_char, fence_length
+    return None
+
+
 def _make_permalink_line(
     line: str,
     *,
@@ -616,7 +631,7 @@ def add_permalinks_page(path: Path, *, update_existing: bool = False) -> None:
         message = f"Path must be inside {docs_root}"
         raise RuntimeError(message)
     rel_path = path.relative_to(docs_root)
-    if str(rel_path).startswith(non_translated_sections):
+    if rel_path.as_posix().startswith(non_translated_sections):
         return
 
     visible_text_extractor = VisibleTextExtractor()
@@ -625,14 +640,20 @@ def add_permalinks_page(path: Path, *, update_existing: bool = False) -> None:
         lines = f.readlines()
 
     updated_lines: list[str] = []
-    in_code_block3 = in_code_block4 = False
+    in_fence: tuple[str, int] | None = None
     for current_line in lines:
-        in_code_block3, in_code_block4 = _update_code_block_state(
-            current_line,
-            in_code_block3=in_code_block3,
-            in_code_block4=in_code_block4,
-        )
-        if in_code_block3 or in_code_block4:
+        fence = _detect_fence(current_line)
+        if in_fence is not None:
+            if (
+                fence is not None
+                and fence[0] == in_fence[0]
+                and fence[1] >= in_fence[1]
+            ):
+                in_fence = None
+            updated_lines.append(current_line)
+            continue
+        if fence is not None:
+            in_fence = fence
             updated_lines.append(current_line)
             continue
         updated_lines.append(
