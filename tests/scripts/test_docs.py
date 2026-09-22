@@ -163,6 +163,10 @@ def test_text_path_and_language_helpers(
     assert docs.get_zensical_theme_language("en") == "en"
     assert docs.lang_callback(None) is None
     assert docs.lang_callback("JA") == "ja"
+    absolute_lang = str(Path(Path.cwd().anchor) / "tmp" / "ja")
+    for unsafe_lang in ("../docs/ja", ".", "..", "foo/bar", absolute_lang):
+        with pytest.raises(typer.BadParameter, match="single path component"):
+            docs.lang_callback(unsafe_lang)
     docs_root = tmp_path / "docs"
     (docs_root / "ja").mkdir(parents=True)
     (docs_root / "ja-extra").mkdir()

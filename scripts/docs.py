@@ -108,11 +108,25 @@ def get_lang_paths() -> list[Path]:
     return sorted(docs_path.iterdir())
 
 
+def _validate_lang_value(lang: str) -> str:
+    """Reject unsafe language values before they are used in filesystem paths."""
+    normalized = lang.lower()
+    lang_path = Path(normalized)
+    if (
+        lang_path.is_absolute()
+        or normalized in {".", ".."}
+        or len(lang_path.parts) != 1
+    ):
+        message = "Language must be a single path component without '.' or '..'"
+        raise typer.BadParameter(message)
+    return normalized
+
+
 def lang_callback(lang: str | None) -> str | None:
     """Normalize a language code for CLI argument validation."""
     if lang is None:
         return None
-    return lang.lower()
+    return _validate_lang_value(lang)
 
 
 def complete_existing_lang(incomplete: str) -> Iterator[str]:
