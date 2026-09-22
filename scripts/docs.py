@@ -382,6 +382,24 @@ def build_all() -> None:
     typer.secho("Successfully built all docs", fg=typer.colors.GREEN)
 
 
+def update_alternate_languages(
+    config_text: str,
+    alternate: list[dict[str, str]],
+) -> str:
+    """Update only the alternate array while preserving the rest of the TOML."""
+    alternate_text = str(tomli_w.dumps({"alternate": alternate})).rstrip("\n")
+    alternate_pattern = re.compile(
+        r"^alternate\s*=\s*\[\n.*?^\](?=\n)",
+        re.MULTILINE | re.DOTALL,
+    )
+    matches: list[re.Match[str]] = list(alternate_pattern.finditer(config_text))
+    if len(matches) != 1:
+        message = "Expected exactly one alternate array in the config"
+        raise ValueError(message)
+    match = matches[0]
+    return config_text[: match.start()] + alternate_text + config_text[match.end() :]
+
+
 @app.command()
 def update_languages() -> None:
     """Update the docs config Languages section.
@@ -393,8 +411,10 @@ def update_languages() -> None:
     if old_config != updated_config:
         typer.echo("docs/ja/zensical.toml outdated")
         typer.echo("Updating docs/ja/zensical.toml")
+        alternate = updated_config["project"]["extra"]["alternate"]
+        config_text = ja_config_path.read_text(encoding="utf-8")
         ja_config_path.write_text(
-            tomli_w.dumps(updated_config),
+            update_alternate_languages(config_text, alternate),
             encoding="utf-8",
         )
         raise typer.Exit(1)
@@ -476,7 +496,7 @@ def get_updated_config_content() -> dict[str, Any]:
             )
             raise typer.Abort
         use_name = f"{code} - {local_language_names[code]}"
-        new_alternate.append({"link": url, "name": use_name})
+        new_alternate.append({"name": use_name, "link": url, "lang": code})
     config["project"]["extra"]["alternate"] = new_alternate
     return config
 
