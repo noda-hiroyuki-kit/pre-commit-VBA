@@ -501,6 +501,48 @@ def langs_json() -> None:
     typer.echo(json.dumps(langs))
 
 
+def _update_code_block_state(
+    line: str,
+    *,
+    in_code_block3: bool,
+    in_code_block4: bool,
+) -> tuple[bool, bool]:
+    if in_code_block4:
+        return False, not code_block4_pattern.match(line)
+    if in_code_block3:
+        return not code_block3_pattern.match(line), False
+    if code_block4_pattern.match(line):
+        return False, True
+    return code_block3_pattern.match(line) is not None, False
+
+
+def _make_permalink_line(
+    line: str,
+    *,
+    update_existing: bool,
+    visible_text_extractor: VisibleTextExtractor,
+    permalinks: set[str],
+) -> str:
+    match = header_pattern.match(line)
+    if not match:
+        return line
+
+    hashes, title, existing_permalink = match.groups()
+    if existing_permalink and not update_existing:
+        return line
+
+    slug = slugify(
+        visible_text_extractor.extract_visible_text(strip_markdown_links(title)),
+    )
+    original_slug = slug
+    count = 1
+    while slug in permalinks:
+        slug = f"{original_slug}_{count}"
+        count += 1
+    permalinks.add(slug)
+    return f"{hashes} {title} {{ #{slug} }}\n"
+
+
 @app.command()
 def add_permalinks_page(path: Path, *, update_existing: bool = False) -> None:
     """Add or update header permalinks in specific page of Ja docs."""
@@ -509,60 +551,33 @@ def add_permalinks_page(path: Path, *, update_existing: bool = False) -> None:
         message = f"Path must be inside {docs_root}"
         raise RuntimeError(message)
     rel_path = path.relative_to(docs_root)
-
-    # Skip excluded sections
     if str(rel_path).startswith(non_translated_sections):
         return
 
     visible_text_extractor = VisibleTextExtractor()
-    updated_lines: list[str] = []
-    in_code_block3 = False
-    in_code_block4 = False
     permalinks: set[str] = set()
-
     with path.open("r", encoding="utf-8") as f:
         lines = f.readlines()
 
-    def update_code_block_state(line: str) -> tuple[bool, bool]:
-        if in_code_block4:
-            return False, not code_block4_pattern.match(line)
-        if in_code_block3:
-            return not code_block3_pattern.match(line), False
-        if code_block4_pattern.match(line):
-            return False, True
-        return code_block3_pattern.match(line) is not None, False
-
-    def make_permalink_line(line: str) -> str:
-        match = header_pattern.match(line)
-        if not match:
-            return line
-
-        hashes, title, existing_permalink = match.groups()
-        if existing_permalink and not update_existing:
-            return line
-
-        slug = slugify(
-            visible_text_extractor.extract_visible_text(strip_markdown_links(title)),
-        )
-        if slug in permalinks:
-            original_slug = slug
-            count = 1
-            while slug in permalinks:
-                slug = f"{original_slug}_{count}"
-                count += 1
-        permalinks.add(slug)
-        return f"{hashes} {title} {{ #{slug} }}\n"
-
+    updated_lines: list[str] = []
+    in_code_block3 = in_code_block4 = False
     for current_line in lines:
-        # Handle codeblocks start and end
-        in_code_block3, in_code_block4 = update_code_block_state(current_line)
-
-        # Process Headers only outside codeblocks
+        in_code_block3, in_code_block4 = _update_code_block_state(
+            current_line,
+            in_code_block3,
+            in_code_block4,
+        )
         if in_code_block3 or in_code_block4:
             updated_lines.append(current_line)
             continue
-
-        updated_lines.append(make_permalink_line(current_line))
+        updated_lines.append(
+            _make_permalink_line(
+                current_line,
+                update_existing=update_existing,
+                visible_text_extractor=visible_text_extractor,
+                permalinks=permalinks,
+            ),
+        )
 
     with path.open("w", encoding="utf-8") as f:
         f.writelines(updated_lines)
