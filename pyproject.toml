@@ -26,11 +26,14 @@ dev = [
     "pytest-cov>=7.1.0",
     "pytest-randomly>=5.0.0",
     "pyyaml>=6.0.3",
+    "python-slugify>=8.0.4",
     "ruff>=0.16.5",
     "termynal>=0.14.0",
     "tox>=4.61.2",
     "tox-uv>=1.36.0",
     "zensical>=0.0.58",
+    "types-pyyaml>=6.0.12.20260815",
+    "tomli-w>=1.2.0",
 ]
 
 [tool.uv]
