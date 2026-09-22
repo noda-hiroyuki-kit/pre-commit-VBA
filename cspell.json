@@ -6,6 +6,7 @@
         "powershell"
     ],
     "ignorePaths": [
+        "language_names.yml",
         "**/*.svg",
         "uv.lock"
     ],
@@ -116,6 +117,7 @@
         "Sabotaro",
         "Scrapy",
         "sdist",
+        "secho",
         "shellingham",
         "smartsymbols",
         "Spyder",

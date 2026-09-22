@@ -11,7 +11,7 @@ icon: lucide/folder-git-2
 ## 手順 1: クローンして移動
 
 1. GitHub でリポジトリ URL をコピーします.  
-    ![remote repository url](../../../img/demo/step-02/repository-first.drawio.svg){width="700"}
+    ![remote repository url](../../img/demo/step-02/repository-first.drawio.svg){width="700"}
 2. ターミナルで次を実行します.
     ```console
     git clone <コピーしたURL>

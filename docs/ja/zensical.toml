@@ -17,7 +17,7 @@ site_name = "pre-commit-vba"
 # meaningful description of the site content for use by search engines.
 #
 # Read more: https://zensical.org/docs/setup/basics/#site_description
-site_description = "This is a Python script that extracts VBA code from Excel files for managing VBA code in git."
+site_description = "pre-commit-vba is a Python tool that extracts VBA code from Office files to make source code management with Git easier."
 
 # The site_author attribute. This is used in the HTML head element.
 #
@@ -49,43 +49,22 @@ watch = ["pyproject.toml"]
 #
 # Read more: https://zensical.org/docs/setup/navigation/
 nav = [
-    { "Home" = "index.md" },
-    { "日本語" = [
-        "ja/index.md",
-        "ja/getting-started.md",
-        { "デモ" = [
-            "ja/demo/sample-usage.md",
-            "ja/demo/step-01/create-remote-repository.md",
-            "ja/demo/step-02/local-repository.md",
-            "ja/demo/step-03/pull-request.md",
-            "ja/demo/step-04/setup-dev-environment.md",
-            "ja/demo/step-05/create-excel-app.md",
-            "ja/demo/step-06/preparation-release.md",
-            "ja/demo/step-07/release-main-branch.md"
+        "index.md",
+        "getting-started.md",
+        { "" = [
+            "demo/sample-usage.md",
+            "demo/step-01/create-remote-repository.md",
+            "demo/step-02/local-repository.md",
+            "demo/step-03/pull-request.md",
+            "demo/step-04/setup-dev-environment.md",
+            "demo/step-05/create-excel-app.md",
+            "demo/step-06/preparation-release.md",
+            "demo/step-07/release-main-branch.md"
         ]},
-        "ja/options-guide.md",
-        "ja/reference.md",
-        "ja/contributing.md",
-        "ja/code-of-conduct.md",
-   ]},
-   { "English" = [
-        "en/index.md",
-        "en/getting-started.md",
-        { "demo" = [
-            "en/demo/sample-usage.md",
-            "en/demo/step-01/create-remote-repository.md",
-            "en/demo/step-02/local-repository.md",
-            "en/demo/step-03/pull-request.md",
-            "en/demo/step-04/setup-dev-environment.md",
-            "en/demo/step-05/create-excel-app.md",
-            "en/demo/step-06/preparation-release.md",
-            "en/demo/step-07/release-main-branch.md"
-        ]},
-        "en/options-guide.md",
-        "en/reference.md",
-        "en/contributing.md",
-        "en/code-of-conduct.md",
-   ]}
+        "options-guide.md",
+        "reference.md",
+        "contributing.md",
+        "code-of-conduct.md",
 ]
 
 # With the "extra_css" option you can add your own CSS styling to customize
@@ -341,8 +320,8 @@ toggle.name = "Switch to light mode"
 # ----------------------------------------------------------------------------
 [project.extra]
 alternate = [
-    { name = "ja - 日本語", link = "/pre-commit-VBA/ja/", lang = "ja" },
-    { name = "en - English", link = "/pre-commit-VBA/en/", lang = "en" },
+    { name = "ja - 日本語", link = "/", lang = "ja" },
+    { name = "en - English", link = "/en/", lang = "en" },
 ]
 
 #[[project.extra.social]]
@@ -383,6 +362,7 @@ pygments_lang_class = true
 [project.markdown_extensions.pymdownx.magiclink]
 [project.markdown_extensions.pymdownx.mark]
 [project.markdown_extensions.pymdownx.snippets]
+base_path = ["../.."]
 [project.markdown_extensions.pymdownx.smartsymbols]
 [project.markdown_extensions.pymdownx.superfences]
 custom_fences = [
