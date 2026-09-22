@@ -201,12 +201,18 @@ commands = [
 
 [tool.pytest]
 minversion = "9.0"
-addopts = ["-v", "-s", "--strict-markers","--cov=src", "--cov-report=html", "--cov-report=term"]
+addopts = ["-v", "-s", "--strict-markers", "--cov", "--cov-report=html", "--cov-report=term"]
 testpaths = [
     "tests"
 ]
 markers=["develop_research"]
 
+[tool.coverage.run]
+source = ["src/pre_commit_vba", "scripts"]
+include = [
+    "*/src/pre_commit_vba/pre_commit_vba.py",
+    "*/scripts/docs.py",
+]
 [tool.coverage.report]
 fail_under = 80
 exclude_also = [
