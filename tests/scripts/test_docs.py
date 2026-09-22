@@ -202,6 +202,8 @@ def test_asset_and_alternate_config_helpers() -> None:
     assert "alternate = [" in result
     assert "[[alternate]]" not in result
     assert tomllib.loads(result)["alternate"] == alternate
+    empty_result = docs.update_alternate_languages(source, [])
+    assert "alternate = []" in empty_result
     with pytest.raises(ValueError, match="exactly one"):
         docs.update_alternate_languages('title = "Docs"\n', alternate)
     with pytest.raises(ValueError, match="exactly one"):
