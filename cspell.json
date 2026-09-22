@@ -6,6 +6,7 @@
         "powershell"
     ],
     "ignorePaths": [
+        "language_names.yml",
         "**/*.svg",
         "uv.lock"
     ],
@@ -78,8 +79,8 @@
         "Noda",
         "nodeenv",
         "noninteractive",
-        "openstream",
         "nosetests",
+        "openstream",
         "pathspec",
         "pipenv",
         "Pipfile",
@@ -114,6 +115,7 @@
         "Sabotaro",
         "Scrapy",
         "sdist",
+        "secho",
         "shellingham",
         "smartsymbols",
         "Spyder",
