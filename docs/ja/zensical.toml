@@ -17,7 +17,7 @@ site_name = "pre-commit-vba"
 # meaningful description of the site content for use by search engines.
 #
 # Read more: https://zensical.org/docs/setup/basics/#site_description
-site_description = "This is a Python script that extracts VBA code from Excel files for managing VBA code in git."
+site_description = "pre-commit-vba is a Python tool that extracts VBA code from Office files to make source code management with Git easier."
 
 # The site_author attribute. This is used in the HTML head element.
 #
