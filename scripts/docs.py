@@ -42,7 +42,7 @@ app = typer.Typer()
 site_url = "https://noda-hiroyuki-kit.github.io/pre-commit-VBA/"
 zensical_name = "zensical.toml"
 
-non_translated_sections = ()
+non_translated_sections: tuple[str, ...] = ()
 
 docs_path = Path("docs").absolute()
 ja_docs_path = Path(docs_path, "ja")
