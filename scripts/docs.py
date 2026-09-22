@@ -565,6 +565,7 @@ def _make_permalink_line(
 
     hashes, title, existing_permalink = match.groups()
     if existing_permalink and not update_existing:
+        permalinks.add(existing_permalink.strip().removeprefix("#"))
         return line
 
     slug = slugify(

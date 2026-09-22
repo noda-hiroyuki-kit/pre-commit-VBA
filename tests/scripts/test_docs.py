@@ -88,6 +88,28 @@ def test_make_permalink_line_avoids_duplicate_generated_slugs() -> None:
     assert second == "## Introduction { #introduction_1 }\n"
 
 
+def test_make_permalink_line_registers_preserved_permalink() -> None:
+    """Reserve an existing anchor before generating later anchors."""
+    extractor = docs.VisibleTextExtractor()
+    permalinks: set[str] = set()
+
+    preserved = docs._make_permalink_line(
+        "## Introduction { #introduction }\n",
+        update_existing=False,
+        visible_text_extractor=extractor,
+        permalinks=permalinks,
+    )
+    generated = docs._make_permalink_line(
+        "## Introduction\n",
+        update_existing=False,
+        visible_text_extractor=extractor,
+        permalinks=permalinks,
+    )
+
+    assert preserved == "## Introduction { #introduction }\n"
+    assert generated == "## Introduction { #introduction_1 }\n"
+
+
 def test_add_permalinks_page_skips_headings_in_code_blocks(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
