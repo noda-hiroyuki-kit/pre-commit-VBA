@@ -1,9 +1,7 @@
 """Utilities for building and serving the project's documentation."""
 # This file is derived from FastAPI's scripts/docs.py:
-# https://github.com/fastapi/fastapi/blob/master/scripts/docs.py
+# https://github.com/fastapi/fastapi/blob/cba41585675ecb0e119d3ca258821659f07ec3f7/scripts/docs.py
 # Copyright (c) 2018 Sebastián Ramírez              # cspell:disable-line
-# SPDX-License-Identifier: MIT
-
 # Copyright (c) 2026 Noda Hiroyuki
 # SPDX-License-Identifier: MIT
 # See LICENSE in the repository root for the full license text.
