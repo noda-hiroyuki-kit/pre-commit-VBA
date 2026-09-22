@@ -220,6 +220,50 @@ def get_zensical_theme_language(lang: str) -> str:
     return lang
 
 
+def stage_translated_docs(
+    staged_docs_path: Path,
+    lang_docs_path: Path,
+    missing_translation: str,
+) -> None:
+    """Replace staged Japanese pages with translations where available."""
+    for staged_file in staged_docs_path.rglob("*.md"):
+        relative_path = staged_file.relative_to(staged_docs_path)
+        translated_file = lang_docs_path / relative_path
+        if translated_file.is_file():
+            if relative_path.name != "translation-banner.md":
+                staged_file.write_text(
+                    translated_file.read_text(encoding="utf-8"),
+                    encoding="utf-8",
+                )
+        elif not is_non_translated_path(relative_path):
+            staged_file.write_text(
+                add_markdown_notice(
+                    staged_file.read_text(encoding="utf-8"),
+                    missing_translation,
+                ),
+                encoding="utf-8",
+            )
+
+
+def make_root_asset_paths(project_config: dict[str, object]) -> None:
+    """Make shared assets resolve from the root Japanese site."""
+    theme = project_config.get("theme")
+    if not isinstance(theme, dict):
+        theme = {}
+        project_config["theme"] = theme
+    for key in ("logo", "favicon"):
+        if key in theme:
+            theme[key] = "/" + str(theme[key]).lstrip("/")
+    for key in ("extra_css", "extra_javascript"):
+        paths = project_config.get(key, [])
+        if not isinstance(paths, list):
+            paths = []
+        project_config[key] = [
+            "/" + str(path).lstrip("/")
+            for path in paths
+        ]
+
+
 def stage_zensical_docs(lang: str) -> Path:
     """Stage the English docs tree into the Zensical output for a target language."""
     lang_docs_path = docs_path / lang / "docs"
@@ -240,20 +284,11 @@ def stage_zensical_docs(lang: str) -> Path:
     )
 
     if lang != "ja":
-        for staged_file in staged_docs_path.rglob("*.md"):
-            relative_path = staged_file.relative_to(staged_docs_path)
-            translated_file = lang_docs_path / relative_path
-            if translated_file.is_file():
-                markdown = translated_file.read_text(encoding="utf-8")
-                if relative_path.name == "translation-banner.md":
-                    continue
-                staged_file.write_text(markdown, encoding="utf-8")
-            elif not is_non_translated_path(relative_path):
-                markdown = staged_file.read_text(encoding="utf-8")
-                staged_file.write_text(
-                    add_markdown_notice(markdown, missing_translation),
-                    encoding="utf-8",
-                )
+        stage_translated_docs(
+            staged_docs_path,
+            lang_docs_path,
+            missing_translation,
+        )
 
     shutil.copytree(ja_docs_path / "overrides", lang_stage_path / "overrides")
 
@@ -270,26 +305,7 @@ def stage_zensical_docs(lang: str) -> Path:
     if lang != "ja":
         # The root English build owns shared static assets; translated builds should
         # reference those root paths instead of emitting language-local copies.
-        if "logo" in project_config["theme"]:
-            project_config["theme"]["logo"] = "/" + project_config["theme"][
-                "logo"
-            ].lstrip("/")
-        if "favicon" in project_config["theme"]:
-            project_config["theme"]["favicon"] = "/" + project_config["theme"][
-                "favicon"
-            ].lstrip("/")
-        if "extra_css" not in project_config:
-            project_config["extra_css"] = []
-        else:
-            project_config["extra_css"] = [
-                "/" + path.lstrip("/") for path in project_config["extra_css"]
-            ]
-        if "extra_javascript" not in project_config:
-            project_config["extra_javascript"] = []
-        else:
-            project_config["extra_javascript"] = [
-                "/" + path.lstrip("/") for path in project_config["extra_javascript"]
-            ]
+        make_root_asset_paths(project_config)
     config_path = lang_stage_path / zensical_name
     config_path.write_text(
         tomli_w.dumps(config),
