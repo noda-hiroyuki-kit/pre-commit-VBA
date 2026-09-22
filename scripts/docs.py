@@ -297,9 +297,9 @@ def stage_zensical_docs(lang: str) -> Path:
     project_config["docs_dir"] = "content"
     project_config["site_dir"] = "site"
     if lang == "ja":
-        config["site_url"] = site_url
+        project_config["site_url"] = site_url
     else:
-        config["site_url"] = f"{site_url}{lang}/"
+        project_config["site_url"] = f"{site_url}{lang}/"
     config.setdefault("theme", {})
     project_config["theme"]["language"] = get_zensical_theme_language(lang)
     if lang != "ja":
