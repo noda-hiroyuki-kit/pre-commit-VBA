@@ -258,6 +258,19 @@ def stage_translated_docs(
                 encoding="utf-8",
             )
 
+    for translated_file in lang_docs_path.rglob("*"):
+        if not translated_file.is_file():
+            continue
+        relative_path = translated_file.relative_to(lang_docs_path)
+        if relative_path.name == "translation-banner.md":
+            continue
+        staged_file = staged_docs_path / relative_path
+        staged_file.parent.mkdir(parents=True, exist_ok=True)
+        staged_file.write_text(
+            translated_file.read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
+
 
 def make_root_asset_paths(project_config: dict[str, object]) -> None:
     """Make shared assets resolve from the root Japanese site."""
