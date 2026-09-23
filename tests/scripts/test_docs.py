@@ -105,7 +105,7 @@ def test_translate_nav_item_aborts_on_missing_translation(
     """Abort and warn when a nav section title has no translation for the language."""
     with pytest.raises(typer.Abort):
         docs.translate_nav_item({"デモ": []}, "en", {})
-    assert "Missing nav section translation" in capsys.readouterr().out
+    assert "Missing nav title translation" in capsys.readouterr().out
 
     with pytest.raises(typer.Abort):
         docs.translate_nav_item({"デモ": []}, "fr", {"デモ": {"en": "Demo"}})

@@ -357,7 +357,7 @@ def translate_nav_item(
         translations = section_names.get(title)
         if translations is None or lang not in translations:
             typer.echo(
-                f"Missing nav section translation for: {title!r} (lang: {lang}), "
+                f"Missing nav title translation for: {title!r} (lang: {lang}), "
                 "update it in docs/nav_section_names.yml",
             )
             raise typer.Abort
