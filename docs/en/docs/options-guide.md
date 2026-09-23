@@ -1,19 +1,19 @@
 ---
 icon: lucide/sliders-horizontal
 ---
-# Options Guide
+# Options Guide { #options-guide }
 
 This page explains the options for `pre-commit-vba`.  
 If you only want to see the specification list, refer to [Reference](reference.md).
 
-## Commands
+## Commands { #commands }
 
 - `extract`: Extracts VBA code.
 - `check`: Compares the branch name and the Office file version.
 
-## Default Values
+## Default Values { #default-values }
 
-### extract
+### extract { #extract }
 
 | Option | Default |
 |---|---|
@@ -26,15 +26,15 @@ If you only want to see the specification list, refer to [Reference](reference.m
 | --create-gitignore / --not-create-gitignore | Enabled |
 | --include-extension / --exclude-extension | Enabled |
 
-### check
+### check { #check }
 
 | Option | Default |
 |---|---|
 | --target-path | . |
 
-## `extract` Options
+## `extract` Options { #extract-options }
 
-### --target-path
+### --target-path { #target-path }
 
 - What it does: Specifies the folder to search for Office files.
 - When to use it: When Office files are stored outside the repository root (for example, test workbooks).
@@ -44,7 +44,7 @@ If you only want to see the specification list, refer to [Reference](reference.m
 uv run pre_commit_vba.py extract --target-path ./tests
 ```
 
-### --folder-suffix
+### --folder-suffix { #folder-suffix }
 
 - What it does: Changes the suffix of the generated shared folder name.
 - When to use it: When you want to standardize output folder names based on team conventions.
@@ -54,7 +54,7 @@ uv run pre_commit_vba.py extract --target-path ./tests
 uv run pre_commit_vba.py extract --folder-suffix src
 ```
 
-### --export-folder
+### --export-folder { #export-folder }
 
 - What it does: Changes the destination name for exported raw files.
 - When to use it: When you want to manage raw file outputs in a differently named folder.
@@ -64,7 +64,7 @@ uv run pre_commit_vba.py extract --folder-suffix src
 uv run pre_commit_vba.py extract --export-folder raw-export
 ```
 
-### --custom-ui-folder
+### --custom-ui-folder { #custom-ui-folder }
 
 - What it does: Changes the destination folder name for `customUI.xml` / `customUI14.xml`.
 - When to use it: When you want to manage ribbon UI definitions in a differently named folder.
@@ -74,7 +74,7 @@ uv run pre_commit_vba.py extract --export-folder raw-export
 uv run pre_commit_vba.py extract --custom-ui-folder ribbon
 ```
 
-### --code-folder
+### --code-folder { #code-folder }
 
 - What it does: Changes the destination folder name for final code managed in Git.
 - When to use it: When you want to align code placement with an existing project structure.
@@ -84,7 +84,7 @@ uv run pre_commit_vba.py extract --custom-ui-folder ribbon
 uv run pre_commit_vba.py extract --code-folder src-vba
 ```
 
-### --enable-folder-annotation / --disable-folder-annotation
+### --enable-folder-annotation / --disable-folder-annotation { #enable-folder-annotation-disable-folder-annotation }
 
 - What it does: Toggles whether the `@Folder("...")` annotation in VBA is reflected in the subfolder structure.
 - When to use it:
@@ -96,7 +96,7 @@ uv run pre_commit_vba.py extract --code-folder src-vba
 uv run pre_commit_vba.py extract --disable-folder-annotation
 ```
 
-### --create-gitignore / --not-create-gitignore
+### --create-gitignore / --not-create-gitignore { #create-gitignore-not-create-gitignore }
 
 - What it does: Toggles whether to create `.gitignore` directly under the shared folder.
 - When to use it:
@@ -111,7 +111,7 @@ uv run pre_commit_vba.py extract --disable-folder-annotation
 uv run pre_commit_vba.py extract --not-create-gitignore
 ```
 
-### --include-extension / --exclude-extension
+### --include-extension / --exclude-extension { #include-extension-exclude-extension }
 
 - What it does: Toggles whether to include the original file extension in the output folder name.
 - When to use it:
@@ -123,7 +123,7 @@ uv run pre_commit_vba.py extract --not-create-gitignore
 uv run pre_commit_vba.py extract --exclude-extension
 ```
 
-### --version
+### --version { #version }
 
 - What it does: Displays only the version and exits.
 - When to use it: When you only need to check the runtime version in CI or during investigation.
@@ -133,9 +133,9 @@ uv run pre_commit_vba.py extract --exclude-extension
 uv run pre_commit_vba.py extract --version
 ```
 
-## `check` Options
+## `check` Options { #check-options }
 
-### --target-path
+### --target-path { #target-path_1 }
 
 - What it does: Specifies the directory to search for Office files to check.
 - When to use it: When release-target Office files are in a subfolder.
@@ -145,7 +145,7 @@ uv run pre_commit_vba.py extract --version
 uv run pre_commit_vba.py check --target-path ./release-books
 ```
 
-### --version
+### --version { #version_1 }
 
 - What it does: Displays only the version and exits.
 - When to use it: During diagnostics of the hook environment.
@@ -155,28 +155,28 @@ uv run pre_commit_vba.py check --target-path ./release-books
 uv run pre_commit_vba.py check --version
 ```
 
-## Common Usage Patterns
+## Common Usage Patterns { #common-usage-patterns }
 
-### 1. Standard operation
+### 1. Standard operation { #1-standard-operation }
 
 ```console
 uv run pre_commit_vba.py extract
 uv run pre_commit_vba.py check
 ```
 
-### 2. Use a simple single-folder output structure
+### 2. Use a simple single-folder output structure { #2-use-a-simple-single-folder-output-structure }
 
 ```console
 uv run pre_commit_vba.py extract --disable-folder-annotation --exclude-extension
 ```
 
-### 3. Match naming in an existing repository
+### 3. Match naming in an existing repository { #3-match-naming-in-an-existing-repository }
 
 ```console
 uv run pre_commit_vba.py extract --folder-suffix .vba --code-folder source
 ```
 
-## Notes
+## Notes { #notes }
 
 - `extract` checks changes in staging state before and after execution. On the first run, staging changes because code is extracted, so it results in an error.
 - `check` is valid only on `release/v...` or `hotfix/v...` branches.

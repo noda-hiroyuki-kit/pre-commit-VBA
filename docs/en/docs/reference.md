@@ -2,26 +2,26 @@
 icon: lucide/book-open
 ---
 
-# Reference
+# Reference { #reference }
 
 This page is a reference that organizes the internal processing.
 
-## CLI Overview
+## CLI Overview { #cli-overview }
 
 The CLI is implemented with [`typer`](https://typer.tiangolo.com/). It provides the following two commands.
 
 - `extract`
 - `check`
 
-## Command: extract
+## Command: extract { #command-extract }
 
-### Example
+### Example { #example }
 
 ```console
 uv run pre_commit_vba.py extract
 ```
 
-### Processing
+### Processing { #processing }
 
 1. Get the staging state before execution.
 2. Scan supported Office files. The following are excluded.
@@ -36,15 +36,15 @@ uv run pre_commit_vba.py extract
 9. Compare with the staging state from before execution.
     - If the state changed, exit with an error.
 
-## Command: check
+## Command: check { #command-check }
 
-### Example
+### Example { #example_1 }
 
 ```console
 uv run pre_commit_vba.py check
 ```
 
-### What is validated
+### What is validated { #what-is-validated }
 
 1. Get the current branch name.
 2. If the branch name is not `release/v...` or `hotfix/v...`, output a log and exit successfully.
@@ -55,7 +55,7 @@ uv run pre_commit_vba.py check
 5. If a mismatch or reference detection occurs, exit with an error.
 6. If no target file exists, output a warning log and exit successfully.
 
-## Main Classes
+## Main Classes { #main-classes }
 
 - Constants: Holds VBE component type constants
 - SettingsCommonFolder: Determines the extraction destination folder name per file
@@ -68,7 +68,7 @@ uv run pre_commit_vba.py check
 - Utf8Converter: Handles cp932 to UTF-8 conversion, line-ending normalization, and folder-annotation reflection
 - ITrailingWhiteSpaceRemover family: Handles trailing whitespace in metadata sections
 
-## Exceptions and Exit Codes
+## Exceptions and Exit Codes { #exceptions-and-exit-codes }
 
 - StagingStatusError: When `git write-tree` fails
 - AddToStagingError: When `git add` fails

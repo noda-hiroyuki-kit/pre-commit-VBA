@@ -2,4 +2,4 @@
 icon: lucide/settings
 ---
 
-# Configuration
+# Configuration { #configuration }

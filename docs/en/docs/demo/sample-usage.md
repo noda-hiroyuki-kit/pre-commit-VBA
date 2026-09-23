@@ -1,16 +1,16 @@
-# Usage Demo
+# Usage Demo { #usage-demo }
 
 This demo explains how to set up `pre-commit-vba`.  
 The steps are ordered so that even beginners can reproduce them.
 
-## What You Can Do in This Demo
+## What You Can Do in This Demo { #what-you-can-do-in-this-demo }
 
 - Create a repository on GitHub.
 - Try basic Git Flow operations.
 - Experience the setup process of `pre-commit-vba`.
 - Review the flow through release.
 
-## Prerequisites
+## Prerequisites { #prerequisites }
 
 Make sure the following tools and services are available.
 
@@ -19,7 +19,7 @@ Make sure the following tools and services are available.
 - GitHub account
 - Excel (an environment that can handle macro-enabled workbooks)
 
-## How to Proceed
+## How to Proceed { #how-to-proceed }
 
 Read each step in the following order.
 
@@ -28,7 +28,7 @@ Read each step in the following order.
 3. Use the checkpoints to verify success.
 4. If there is a problem, check the supplementary notes.
 
-## Procedure
+## Procedure { #procedure }
 
 1. [Create a Remote Repository](step-01/create-remote-repository.md)
 2. [Create Basic Repository Files](step-02/local-repository.md)

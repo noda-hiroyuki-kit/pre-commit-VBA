@@ -1,15 +1,15 @@
 ---
 icon: lucide/sheet
 ---
-# Prepare for Release
+# Prepare for Release { #prepare-for-release }
 
 This procedure uses `v0.1.0` as an example.
 
-## Objective
+## Objective { #objective }
 
 Run pre-release checks on a `release` branch.
 
-## Step 1: Create a Release Branch
+## Step 1: Create a Release Branch { #step-1-create-a-release-branch }
 
 ```console
 git switch develop
@@ -17,7 +17,7 @@ git pull
 git switch -c release/v0.1.0
 ```
 
-## Step 2: Update Workbook Information
+## Step 2: Update Workbook Information { #step-2-update-workbook-information }
 
 1. In the VBE, set Document version to `v0.1.0`.
 
@@ -36,7 +36,7 @@ git switch -c release/v0.1.0
 
 3. Save the workbook.
 
-## Step 3: Commit and Push
+## Step 3: Commit and Push { #step-3-commit-and-push }
 
 ```powershell
 git add .
@@ -59,7 +59,7 @@ check json...........................................(no files to check)Skipped
 mixed line ending........................................................Passed
 yamllint.............................................(no files to check)Skipped
 ```
-## Step 4: Update Changelog
+## Step 4: Update Changelog { #step-4-update-changelog }
 
 Update `CHANGELOG.md` and commit it.  
 Push additional commits if needed.
@@ -67,7 +67,7 @@ Push additional commits if needed.
 ??? info "Site for writing changelogs"
     [https://keepachangelog.com/en/1.1.0/](https://keepachangelog.com/en/1.1.0/)
 
-## Step 5: Create a PR to `main`
+## Step 5: Create a PR to `main` { #step-5-create-a-pr-to-main }
 
 Select base as `main` and compare as `release/v0.1.0`.  
 Create the PR and merge it.
@@ -75,7 +75,7 @@ Create the PR and merge it.
 ??? info "Created PR screen"
     ![pullRequestMergeToMain](../../../img/demo/step-06/pullRequestMergeToMain.drawio.svg){width="600"}
 
-## Checkpoints
+## Checkpoints { #checkpoints }
 
 - `main` contains release preparation changes.
 - Branch name and Document Version match.

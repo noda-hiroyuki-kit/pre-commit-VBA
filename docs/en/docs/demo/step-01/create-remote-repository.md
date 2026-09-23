@@ -1,14 +1,14 @@
 ---
 icon: lucide/cloud-upload
 ---
-# Create a Remote Repository
+# Create a Remote Repository { #create-a-remote-repository }
 
-## Objective
+## Objective { #objective }
 
 Create an empty repository on GitHub.  
 This will be the foundation for the following steps.
 
-## Steps
+## Steps { #steps }
 
 1. Open your GitHub organization or profile.
 2. Click `Repositories`.  
@@ -27,13 +27,13 @@ This will be the foundation for the following steps.
 5. Click `Create repository`.  
    ![Create a new repository](../../../img/demo/step-01/create-repository.drawio.svg){width="650"}
 
-## Checkpoints
+## Checkpoints { #checkpoints }
 
 - The repository top page is displayed.
 - It shows 0 initial files.
 - The URL ends with `pre-commit-vba-example`.
 
-## Supplement
+## Supplement { #supplement }
 
 If a repository with the same name already exists, creation will fail.  
 In that case, change the name and create it again.

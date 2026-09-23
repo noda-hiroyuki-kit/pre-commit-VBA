@@ -2,15 +2,15 @@
 icon: lucide/package-open
 ---
 
-# Getting Started
+# Getting Started { #getting-started }
 
-## Installation
+## Installation { #installation }
 
 This page explains setup assuming you use `mise`.  
 If you already have `uv`, `mise` is not required.  
 Install `mise` using the [official instructions](https://mise.jdx.dev/getting-started.html).
 
-### Use as a pre-commit hook
+### Use as a pre-commit hook { #use-as-a-pre-commit-hook }
 
 1. Move to your workbook management folder.  
    This folder is referred to as `vba_root_folder`.
@@ -42,7 +42,7 @@ Install `mise` using the [official instructions](https://mise.jdx.dev/getting-st
         !!! info
             `check-office-file-integrity` is the successor of the deprecated `check-excel-book-version` id.
 
-### Use `pre_commit_vba.py` directly
+### Use `pre_commit_vba.py` directly { #use-pre-commit-vba-py-directly }
 
 1. Move to `vba_root_folder`.
 2. Install `uv` with `mise`.
@@ -55,9 +55,9 @@ Install `mise` using the [official instructions](https://mise.jdx.dev/getting-st
     ```
 4. Copy `pre_commit_vba.py`.
 
-## Usage
+## Usage { #usage }
 
-### Use as a pre-commit hook
+### Use as a pre-commit hook { #use-as-a-pre-commit-hook_1 }
 
 1. Stage your macro-enabled Office file (for example, `sample-app.xlsm`).
     ```console
@@ -72,15 +72,15 @@ Install `mise` using the [official instructions](https://mise.jdx.dev/getting-st
     uv run pre-commit
     ```
 
-### Use `pre_commit_vba.py` directly
+### Use `pre_commit_vba.py` directly { #use-pre-commit-vba-py-directly_1 }
 
-#### Extract code
+#### Extract code { #extract-code }
 
 ```console
 uv run pre_commit_vba.py extract
 ```
 
-#### Check branch name against version
+#### Check branch name against version { #check-branch-name-against-version }
 
 ```console
 uv run pre_commit_vba.py check
