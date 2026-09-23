@@ -51,14 +51,22 @@ def test_stage_zensical_docs_writes_language_specific_project_config(
     monkeypatch.setattr(docs, "ja_docs_path", ja_root)
     stage_root = tmp_path / "site_zensical_src"
     monkeypatch.setattr(docs, "zensical_src_path", stage_root)
+    use_site_url_values: list[bool] = []
     monkeypatch.setattr(
         docs,
         "get_updated_config_content",
-        lambda **_: {"project": {"theme": {}}, "theme": {}},
+        lambda **kwargs: (
+            use_site_url_values.append(kwargs["use_site_url"])
+            or {"project": {"theme": {}}, "theme": {}}
+        ),
     )
 
+    monkeypatch.setenv("GITHUB_ACTIONS", "false")
     config_path = docs.stage_zensical_docs("en")
+    monkeypatch.setenv("GITHUB_ACTIONS", "true")
+    docs.stage_zensical_docs("en")
 
+    assert use_site_url_values == [False, True]
     config = tomllib.loads(config_path.read_text(encoding="utf-8"))
     assert config["project"]["site_url"] == f"{docs.site_url}en/"
     assert (stage_root / "en" / "content" / "index.md").read_text(
