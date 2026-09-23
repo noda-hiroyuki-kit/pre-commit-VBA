@@ -436,8 +436,14 @@ def stage_zensical_docs(lang: str) -> Path:
         # reference those root paths instead of emitting language-local copies.
         make_root_asset_paths(project_config)
         if "nav" in project_config:
+            nav = project_config["nav"]
+            if not isinstance(nav, list):
+                typer.echo(
+                    f"Invalid project.nav: expected a list, got {type(nav).__name__}",
+                )
+                raise typer.Abort
             project_config["nav"] = translate_nav(
-                project_config["nav"],
+                nav,
                 lang,
                 get_nav_section_names(),
             )

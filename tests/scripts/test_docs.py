@@ -183,6 +183,7 @@ def test_get_nav_section_names_aborts_on_missing_or_invalid_yaml(
 def test_stage_zensical_docs_translates_nav_for_non_japanese_language(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
 ) -> None:
     """Translate nav section titles when staging a non-Japanese language."""
     monkeypatch.chdir(tmp_path)
@@ -222,6 +223,16 @@ def test_stage_zensical_docs_translates_nav_for_non_japanese_language(
 
     config = tomllib.loads(config_path.read_text(encoding="utf-8"))
     assert config["project"]["nav"] == [{"Demo": ["demo/a.md"]}]
+
+    monkeypatch.setattr(
+        docs,
+        "get_updated_config_content",
+        lambda: {"project": {"theme": {}, "nav": "invalid"}, "theme": {}},
+    )
+    with pytest.raises(typer.Abort):
+        docs.stage_zensical_docs("en")
+
+    assert "Invalid project.nav: expected a list" in capsys.readouterr().out
 
 
 def test_stage_zensical_docs_aborts_when_nav_translation_missing(
