@@ -1,14 +1,14 @@
 ---
 icon: lucide/sheet
 ---
-# Excel アプリを構築する
+# Excel アプリを構築する { #build-an-excel-app }
 
-## 目的
+## 目的 { #objective }
 
 Excel ブックの変更を Git 管理します.  
 `pre-commit-vba` の実行感を確認します.
 
-## 手順 1: ブランチを作る
+## 手順 1: ブランチを作る { #step-1-create-a-branch }
 
 ```console
 git switch develop
@@ -16,13 +16,13 @@ git pull
 git switch -c feature/create-app
 ```
 
-## 手順 2: Excel でコードを書く
+## 手順 2: Excel でコードを書く { #step-2-write-code-in-excel }
 
 1. `example-app.xlsm` を開きます.
 2. VBE でプロシージャを追加します.
 3. ブックを保存します.
 
-## 手順 3: `pre-commit` を実行
+## 手順 3: `pre-commit` を実行 { #step-3-run-pre-commit }
 
 ```console
 git add .
@@ -36,19 +36,19 @@ uv run pre-commit
 uv run pre-commit
 ```
 
-## 手順 4: コミットしてプッシュ
+## 手順 4: コミットしてプッシュ { #step-4-commit-and-push }
 
 ```powershell
 git commit -m "feat: add workbook macro"
 git push origin feature/create-app
 ```
 
-## 手順 5: PR を作ってマージ
+## 手順 5: PR を作ってマージ { #step-5-create-and-merge-a-pr }
 
 GitHub で PR を作成します.  
 base を `develop` にしてマージします.
 
-## 確認ポイント
+## 確認ポイント { #checkpoints }
 
 - 抽出された VBA ファイルが更新される.
 - `uv run pre-commit` が最終的に通る.

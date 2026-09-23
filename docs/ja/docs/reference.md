@@ -2,26 +2,26 @@
 icon: lucide/book-open
 ---
 
-# リファレンス
+# リファレンス { #reference }
 
 このページは, 内部処理を整理したリファレンスです.
 
-## CLI概要
+## CLI概要 { #cli-overview }
 
 CLIは, [`typer`](https://typer.tiangolo.com/) で実装しています. 次の 2 コマンドを提供します.
 
 - `extract`
 - `check`
 
-## コマンド: extract
+## コマンド: extract { #command-extract }
 
-### 実行例
+### 実行例 { #example }
 
 ```console
 uv run pre_commit_vba.py extract
 ```
 
-### 処理
+### 処理 { #processing }
 
 1. 実行前のステージング状態を取得します.
 2. 対応する Office ファイルを走査します. 以下を除外しています.
@@ -36,15 +36,15 @@ uv run pre_commit_vba.py extract
 9. 実行前のステージング状態を比較します.
     - 状態が変化していたらエラー終了します.
 
-## コマンド: check
+## コマンド: check { #command-check }
 
-### 実行例
+### 実行例 { #example_1 }
 
 ```console
 uv run pre_commit_vba.py check
 ```
 
-### 判定内容
+### 判定内容 { #what-is-validated }
 
 1. 現在ブランチ名を取得します.
 2. ブランチ名が `release/v...` または `hotfix/v...` 以外ならログを出して正常終了します.
@@ -55,7 +55,7 @@ uv run pre_commit_vba.py check
 5. 不一致または参照検出時はエラー終了します.
 6. 対象ファイルが存在しない場合は警告ログで正常終了します.
 
-## 主要クラス
+## 主要クラス { #main-classes }
 
 - Constants: VBE の component type 定数を保持
 - SettingsCommonFolder: ファイルごとの抽出先フォルダ名を決定
@@ -68,7 +68,7 @@ uv run pre_commit_vba.py check
 - Utf8Converter: cp932 -> UTF-8 変換, 行末統一, フォルダ注釈反映
 - ITrailingWhiteSpaceRemover 系: メタデータ部分の trailing white space 処理
 
-## 例外と終了コード
+## 例外と終了コード { #exceptions-and-exit-codes }
 
 - StagingStatusError: `git write-tree` 失敗時
 - AddToStagingError: `git add` 失敗時

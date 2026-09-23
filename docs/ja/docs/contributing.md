@@ -1,12 +1,12 @@
 ---
 icon: octicons/people-16
 ---
-# pre-commit-vba への貢献
+# pre-commit-vba への貢献 { #contributing-to-pre-commit-vba }
 
 貢献ありがとうございます.  
 コード・非コード双方の貢献を歓迎します.
 
-## 貢献の方法
+## 貢献の方法 { #how-to-contribute }
 
 以下のようなさまざまな方法の貢献を歓迎します.
 
@@ -16,7 +16,7 @@ icon: octicons/people-16
 - テストの追加・改善
 - バグ修正・新機能実装
 
-## 始める前に
+## 始める前に { #before-you-start }
 
 既存の Issue と PR を確認してください.
 
@@ -25,7 +25,7 @@ icon: octicons/people-16
 
 大きな変更は先に Issue で相談してください.
 
-## 開発環境
+## 開発環境 { #development-environment }
 
 このプロジェクトは `uv` を使います.  
 対象 Python は 3.14 です.
@@ -35,7 +35,7 @@ mise install
 uv sync
 ```
 
-## 品質チェック
+## 品質チェック { #quality-checks }
 
 PR 前に次を実行してください.
 
@@ -52,7 +52,7 @@ uv run mypy src/
 - `uv.lock` を手動編集しないでください.
 - `.env` ファイルは変更しないでください.
 
-## テスト
+## テスト { #testing }
 
 ```powershell
 uv run tox -e 3.14
@@ -62,7 +62,7 @@ uv run tox -e 3.14
 - `tests/test_*.py` に置いてください.
 - 新機能と修正にはテストを追加してください.
 
-## バグ報告
+## バグ報告 { #bug-reports }
 
 バグ報告テンプレートを使用してください.
 
@@ -75,7 +75,7 @@ uv run tox -e 3.14
 - 期待値と実際の結果
 - サンプルやログ
 
-## 機能提案
+## 機能提案 { #feature-proposals }
 
 機能リクエストテンプレートを使用してください.
 
@@ -87,7 +87,7 @@ uv run tox -e 3.14
 - 提案する動作
 - 代替案
 
-## 変更の提出
+## 変更の提出 { #submitting-changes }
 
 1. `main` からブランチをつくってください.
 2. 変更を実装してください.
@@ -100,7 +100,7 @@ uv run tox -e 3.14
 - [ ] `ruff` `mypy` `pytest` が通った
 - [ ] 必要な文書を更新した
 
-## 規約
+## 規約 { #conventions }
 
 Conventional Commits を英語で使用してください.
 
@@ -117,16 +117,16 @@ Conventional Commits を英語で使用してください.
 - `hotfix/v<semantic-version>`
 - `release/v<semantic-version>`
 
-## 行動規範
+## 行動規範 { #code-of-conduct }
 
 - [code-of-conduct](code-of-conduct.md)
 
-## 謝意
+## 謝意 { #appreciation }
 
 すべての貢献に感謝します.  
 貢献者はリリースノート, リポジトリディスカッションでの謝辞, マージされたPRなどで認識される可能性があります.
 
-## 困ったときは
+## 困ったときは { #when-you-need-help }
 
 どこから始めればよいかわからない場合：
 

@@ -1,14 +1,14 @@
 ---
 icon: lucide/folder-git-2
 ---
-# リポジトリの基本ファイル作成
+# リポジトリの基本ファイル作成 { #create-basic-repository-files }
 
-## 目的
+## 目的 { #objective }
 
 ローカルリポジトリを作成します.  
 `main` / `develop` / `feature` を準備します.
 
-## 手順 1: クローンして移動
+## 手順 1: クローンして移動 { #step-1-clone-and-move }
 
 1. GitHub でリポジトリ URL をコピーします.  
     ![remote repository url](../../img/demo/step-02/repository-first.drawio.svg){width="700"}
@@ -18,7 +18,7 @@ icon: lucide/folder-git-2
     cd pre-commit-vba-example
     ```
 
-## 手順 2: `main` を準備
+## 手順 2: `main` を準備 { #step-2-prepare-main }
 
 ```console
 git commit -m "first commit" --allow-empty
@@ -36,7 +36,7 @@ git push -u origin main
     nothing to commit, working tree clean
     ```
 
-## 手順 3: `develop` を準備
+## 手順 3: `develop` を準備 { #step-3-prepare-develop }
 
 ```console
 git switch -c develop
@@ -53,14 +53,14 @@ git push -u origin develop
     nothing to commit, working tree clean
     ```
 
-## 手順 4: 作業ブランチを準備
+## 手順 4: 作業ブランチを準備 { #step-4-prepare-a-working-branch }
 
 ```console
 git switch -c feature/setup-repository
 git push -u origin feature/setup-repository
 ```
 
-## 手順 5: 基本ファイルを追加
+## 手順 5: 基本ファイルを追加 { #step-5-add-basic-files }
 
 1. `README.md` を作成します.
 
@@ -100,7 +100,7 @@ git push -u origin feature/setup-repository
     git push -u origin feature/setup-repository
     ```
 
-## 確認ポイント
+## 確認ポイント { #checkpoints }
 
 - `git status` が clean を示す.
 - GitHub 上に 3 ブランチが存在する.

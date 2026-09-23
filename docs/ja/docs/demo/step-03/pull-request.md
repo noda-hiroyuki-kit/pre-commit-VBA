@@ -1,13 +1,13 @@
 ---
 icon: lucide/git-pull-request
 ---
-# 基本ファイルを `develop` にマージ
+# 基本ファイルを `develop` にマージ { #merge-basic-files-into-develop }
 
-## 目的
+## 目的 { #objective }
 
 `feature/setup-repository` の変更を `develop` に統合します.
 
-## ブラウザでの手順
+## ブラウザでの手順 { #steps-in-browser }
 
 1. `Pull requests` を開きます.
 2. `New pull request` をクリックします.
@@ -57,7 +57,7 @@ icon: lucide/git-pull-request
         ![delete-branch](../../img/demo/step-03/delete-branch.drawio.svg){width="600"}
 
 
-## ローカルでの手順
+## ローカルでの手順 { #local-steps }
 
 ```console
 git switch develop
@@ -65,7 +65,7 @@ git pull
 git branch -D feature/setup-repository
 ```
 
-## 確認ポイント
+## 確認ポイント { #checkpoints }
 
 - `develop` に基本ファイルが入っている.
 - `feature/setup-repository` がローカルに残っていない.
