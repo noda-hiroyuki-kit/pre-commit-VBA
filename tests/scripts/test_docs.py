@@ -51,14 +51,22 @@ def test_stage_zensical_docs_writes_language_specific_project_config(
     monkeypatch.setattr(docs, "ja_docs_path", ja_root)
     stage_root = tmp_path / "site_zensical_src"
     monkeypatch.setattr(docs, "zensical_src_path", stage_root)
+    use_site_url_values: list[bool] = []
     monkeypatch.setattr(
         docs,
         "get_updated_config_content",
-        lambda: {"project": {"theme": {}}, "theme": {}},
+        lambda **kwargs: (
+            use_site_url_values.append(kwargs["use_site_url"])
+            or {"project": {"theme": {}}, "theme": {}}
+        ),
     )
 
+    monkeypatch.setenv("GITHUB_ACTIONS", "false")
     config_path = docs.stage_zensical_docs("en")
+    monkeypatch.setenv("GITHUB_ACTIONS", "true")
+    docs.stage_zensical_docs("en")
 
+    assert use_site_url_values == [False, True]
     config = tomllib.loads(config_path.read_text(encoding="utf-8"))
     assert config["project"]["site_url"] == f"{docs.site_url}en/"
     assert (stage_root / "en" / "content" / "index.md").read_text(
@@ -151,7 +159,17 @@ def test_get_nav_section_names_aborts_on_invalid_yaml_shape(
 
     assert str(table_path) in capsys.readouterr().out
 
+    table_path.write_text('"デモ": invalid\n', encoding="utf-8")
+
+    with pytest.raises(typer.Abort):
+        docs.get_nav_section_names()
+
     table_path.write_text('"デモ":\n  en: ["Demo"]\n', encoding="utf-8")
+
+    with pytest.raises(typer.Abort):
+        docs.get_nav_section_names()
+
+    table_path.write_text('"デモ":\n  en: 123\n', encoding="utf-8")
 
     with pytest.raises(typer.Abort):
         docs.get_nav_section_names()
@@ -209,7 +227,7 @@ def test_stage_zensical_docs_translates_nav_for_non_japanese_language(
     monkeypatch.setattr(
         docs,
         "get_updated_config_content",
-        lambda: {
+        lambda **_: {
             "project": {"theme": {}, "nav": [{"デモ": ["demo/a.md"]}]},
             "theme": {},
         },
@@ -228,7 +246,7 @@ def test_stage_zensical_docs_translates_nav_for_non_japanese_language(
     monkeypatch.setattr(
         docs,
         "get_updated_config_content",
-        lambda: {"project": {"theme": {}, "nav": "invalid"}, "theme": {}},
+        lambda **_: {"project": {"theme": {}, "nav": "invalid"}, "theme": {}},
     )
     with pytest.raises(typer.Abort):
         docs.stage_zensical_docs("en")
@@ -263,7 +281,7 @@ def test_stage_zensical_docs_aborts_when_nav_translation_missing(
     monkeypatch.setattr(
         docs,
         "get_updated_config_content",
-        lambda: {
+        lambda **_: {
             "project": {"theme": {}, "nav": [{"デモ": ["demo/a.md"]}]},
             "theme": {},
         },
@@ -464,7 +482,7 @@ def test_stage_translation_and_japanese_config(
     monkeypatch.setattr(
         docs,
         "get_updated_config_content",
-        lambda: {"project": {"theme": {}}, "theme": {}},
+        lambda **_: {"project": {"theme": {}}, "theme": {}},
     )
     config_path = docs.stage_zensical_docs("ja")
     config = tomllib.loads(config_path.read_text(encoding="utf-8"))
@@ -598,6 +616,11 @@ def test_updated_config_cleanup_and_build_all(
     assert alternate[0]["link"] == "/"
     assert alternate[-1]["link"] == "/en/"
     assert alternate[-1]["lang"] == "en"
+    deployed = docs.get_updated_config_content(use_site_url=True)["project"]["extra"][
+        "alternate"
+    ]
+    assert deployed[0]["link"] == docs.site_url
+    assert deployed[-1]["link"] == f"{docs.site_url}en/"
     names.write_text("en: English\n", encoding="utf-8")
     with pytest.raises(typer.Abort):
         docs.get_updated_config_content()
