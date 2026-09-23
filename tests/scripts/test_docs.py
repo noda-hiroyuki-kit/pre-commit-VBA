@@ -351,24 +351,21 @@ def test_stage_translation_and_japanese_config(
     translated = tmp_path / "translated"
     (staged / "api").mkdir(parents=True)
     translated.mkdir()
-    (staged / "translated.md").write_text("# Original\n", encoding="utf-8")
+    (staged / "translated.md").write_bytes(b"# Original\r\n")
     (staged / "translation-banner.md").write_text("Banner\n", encoding="utf-8")
-    (staged / "missing.md").write_text("# Missing\n\nBody\n", encoding="utf-8")
+    (staged / "missing.md").write_bytes(b"# Missing\r\n\r\nBody\r\n")
     (staged / "api" / "skip.md").write_text("# API\n", encoding="utf-8")
-    (translated / "translated.md").write_text("# Translated\n", encoding="utf-8")
-    (translated / "translation-only.md").write_text(
-        "# Translation only\n",
-        encoding="utf-8",
-    )
+    (translated / "translated.md").write_bytes(b"# Translated\r\n")
+    (translated / "translation-only.md").write_bytes(b"# Translation only\r\n")
     (translated / "translation-banner.md").write_text("Do not copy\n", encoding="utf-8")
     monkeypatch.setattr(docs, "non_translated_sections", ("api/",))
     docs.stage_translated_docs(staged, translated, "Needs translation")
-    assert (staged / "translated.md").read_text(encoding="utf-8") == "# Translated\n"
-    assert (staged / "translation-only.md").read_text(
-        encoding="utf-8",
-    ) == "# Translation only\n"
+    assert (staged / "translated.md").read_bytes() == b"# Translated\n"
+    assert (staged / "translation-only.md").read_bytes() == b"# Translation only\n"
     assert (staged / "translation-banner.md").read_text(encoding="utf-8") == "Banner\n"
-    assert "Needs translation" in (staged / "missing.md").read_text(encoding="utf-8")
+    assert (staged / "missing.md").read_bytes() == (
+        b"# Missing\n\nNeeds translation\n\nBody\n"
+    )
     assert (staged / "api" / "skip.md").read_text(encoding="utf-8") == "# API\n"
     docs_root = tmp_path / "docs"
     ja_root = docs_root / "ja"
