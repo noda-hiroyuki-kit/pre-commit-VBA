@@ -388,11 +388,13 @@ def test_stage_translation_and_japanese_config(
     (staged / "api" / "skip.md").write_text("# API\n", encoding="utf-8")
     (translated / "translated.md").write_bytes(b"# Translated\r\n")
     (translated / "translation-only.md").write_bytes(b"# Translation only\r\n")
+    (translated / "image.bin").write_bytes(b"\x00\xff\x01\xfe")
     (translated / "translation-banner.md").write_text("Do not copy\n", encoding="utf-8")
     monkeypatch.setattr(docs, "non_translated_sections", ("api/",))
     docs.stage_translated_docs(staged, translated, "Needs translation")
     assert (staged / "translated.md").read_bytes() == b"# Translated\n"
     assert (staged / "translation-only.md").read_bytes() == b"# Translation only\n"
+    assert (staged / "image.bin").read_bytes() == b"\x00\xff\x01\xfe"
     assert (staged / "translation-banner.md").read_text(encoding="utf-8") == "Banner\n"
     assert (staged / "missing.md").read_bytes() == (
         b"# Missing\n\nNeeds translation\n\nBody\n"

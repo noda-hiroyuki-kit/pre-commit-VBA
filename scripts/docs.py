@@ -271,11 +271,14 @@ def stage_translated_docs(
             continue
         staged_file = staged_docs_path / relative_path
         staged_file.parent.mkdir(parents=True, exist_ok=True)
-        staged_file.write_text(
-            translated_file.read_text(encoding="utf-8"),
-            encoding="utf-8",
-            newline="\n",
-        )
+        if translated_file.suffix == ".md":
+            staged_file.write_text(
+                translated_file.read_text(encoding="utf-8"),
+                encoding="utf-8",
+                newline="\n",
+            )
+        else:
+            shutil.copy2(translated_file, staged_file)
 
 
 def make_root_asset_paths(project_config: dict[str, object]) -> None:
