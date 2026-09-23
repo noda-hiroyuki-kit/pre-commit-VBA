@@ -111,6 +111,18 @@ def test_translate_nav_item_aborts_on_missing_translation(
         docs.translate_nav_item({"デモ": []}, "fr", {"デモ": {"en": "Demo"}})
 
 
+def test_translate_nav_item_aborts_on_invalid_children(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Abort and warn when a nav section has an unsupported children type."""
+    with pytest.raises(typer.Abort):
+        docs.translate_nav_item(
+            {"デモ": {"子": "index.md"}}, "en", {"デモ": {"en": "Demo"}}
+        )
+
+    assert "expected a string or list" in capsys.readouterr().out
+
+
 def test_get_nav_section_names_loads_yaml_table(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

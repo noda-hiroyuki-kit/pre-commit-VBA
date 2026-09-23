@@ -350,12 +350,20 @@ def translate_nav_item(
                 "update it in docs/nav_section_names.yml",
             )
             raise typer.Abort
-        if isinstance(children, str):
-            translated[translations[lang]] = children
-        else:
+        children_value: object = children
+        if isinstance(children_value, str):
+            translated[translations[lang]] = children_value
+        elif isinstance(children_value, list):
             translated[translations[lang]] = [
-                translate_nav_item(child, lang, section_names) for child in children
+                translate_nav_item(child, lang, section_names)
+                for child in children_value
             ]
+        else:
+            typer.echo(
+                f"Invalid nav children for {title!r}: expected a string or list, "
+                f"got {type(children_value).__name__}",
+            )
+            raise typer.Abort
     return translated
 
 
