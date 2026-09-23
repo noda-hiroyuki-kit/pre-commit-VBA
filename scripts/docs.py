@@ -322,7 +322,9 @@ def translate_nav_item(
                 "update it in docs/nav_section_names.yml",
             )
             raise typer.Abort
-        translated[translations[lang]] = children
+        translated[translations[lang]] = [
+            translate_nav_item(child, lang, section_names) for child in children
+        ]
     return translated
 
 
