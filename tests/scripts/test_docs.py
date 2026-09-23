@@ -151,7 +151,17 @@ def test_get_nav_section_names_aborts_on_invalid_yaml_shape(
 
     assert str(table_path) in capsys.readouterr().out
 
+    table_path.write_text('"デモ": invalid\n', encoding="utf-8")
+
+    with pytest.raises(typer.Abort):
+        docs.get_nav_section_names()
+
     table_path.write_text('"デモ":\n  en: ["Demo"]\n', encoding="utf-8")
+
+    with pytest.raises(typer.Abort):
+        docs.get_nav_section_names()
+
+    table_path.write_text('"デモ":\n  en: 123\n', encoding="utf-8")
 
     with pytest.raises(typer.Abort):
         docs.get_nav_section_names()
