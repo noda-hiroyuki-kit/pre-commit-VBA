@@ -250,6 +250,7 @@ def stage_translated_docs(
                 staged_file.write_text(
                     translated_file.read_text(encoding="utf-8"),
                     encoding="utf-8",
+                    newline="\n",
                 )
         elif not is_non_translated_path(relative_path):
             staged_file.write_text(
@@ -258,6 +259,7 @@ def stage_translated_docs(
                     missing_translation,
                 ),
                 encoding="utf-8",
+                newline="\n",
             )
 
     for translated_file in lang_docs_path.rglob("*"):
@@ -271,6 +273,7 @@ def stage_translated_docs(
         staged_file.write_text(
             translated_file.read_text(encoding="utf-8"),
             encoding="utf-8",
+            newline="\n",
         )
 
 
