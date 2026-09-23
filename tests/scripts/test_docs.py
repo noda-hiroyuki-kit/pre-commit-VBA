@@ -132,7 +132,8 @@ def test_add_permalinks_page_skips_headings_in_code_blocks(
 
 
 def test_text_path_and_language_helpers(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     assert docs.strip_markdown_links("See [guide](guide.md).") == "See guide."
     extractor = docs.VisibleTextExtractor()
@@ -208,12 +209,14 @@ def test_asset_and_alternate_config_helpers() -> None:
         docs.update_alternate_languages('title = "Docs"\n', alternate)
     with pytest.raises(ValueError, match="exactly one"):
         docs.update_alternate_languages(
-            "alternate = []\nother = 1\nalternate = []\n", alternate
+            "alternate = []\nother = 1\nalternate = []\n",
+            alternate,
         )
 
 
 def test_stage_translation_and_japanese_config(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     staged = tmp_path / "staged"
     translated = tmp_path / "translated"
@@ -225,14 +228,15 @@ def test_stage_translation_and_japanese_config(
     (staged / "api" / "skip.md").write_text("# API\n", encoding="utf-8")
     (translated / "translated.md").write_text("# Translated\n", encoding="utf-8")
     (translated / "translation-only.md").write_text(
-        "# Translation only\n", encoding="utf-8"
+        "# Translation only\n",
+        encoding="utf-8",
     )
     (translated / "translation-banner.md").write_text("Do not copy\n", encoding="utf-8")
     monkeypatch.setattr(docs, "non_translated_sections", ("api/",))
     docs.stage_translated_docs(staged, translated, "Needs translation")
     assert (staged / "translated.md").read_text(encoding="utf-8") == "# Translated\n"
     assert (staged / "translation-only.md").read_text(
-        encoding="utf-8"
+        encoding="utf-8",
     ) == "# Translation only\n"
     assert (staged / "translation-banner.md").read_text(encoding="utf-8") == "Banner\n"
     assert "Needs translation" in (staged / "missing.md").read_text(encoding="utf-8")
@@ -277,7 +281,8 @@ def test_stage_translated_docs_skips_directories(
 
 
 def test_config_build_and_copy_helpers(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     config_path = tmp_path / "zensical.toml"
     config_path.write_text("[project]\nname = 'docs'\n", encoding="utf-8")
@@ -308,20 +313,24 @@ def test_config_build_and_copy_helpers(
     monkeypatch.setattr(docs, "zensical_src_path", tmp_path / "stage")
     (tmp_path / "stage" / "ja" / "site").mkdir(parents=True)
     (tmp_path / "stage" / "ja" / "site" / "index.html").write_text(
-        "ja", encoding="utf-8"
+        "ja",
+        encoding="utf-8",
     )
     docs.copy_zensical_stage_to_site("ja")
     assert (tmp_path / "site" / "index.html").read_text(encoding="utf-8") == "ja"
     (tmp_path / "stage" / "en" / "site").mkdir(parents=True)
     (tmp_path / "stage" / "en" / "site" / "index.html").write_text(
-        "en", encoding="utf-8"
+        "en",
+        encoding="utf-8",
     )
     docs.copy_zensical_stage_to_site("en")
     assert (tmp_path / "site" / "en" / "index.html").read_text(encoding="utf-8") == "en"
 
 
 def test_language_and_translation_commands(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
 ) -> None:
     monkeypatch.chdir(tmp_path)
     (tmp_path / "docs").mkdir()
@@ -337,7 +346,9 @@ def test_language_and_translation_commands(
     monkeypatch.setattr(docs, "get_ja_config", lambda: current)
     monkeypatch.setattr(docs, "get_updated_config_content", lambda: current)
     monkeypatch.setattr(
-        docs, "ja_config_path", tmp_path / "docs" / "ja" / "zensical.toml"
+        docs,
+        "ja_config_path",
+        tmp_path / "docs" / "ja" / "zensical.toml",
     )
     docs.ja_config_path.write_text("alternate = [\n]\n", encoding="utf-8")
     docs.update_languages()
@@ -355,7 +366,8 @@ def test_language_and_translation_commands(
 
 
 def test_updated_config_cleanup_and_build_all(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     names = tmp_path / "language_names.yml"
     names.write_text("ja: Japanese\nen: English\n", encoding="utf-8")
@@ -387,13 +399,17 @@ def test_updated_config_cleanup_and_build_all(
     (forbidden / "index.md").write_text("", encoding="utf-8")
     monkeypatch.setattr(docs, "non_translated_sections", ("api",))
     monkeypatch.setattr(
-        docs, "get_lang_paths", lambda: [tmp_path / "ja", tmp_path / "en"]
+        docs,
+        "get_lang_paths",
+        lambda: [tmp_path / "ja", tmp_path / "en"],
     )
     with pytest.raises(typer.Exit):
         docs.ensure_non_translated()
     assert not forbidden.exists()
     monkeypatch.setattr(
-        docs, "get_lang_paths", lambda: [tmp_path / "ja", tmp_path / "en"]
+        docs,
+        "get_lang_paths",
+        lambda: [tmp_path / "ja", tmp_path / "en"],
     )
     monkeypatch.setattr(docs, "update_languages", Mock())
     monkeypatch.setattr(docs.shutil, "rmtree", Mock())
@@ -408,25 +424,38 @@ def test_updated_config_cleanup_and_build_all(
 
 
 def test_permalink_states_validation_and_delegates(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     assert docs._update_code_block_state(
-        "````\n", in_code_block3=False, in_code_block4=False
+        "````\n",
+        in_code_block3=False,
+        in_code_block4=False,
     ) == (False, True)
     assert docs._update_code_block_state(
-        "text\n", in_code_block3=False, in_code_block4=True
+        "text\n",
+        in_code_block3=False,
+        in_code_block4=True,
     ) == (False, True)
     assert docs._update_code_block_state(
-        "````\n", in_code_block3=False, in_code_block4=True
+        "````\n",
+        in_code_block3=False,
+        in_code_block4=True,
     ) == (False, False)
     assert docs._update_code_block_state(
-        "```\n", in_code_block3=True, in_code_block4=False
+        "```\n",
+        in_code_block3=True,
+        in_code_block4=False,
     ) == (False, False)
     assert docs._update_code_block_state(
-        "text\n", in_code_block3=True, in_code_block4=False
+        "text\n",
+        in_code_block3=True,
+        in_code_block4=False,
     ) == (True, False)
     assert docs._update_code_block_state(
-        "text\n", in_code_block3=False, in_code_block4=False
+        "text\n",
+        in_code_block3=False,
+        in_code_block4=False,
     ) == (False, False)
     assert docs._detect_fence("  ``\n") is None
     assert docs._detect_fence("heading\n") is None
@@ -481,7 +510,8 @@ def test_permalink_states_validation_and_delegates(
     assert nested_api.read_text(encoding="utf-8") == "# Nested API\n"
     tilde_page = docs_root / "tilde.md"
     tilde_page.write_text(
-        "# Visible\n\n~~~markdown\n## Hidden\n~~~\n", encoding="utf-8"
+        "# Visible\n\n~~~markdown\n## Hidden\n~~~\n",
+        encoding="utf-8",
     )
     docs.add_permalinks_page(tilde_page)
     assert tilde_page.read_text(encoding="utf-8") == (
@@ -554,7 +584,9 @@ def test_remaining_cli_paths(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) ->
     forbidden_file.write_text("", encoding="utf-8")
     monkeypatch.setattr(docs, "non_translated_sections", ("api.md",))
     monkeypatch.setattr(
-        docs, "get_lang_paths", lambda: [tmp_path / "ja", tmp_path / "en"]
+        docs,
+        "get_lang_paths",
+        lambda: [tmp_path / "ja", tmp_path / "en"],
     )
     with pytest.raises(typer.Exit):
         docs.ensure_non_translated()
