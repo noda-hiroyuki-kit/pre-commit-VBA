@@ -48,7 +48,7 @@ icon: lucide/rocket
 マージ後にローカルを同期します.
 
 ```powershell
-git checkout develop
+git switch develop
 git pull
 ```
 

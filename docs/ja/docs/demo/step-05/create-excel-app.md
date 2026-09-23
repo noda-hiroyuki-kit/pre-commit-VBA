@@ -22,18 +22,18 @@ git switch -c feature/create-app
 2. VBE でプロシージャを追加します.
 3. ブックを保存します.
 
-## 手順 3: `pre-commit` を実行 { #step-3-run-pre-commit }
+## 手順 3: `prek` を実行 { #step-3-run-prek }
 
 ```console
 git add .
-uv run pre-commit
+uv run prek
 ```
 
 初回は, コードの抽出あるため, エラーで終了します.  
 そのため, 再実行します.
 
 ```console
-uv run pre-commit
+uv run prek
 ```
 
 ## 手順 4: コミットしてプッシュ { #step-4-commit-and-push }
@@ -51,5 +51,5 @@ base を `develop` にしてマージします.
 ## 確認ポイント { #checkpoints }
 
 - 抽出された VBA ファイルが更新される.
-- `uv run pre-commit` が最終的に通る.
+- `uv run prek` が最終的に通る.
 - `develop` に変更が入る.

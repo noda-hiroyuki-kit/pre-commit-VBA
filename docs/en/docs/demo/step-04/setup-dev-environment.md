@@ -15,13 +15,13 @@ git pull
 git switch -c feature/setup-dev-environment
 ```
 
-## Step 2: Install `uv` and `pre-commit` { #step-2-install-uv-and-pre-commit }
+## Step 2: Install `uv` and `prek` { #step-2-install-uv-and-prek }
 
 ```console
 mise use uv@latest
-uv init
-uv add --dev pre-commit
-uv run pre-commit install
+uv init --bare
+uv add --dev prek
+uv run prek install
 ```
 
 ## Step 3: Create Configuration Files { #step-3-create-configuration-files }
@@ -48,8 +48,7 @@ uv run pre-commit install
                   - --no-progress
                   - --no-summary
                 stages: [commit-msg]
-          - repo: https://github.com/pre-commit/pre-commit-hooks
-            rev: v6.0.0
+          - repo: builtin
             hooks:
               - id: trailing-whitespace
                 args: [--markdown-linebreak-ext=md]
@@ -87,7 +86,9 @@ uv run pre-commit install
             ],
             "words": [
                 "EDITMSG",
-                "Predeclared"
+                "Predeclared",
+                "prek",
+                "VBIDE"
             ]
         }
         ```
@@ -96,8 +97,8 @@ uv run pre-commit install
 
 ```powershell
 git add .
-uv run pre-commit
-uv run pre-commit run --all-files
+uv run prek
+uv run prek run --all-files
 git commit -m "chore: set up development environment"
 ```
 
@@ -118,5 +119,5 @@ git branch -D feature/setup-dev-environment
 
 ## Checkpoints { #checkpoints }
 
-- `uv run pre-commit run --all-files` passes.
+- `uv run prek run --all-files` passes.
 - Configuration files are included in `develop`.

@@ -133,6 +133,7 @@
         "typer",
         "urllib",
         "vbext",
+        "VBIDE",
         "venv",
         "viewports",
         "virtualenv",
