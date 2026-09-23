@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.3] - 2026-09-24
+
+### Changed
+
+- Replace `pre-commit` with `prek`.  
+  `pre-commit` を `prek` に置き換え.
+- Add `zizmor` and `pinact` to validate and pin GitHub Actions workflow dependencies, including disabling checkout credential persistence.  
+  GitHub Actions workflow の依存関係を検証・固定するため, `zizmor` と `pinact` を追加し, checkout の認証情報永続化を無効化.
+- Change the documentation to support multiple languages.  
+  ドキュメントを多言語対応に変更.
+- Add permalinks to headings in the English and Japanese documentation.  
+  英語と日本語のドキュメントの見出しに permalink を追加.
+- Raise the minimum `uv_build` requirement from 0.12.10 to 0.12.13.  
+  `uv_build` の最小要件を 0.12.10 から 0.12.13 へ引き上げ.
+- Bump minimum `ruff` requirement from 0.16.6 to 0.16.7.  
+  `ruff` の最小要件を 0.16.6 から 0.16.7 へ引き上げ.
+- Bump minimum `tox` requirement from 4.61.2 to 4.61.4.  
+  `tox` の最小要件を 4.61.2 から 4.61.4 へ引き上げ.
+- Bump minimum `zensical` requirement from 0.0.60 to 0.0.61.  
+  `zensical` の最小要件を 0.0.60 から 0.0.61 へ引き上げ.
+
+
 ## [0.4.2] - 2026-09-19
 
 ### Changed
@@ -380,7 +402,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release as first version
 
-[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.4.2...HEAD
+[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.4.3...HEAD
+[0.4.3]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.3.14...v0.4.0

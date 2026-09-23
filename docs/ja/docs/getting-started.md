@@ -1,0 +1,87 @@
+---
+icon: lucide/package-open
+---
+
+# Getting Started { #getting-started }
+
+## インストール方法 { #installation }
+
+このページは `mise` 前提で説明します.  
+`uv` がある場合は `mise` は不要です.  
+`mise` は[公式手順](https://mise.jdx.dev/getting-started.html)で導入してください.
+
+### pre-commit フックとして使う { #use-as-a-pre-commit-hook }
+
+1. ブックの管理フォルダへ移動します.  
+   このフォルダを `vba_root_folder` とします.
+2. `pre-commit` を導入します.
+    1. `mise` で `uv` を入れます.
+        ```console
+        mise use uv@latest
+        ```
+    2. `uv` を初期化します.
+        ```console
+        uv init
+        ```
+    3. `pre-commit` を追加します.
+        ```console
+        uv add pre-commit
+        uv run pre-commit install
+        ```
+    4. `.pre-commit-config.yaml` を作成します.
+        ```yaml title=".pre-commit-config.yaml"
+        ---
+        repos:
+          - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
+            rev: v{{project_version}}
+            hooks:
+              - id: extract-vba-code
+              - id: check-office-file-integrity
+        ```
+
+        !!! info
+            `check-office-file-integrity` は旧 `check-excel-book-version` の後継IDです（`check-excel-book-version` は非推奨）.
+
+### `pre_commit_vba.py` を直接使う { #use-pre-commit-vba-py-directly }
+
+1. `vba_root_folder` へ移動します.
+2. `mise` で `uv` を入れます.
+    ```console
+    mise use uv@latest
+    ```
+3. `uv` を初期化します.
+    ```console
+    uv init
+    ```
+4. `pre_commit_vba.py` をコピーします.
+
+## 使用方法 { #usage }
+
+### pre-commit フックとして使う { #use-as-a-pre-commit-hook_1 }
+
+1. マクロ付きOfficeファイル(例: sample-app.xlsm)をステージングします.
+    ```console
+    git add sample-app.xlsm
+    ```  
+2. `pre-commit` を実行します.
+    ```console
+    uv run pre-commit
+    ```  
+3. `pre-commit` を再実行します. (展開コードは前回実行時にステージングされます.)
+    ```console
+    uv run pre-commit
+    ```
+
+### `pre_commit_vba.py` を直接使う { #use-pre-commit-vba-py-directly_1 }
+
+#### コード抽出 { #extract-code }
+
+```console
+uv run pre_commit_vba.py extract
+```
+
+#### ブランチ名とバージョンとの照合 { #check-branch-name-against-version }
+
+```console
+uv run pre_commit_vba.py check
+```

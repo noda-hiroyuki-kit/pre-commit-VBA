@@ -1061,7 +1061,7 @@ class TestCodeMetadataPortionIsOkInTrailingWhitespaceCheck:
             [  # noqa: S607
                 "uv",
                 "run",
-                "pre-commit",
+                "prek",
                 "run",
                 "trailing-whitespace",
                 "--files",

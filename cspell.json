@@ -6,6 +6,7 @@
         "powershell"
     ],
     "ignorePaths": [
+        "language_names.yml",
         "**/*.svg",
         "uv.lock"
     ],
@@ -78,14 +79,16 @@
         "Noda",
         "nodeenv",
         "noninteractive",
-        "openstream",
         "nosetests",
+        "openstream",
         "pathspec",
+        "pinact",
         "pipenv",
         "Pipfile",
         "platformdirs",
         "pluggy",
         "Predeclared",
+        "prek",
         "pybuilder",
         "pycache",
         "pycodestyle",
@@ -114,6 +117,7 @@
         "Sabotaro",
         "Scrapy",
         "sdist",
+        "secho",
         "shellingham",
         "smartsymbols",
         "Spyder",
@@ -129,11 +133,13 @@
         "typer",
         "urllib",
         "vbext",
+        "VBIDE",
         "venv",
         "viewports",
         "virtualenv",
         "webassets",
         "xlsb",
-        "zensical"
+        "zensical",
+        "zizmor"
     ]
 }

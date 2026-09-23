@@ -2,7 +2,7 @@
 
 [**English**](README.md)
 
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+[![prek](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/j178/prek/master/docs/assets/badge-v0.json)](https://github.com/j178/prek)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENCE)
 
 [Document](https://noda-hiroyuki-kit.github.io/pre-commit-VBA/)
@@ -18,7 +18,7 @@ Pythonのスクリプトしても利用可能です.
 
 ```
   - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
-    rev: v0.4.2
+    rev: v0.4.3
     hooks:
       - id: extract-vba-code
       - id: check-office-file-integrity
@@ -70,7 +70,7 @@ Version check passed.
         ---
         repos:
           - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
-            rev: v0.4.2
+            rev: v0.4.3
             hooks:
               - id: extract-vba-code
               - id: check-office-file-integrity
