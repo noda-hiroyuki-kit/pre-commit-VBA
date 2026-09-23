@@ -109,6 +109,7 @@ def test_translate_nav_item_aborts_on_missing_translation(
 
     with pytest.raises(typer.Abort):
         docs.translate_nav_item({"デモ": []}, "fr", {"デモ": {"en": "Demo"}})
+    assert "Missing nav title translation" in capsys.readouterr().out
 
 
 def test_translate_nav_item_aborts_on_invalid_children(
