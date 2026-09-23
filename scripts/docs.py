@@ -44,6 +44,7 @@ non_translated_sections: tuple[str, ...] = ()
 
 docs_path = Path("docs").absolute()
 ja_docs_path = Path(docs_path, "ja")
+en_docs_path = Path(docs_path, "en")
 ja_config_path = Path(ja_docs_path, zensical_name)
 site_path = Path("site").absolute()
 zensical_src_path = Path("site_zensical_src").absolute()
@@ -640,8 +641,8 @@ def _make_permalink_line(
 
 @app.command()
 def add_permalinks_page(path: Path, *, update_existing: bool = False) -> None:
-    """Add or update header permalinks in specific page of Ja docs."""
-    docs_root = (ja_docs_path / "docs").resolve()
+    """Add or update header permalinks in specific page of En docs."""
+    docs_root = (en_docs_path / "docs").resolve()
     path = path.resolve()
     if not path.is_relative_to(docs_root):
         message = f"Path must be inside {docs_root}"
@@ -694,7 +695,7 @@ def add_permalinks_pages(
         help="Update existing permalinks.",
     ),
 ) -> None:
-    """Add or update header permalinks in specific pages of Japanese docs."""
+    """Add or update header permalinks in specific pages of English docs."""
     for md_file in pages:
         add_permalinks_page(md_file, update_existing=update_existing)
 
@@ -707,8 +708,8 @@ def add_permalinks(
         help="Update existing permalinks.",
     ),
 ) -> None:
-    """Add or update header permalinks in all pages of Ja docs."""
-    for md_file in ja_docs_path.rglob("*.md"):
+    """Add or update header permalinks in all pages of En docs."""
+    for md_file in en_docs_path.rglob("*.md"):
         add_permalinks_page(md_file, update_existing=update_existing)
 
 

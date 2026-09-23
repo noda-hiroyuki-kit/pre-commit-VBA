@@ -1,13 +1,13 @@
 ---
 icon: lucide/git-pull-request
 ---
-# Merge Basic Files into `develop`
+# Merge Basic Files into `develop` { #merge-basic-files-into-develop }
 
-## Objective
+## Objective { #objective }
 
 Integrate the changes from `feature/setup-repository` into `develop`.
 
-## Steps in Browser
+## Steps in Browser { #steps-in-browser }
 
 1. Open `Pull requests`.
 2. Click `New pull request`.
@@ -57,7 +57,7 @@ Integrate the changes from `feature/setup-repository` into `develop`.
         ![delete-branch](../../../img/demo/step-03/delete-branch.drawio.svg){width="600"}
 
 
-## Local Steps
+## Local Steps { #local-steps }
 
 ```console
 git switch develop
@@ -65,7 +65,7 @@ git pull
 git branch -D feature/setup-repository
 ```
 
-## Checkpoints
+## Checkpoints { #checkpoints }
 
 - Basic files are included in `develop`.
 - `feature/setup-repository` no longer remains locally.

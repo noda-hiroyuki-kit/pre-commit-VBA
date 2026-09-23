@@ -1,13 +1,13 @@
 ---
 icon: lucide/rocket
 ---
-# リリース
+# リリース { #release }
 
-## 目的
+## 目的 { #objective }
 
 `main` の内容を GitHub Release として公開します.
 
-## 手順 1: Release 画面を開く
+## 手順 1: Release 画面を開く { #step-1-open-the-release-page }
 
 1. リポジトリの `Releases` を開きます.
 2. `Create a new release` をクリックします.
@@ -20,7 +20,7 @@ icon: lucide/rocket
     `Draft a new release`のボタンをクリック.  
     ![draftNewRelease](../../img/demo/step-07/draftNewRelease.drawio.svg){width="700"}
 
-## 手順 2: タグを作成
+## 手順 2: タグを作成 { #step-2-create-a-tag }
 
 1. `Select tag` をクリックします.
 2. `v0.1.0` を入力します.
@@ -30,7 +30,7 @@ icon: lucide/rocket
     ![selectTag](../../img/demo/step-07/selectTag.drawio.svg){width="380"}  
     ![createNewTag](../../img/demo/step-07/createNewTag.drawio.svg){width="300"}
 
-## 手順 3: リリース情報を入力
+## 手順 3: リリース情報を入力 { #step-3-enter-release-information }
 
 1. Release title に `v0.1.0` を入れます.
 2. Release notes を入力します.
@@ -42,7 +42,7 @@ icon: lucide/rocket
     ![releaseNotes](../../img/demo/step-07/releaseNotes.drawio.svg){width="450"}  
     ![confirmToPublish](../../img/demo/step-07/confirmToPublish.drawio.svg){width="270"}
 
-## 手順 4: 次の開発へ戻す
+## 手順 4: 次の開発へ戻す { #step-4-return-to-next-development }
 
 `main` から `develop` へ PR を作ります.  
 マージ後にローカルを同期します.
@@ -59,7 +59,7 @@ git pull
     4. ブランチをプッシュします.
     5. `develop` 向け PR を作ってマージします.
 
-## 確認ポイント
+## 確認ポイント { #checkpoints }
 
 - Release 一覧に `v0.1.0` が表示される.
 - `develop` に `main` の内容が戻る.

@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   GitHub Actions workflow の依存関係を検証・固定するため, `zizmor` と `pinact` を追加し, checkout の認証情報永続化を無効化.
 - Change the documentation to support multiple languages.  
   ドキュメントを多言語対応に変更.
+- Add permalinks to headings in the English and Japanese documentation.  
+  英語と日本語のドキュメントの見出しに permalink を追加.
 - Raise the minimum `uv_build` requirement from 0.12.10 to 0.12.13.  
   `uv_build` の最小要件を 0.12.10 から 0.12.13 へ引き上げ.
 - Bump minimum `ruff` requirement from 0.16.6 to 0.16.7.  

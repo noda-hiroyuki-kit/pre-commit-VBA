@@ -1,13 +1,13 @@
 ---
 icon: lucide/tool-case
 ---
-# 開発環境の構築
+# 開発環境の構築 { #set-up-the-development-environment }
 
-## 目的
+## 目的 { #objective }
 
 `pre-commit-vba` を使う開発環境を準備します.
 
-## 手順 1: ブランチを作る
+## 手順 1: ブランチを作る { #step-1-create-a-branch }
 
 ```console
 git checkout develop
@@ -15,7 +15,7 @@ git pull
 git switch -c feature/setup-dev-environment
 ```
 
-## 手順 2: `uv` と `pre-commit` を入れる
+## 手順 2: `uv` と `pre-commit` を入れる { #step-2-install-uv-and-pre-commit }
 
 ```console
 mise use uv@latest
@@ -24,7 +24,7 @@ uv add --dev pre-commit
 uv run pre-commit install
 ```
 
-## 手順 3: 設定ファイルを作る
+## 手順 3: 設定ファイルを作る { #step-3-create-configuration-files }
 
 1. `.pre-commit-config.yaml` を作成します.
 
@@ -92,7 +92,7 @@ uv run pre-commit install
         }
         ```
 
-## 手順 4: フックを実行して整形
+## 手順 4: フックを実行して整形 { #step-4-run-hooks-and-format }
 
 ```powershell
 git add .
@@ -101,7 +101,7 @@ uv run pre-commit run --all-files
 git commit -m "chore: set up development environment"
 ```
 
-## 手順 5: `develop` にマージ
+## 手順 5: `develop` にマージ { #step-5-merge-into-develop }
 
 ```powershell
 git push -u origin feature/setup-dev-environment
@@ -116,7 +116,7 @@ git pull
 git branch -D feature/setup-dev-environment
 ```
 
-## 確認ポイント
+## 確認ポイント { #checkpoints }
 
 - `uv run pre-commit run --all-files` が通る.
 - `develop` に設定ファイルが入っている.

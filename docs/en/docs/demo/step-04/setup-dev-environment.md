@@ -1,13 +1,13 @@
 ---
 icon: lucide/tool-case
 ---
-# Set Up the Development Environment
+# Set Up the Development Environment { #set-up-the-development-environment }
 
-## Objective
+## Objective { #objective }
 
 Prepare a development environment that uses `pre-commit-vba`.
 
-## Step 1: Create a Branch
+## Step 1: Create a Branch { #step-1-create-a-branch }
 
 ```console
 git checkout develop
@@ -15,7 +15,7 @@ git pull
 git switch -c feature/setup-dev-environment
 ```
 
-## Step 2: Install `uv` and `pre-commit`
+## Step 2: Install `uv` and `pre-commit` { #step-2-install-uv-and-pre-commit }
 
 ```console
 mise use uv@latest
@@ -24,7 +24,7 @@ uv add --dev pre-commit
 uv run pre-commit install
 ```
 
-## Step 3: Create Configuration Files
+## Step 3: Create Configuration Files { #step-3-create-configuration-files }
 
 1. Create `.pre-commit-config.yaml`.
 
@@ -92,7 +92,7 @@ uv run pre-commit install
         }
         ```
 
-## Step 4: Run Hooks and Format
+## Step 4: Run Hooks and Format { #step-4-run-hooks-and-format }
 
 ```powershell
 git add .
@@ -101,7 +101,7 @@ uv run pre-commit run --all-files
 git commit -m "chore: set up development environment"
 ```
 
-## Step 5: Merge into `develop`
+## Step 5: Merge into `develop` { #step-5-merge-into-develop }
 
 ```powershell
 git push -u origin feature/setup-dev-environment
@@ -116,7 +116,7 @@ git pull
 git branch -D feature/setup-dev-environment
 ```
 
-## Checkpoints
+## Checkpoints { #checkpoints }
 
 - `uv run pre-commit run --all-files` passes.
 - Configuration files are included in `develop`.

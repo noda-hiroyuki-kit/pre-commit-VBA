@@ -1,13 +1,13 @@
 ---
 icon: lucide/rocket
 ---
-# Release
+# Release { #release }
 
-## Objective
+## Objective { #objective }
 
 Publish the content of `main` as a GitHub Release.
 
-## Step 1: Open the Release Page
+## Step 1: Open the Release Page { #step-1-open-the-release-page }
 
 1. Open `Releases` in the repository.
 2. Click `Create a new release`.
@@ -20,7 +20,7 @@ Publish the content of `main` as a GitHub Release.
     Click the `Draft a new release` button.  
     ![draftNewRelease](../../../img/demo/step-07/draftNewRelease.drawio.svg){width="700"}
 
-## Step 2: Create a Tag
+## Step 2: Create a Tag { #step-2-create-a-tag }
 
 1. Click `Select tag`.
 2. Enter `v0.1.0`.
@@ -30,7 +30,7 @@ Publish the content of `main` as a GitHub Release.
     ![selectTag](../../../img/demo/step-07/selectTag.drawio.svg){width="380"}  
     ![createNewTag](../../../img/demo/step-07/createNewTag.drawio.svg){width="300"}
 
-## Step 3: Enter Release Information
+## Step 3: Enter Release Information { #step-3-enter-release-information }
 
 1. Enter `v0.1.0` in Release title.
 2. Enter release notes.
@@ -42,7 +42,7 @@ Publish the content of `main` as a GitHub Release.
     ![releaseNotes](../../../img/demo/step-07/releaseNotes.drawio.svg){width="450"}  
     ![confirmToPublish](../../../img/demo/step-07/confirmToPublish.drawio.svg){width="270"}
 
-## Step 4: Return to Next Development
+## Step 4: Return to Next Development { #step-4-return-to-next-development }
 
 Create a PR from `main` to `develop`.  
 After merge, sync your local repository.
@@ -59,7 +59,7 @@ git pull
     4. Push the branch.
     5. Create a PR to `develop` and merge it.
 
-## Checkpoints
+## Checkpoints { #checkpoints }
 
 - `v0.1.0` appears in the Releases list.
 - The content from `main` is returned to `develop`.

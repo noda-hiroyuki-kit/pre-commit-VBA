@@ -1,15 +1,15 @@
 ---
 icon: lucide/sheet
 ---
-# リリースの準備
+# リリースの準備 { #prepare-for-release }
 
 この手順は `v0.1.0` を例に説明します.
 
-## 目的
+## 目的 { #objective }
 
 `release` ブランチで公開前チェックを行います.
 
-## 手順 1: リリースブランチを作る
+## 手順 1: リリースブランチを作る { #step-1-create-a-release-branch }
 
 ```console
 git switch develop
@@ -17,7 +17,7 @@ git pull
 git switch -c release/v0.1.0
 ```
 
-## 手順 2: ブック情報を更新
+## 手順 2: ブック情報を更新 { #step-2-update-workbook-information }
 
 1. VBE で Document version を `v0.1.0` にします.
 
@@ -36,7 +36,7 @@ git switch -c release/v0.1.0
 
 3. ブックを保存します.
 
-## 手順 3: コミットしてプッシュ
+## 手順 3: コミットしてプッシュ { #step-3-commit-and-push }
 
 ```powershell
 git add .
@@ -60,7 +60,7 @@ mixed line ending........................................................Passed
 yamllint.............................................(no files to check)Skipped
 ```
 
-## 手順 4: 変更履歴を更新
+## 手順 4: 変更履歴を更新 { #step-4-update-changelog }
 
 `CHANGELOG.md` を更新してコミットします.  
 必要なら追加でプッシュします.
@@ -68,7 +68,7 @@ yamllint.............................................(no files to check)Skipped
 ??? info "変更履歴を記録するのサイト"
     [https://keepachangelog.com/ja/1.1.0/](https://keepachangelog.com/ja/1.1.0/)
 
-## 手順 5: `main` 向け PR を作る
+## 手順 5: `main` 向け PR を作る { #step-5-create-a-pr-to-main }
 
 base は `main`, compare は `release/v0.1.0` を選びます.  
 PR を作成してマージします.
@@ -76,7 +76,7 @@ PR を作成してマージします.
 ??? info "作成したPRの画面"
     ![pullRequestMergeToMain](../../img/demo/step-06/pullRequestMergeToMain.drawio.svg){width="600"}
 
-## 確認ポイント
+## 確認ポイント { #checkpoints }
 
 - `main` にリリース準備の変更が入る.
 - ブランチ名と Document Version が一致する.

@@ -1,14 +1,14 @@
 ---
 icon: lucide/cloud-upload
 ---
-# リモートリポジトリの作成
+# リモートリポジトリの作成 { #create-a-remote-repository }
 
-## 目的
+## 目的 { #objective }
 
 GitHub に空のリポジトリを作成します.  
 この後の手順の土台になります.
 
-## 手順
+## 手順 { #steps }
 
 1. GitHub の組織またはプロフィールを開きます.
 2. `Repositories` をクリックします.  
@@ -27,13 +27,13 @@ GitHub に空のリポジトリを作成します.
 5. `Create repository` をクリックします.  
    ![Create a new repository](../../img/demo/step-01/create-repository.drawio.svg){width="650"}
 
-## 確認ポイント
+## 確認ポイント { #checkpoints }
 
 - リポジトリトップが表示される.
 - 初期ファイルが 0 件で表示される.
 - URL が `pre-commit-vba-example` で終わる.
 
-## 補足
+## 補足 { #supplement }
 
 同名リポジトリがある場合は作成できません.  
 その場合は名前を変更して再作成してください.

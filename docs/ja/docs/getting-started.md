@@ -2,15 +2,15 @@
 icon: lucide/package-open
 ---
 
-# Getting Started
+# Getting Started { #getting-started }
 
-## インストール方法
+## インストール方法 { #installation }
 
 このページは `mise` 前提で説明します.  
 `uv` がある場合は `mise` は不要です.  
 `mise` は[公式手順](https://mise.jdx.dev/getting-started.html)で導入してください.
 
-### pre-commit フックとして使う
+### pre-commit フックとして使う { #use-as-a-pre-commit-hook }
 
 1. ブックの管理フォルダへ移動します.  
    このフォルダを `vba_root_folder` とします.
@@ -42,7 +42,7 @@ icon: lucide/package-open
         !!! info
             `check-office-file-integrity` は旧 `check-excel-book-version` の後継IDです（`check-excel-book-version` は非推奨）.
 
-### `pre_commit_vba.py` を直接使う
+### `pre_commit_vba.py` を直接使う { #use-pre-commit-vba-py-directly }
 
 1. `vba_root_folder` へ移動します.
 2. `mise` で `uv` を入れます.
@@ -55,9 +55,9 @@ icon: lucide/package-open
     ```
 4. `pre_commit_vba.py` をコピーします.
 
-## 使用方法
+## 使用方法 { #usage }
 
-### pre-commit フックとして使う
+### pre-commit フックとして使う { #use-as-a-pre-commit-hook_1 }
 
 1. マクロ付きOfficeファイル(例: sample-app.xlsm)をステージングします.
     ```console
@@ -72,15 +72,15 @@ icon: lucide/package-open
     uv run pre-commit
     ```
 
-### `pre_commit_vba.py` を直接使う
+### `pre_commit_vba.py` を直接使う { #use-pre-commit-vba-py-directly_1 }
 
-#### コード抽出
+#### コード抽出 { #extract-code }
 
 ```console
 uv run pre_commit_vba.py extract
 ```
 
-#### ブランチ名とバージョンとの照合
+#### ブランチ名とバージョンとの照合 { #check-branch-name-against-version }
 
 ```console
 uv run pre_commit_vba.py check

@@ -1,12 +1,12 @@
 ---
 icon: octicons/people-16
 ---
-# Contributing to pre-commit-vba
+# Contributing to pre-commit-vba { #contributing-to-pre-commit-vba }
 
 Thank you for contributing.  
 Both code and non-code contributions are welcome.
 
-## How to Contribute
+## How to Contribute { #how-to-contribute }
 
 We welcome many types of contributions, such as:
 
@@ -16,7 +16,7 @@ We welcome many types of contributions, such as:
 - Adding or improving tests
 - Fixing bugs and implementing new features
 
-## Before You Start
+## Before You Start { #before-you-start }
 
 Please check existing issues and pull requests.
 
@@ -25,7 +25,7 @@ Please check existing issues and pull requests.
 
 For large changes, please discuss in an issue first.
 
-## Development Environment
+## Development Environment { #development-environment }
 
 This project uses `uv`.  
 The target Python version is 3.14.
@@ -35,7 +35,7 @@ mise install
 uv sync
 ```
 
-## Quality Checks
+## Quality Checks { #quality-checks }
 
 Run the following before creating a PR.
 
@@ -52,7 +52,7 @@ Notes:
 - Do not edit `uv.lock` manually.
 - Do not modify the `.env` file.
 
-## Testing
+## Testing { #testing }
 
 ```powershell
 uv run tox -e 3.14
@@ -62,7 +62,7 @@ uv run tox -e 3.14
 - Place them under `tests/test_*.py`.
 - Add tests for new features and fixes.
 
-## Bug Reports
+## Bug Reports { #bug-reports }
 
 Please use the bug report template.
 
@@ -75,7 +75,7 @@ Include the following in your report:
 - Expected and actual results
 - Samples or logs
 
-## Feature Proposals
+## Feature Proposals { #feature-proposals }
 
 Please use the feature request template.
 
@@ -87,7 +87,7 @@ Include the following in your proposal:
 - The behavior you propose
 - Alternatives
 
-## Submitting Changes
+## Submitting Changes { #submitting-changes }
 
 1. Create a branch from `main`.
 2. Implement your changes.
@@ -100,7 +100,7 @@ Checklist:
 - [ ] `ruff`, `mypy`, and `pytest` passed
 - [ ] Updated required documentation
 
-## Conventions
+## Conventions { #conventions }
 
 Use Conventional Commits in English.
 
@@ -117,16 +117,16 @@ Recommended branch names:
 - `hotfix/v<semantic-version>`
 - `release/v<semantic-version>`
 
-## Code of Conduct
+## Code of Conduct { #code-of-conduct }
 
 - [code-of-conduct](code-of-conduct.md)
 
-## Appreciation
+## Appreciation { #appreciation }
 
 Thank you for every contribution.  
 Contributors may be recognized in release notes, acknowledgements in repository discussions, and merged PRs.
 
-## When You Need Help
+## When You Need Help { #when-you-need-help }
 
 If you are unsure where to start:
 

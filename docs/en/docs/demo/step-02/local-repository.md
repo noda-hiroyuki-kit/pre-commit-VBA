@@ -1,14 +1,14 @@
 ---
 icon: lucide/folder-git-2
 ---
-# Create Basic Repository Files
+# Create Basic Repository Files { #create-basic-repository-files }
 
-## Objective
+## Objective { #objective }
 
 Create a local repository.  
 Prepare `main` / `develop` / `feature` branches.
 
-## Step 1: Clone and Move
+## Step 1: Clone and Move { #step-1-clone-and-move }
 
 1. Copy the repository URL on GitHub.  
     ![remote repository url](../../../img/demo/step-02/repository-first.drawio.svg){width="700"}
@@ -18,7 +18,7 @@ Prepare `main` / `develop` / `feature` branches.
     cd pre-commit-vba-example
     ```
 
-## Step 2: Prepare `main`
+## Step 2: Prepare `main` { #step-2-prepare-main }
 
 ```console
 git commit -m "first commit" --allow-empty
@@ -36,7 +36,7 @@ git push -u origin main
     nothing to commit, working tree clean
     ```
 
-## Step 3: Prepare `develop`
+## Step 3: Prepare `develop` { #step-3-prepare-develop }
 
 ```console
 git switch -c develop
@@ -53,14 +53,14 @@ git push -u origin develop
     nothing to commit, working tree clean
     ```
 
-## Step 4: Prepare a Working Branch
+## Step 4: Prepare a Working Branch { #step-4-prepare-a-working-branch }
 
 ```console
 git switch -c feature/setup-repository
 git push -u origin feature/setup-repository
 ```
 
-## Step 5: Add Basic Files
+## Step 5: Add Basic Files { #step-5-add-basic-files }
 
 1. Create `README.md`.
 
@@ -100,7 +100,7 @@ git push -u origin feature/setup-repository
     git push -u origin feature/setup-repository
     ```
 
-## Checkpoints
+## Checkpoints { #checkpoints }
 
 - `git status` shows a clean working tree.
 - Three branches exist on GitHub.
