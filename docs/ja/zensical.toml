@@ -51,7 +51,7 @@ watch = ["pyproject.toml"]
 nav = [
         "index.md",
         "getting-started.md",
-        { "" = [
+        { "デモ" = [
             "demo/sample-usage.md",
             "demo/step-01/create-remote-repository.md",
             "demo/step-02/local-repository.md",

@@ -48,6 +48,7 @@ en_docs_path = Path(docs_path, "en")
 ja_config_path = Path(ja_docs_path, zensical_name)
 site_path = Path("site").absolute()
 zensical_src_path = Path("site_zensical_src").absolute()
+nav_section_names_path = Path(docs_path, "nav_section_names.yml")
 
 header_pattern = re.compile(r"^(#{1,6}) (.+?)(?:\s*\{\s*(#.*)\s*\})?\s*$")
 header_with_permalink_pattern = re.compile(r"^(#{1,6}) (.+?)(\s*\{\s*#.*\s*\})\s*$")
@@ -293,6 +294,50 @@ def make_root_asset_paths(project_config: dict[str, object]) -> None:
         project_config[key] = ["/" + str(path).lstrip("/") for path in paths]
 
 
+def get_nav_section_names() -> dict[str, dict[str, str]]:
+    """Load the ja→language translation table for nav section titles."""
+    section_names: dict[str, dict[str, str]] = yaml.safe_load(
+        nav_section_names_path.read_text(encoding="utf-8"),
+    )
+    return section_names
+
+
+NavItem = str | dict[str, list["NavItem"]]
+
+
+def translate_nav_item(
+    item: NavItem,
+    lang: str,
+    section_names: dict[str, dict[str, str]],
+) -> NavItem:
+    """Translate a single nav entry's section title, if it is a titled section."""
+    if not isinstance(item, dict):
+        return item
+    translated: dict[str, list[NavItem]] = {}
+    for title, children in item.items():
+        translations = section_names.get(title)
+        if translations is None or lang not in translations:
+            typer.echo(
+                f"Missing nav section translation for: {title!r} (lang: {lang}), "
+                "update it in docs/nav_section_names.yml",
+            )
+            raise typer.Abort
+        translated[translations[lang]] = children
+    return translated
+
+
+def translate_nav(
+    nav: list[NavItem],
+    lang: str,
+    section_names: dict[str, dict[str, str]],
+) -> list[NavItem]:
+    """Translate nav section titles for the target language.
+
+    Missing translations abort the build so untranslated labels are never shipped.
+    """
+    return [translate_nav_item(item, lang, section_names) for item in nav]
+
+
 def stage_zensical_docs(lang: str) -> Path:
     """Stage the Japanese source docs tree into the Zensical output.
 
@@ -338,6 +383,12 @@ def stage_zensical_docs(lang: str) -> Path:
         # The root Japanese build owns shared static assets; translated builds should
         # reference those root paths instead of emitting language-local copies.
         make_root_asset_paths(project_config)
+        if "nav" in project_config:
+            project_config["nav"] = translate_nav(
+                project_config["nav"],
+                lang,
+                get_nav_section_names(),
+            )
     config_path = lang_stage_path / zensical_name
     config_path.write_text(
         tomli_w.dumps(config),

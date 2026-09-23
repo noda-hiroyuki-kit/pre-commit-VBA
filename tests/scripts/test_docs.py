@@ -66,6 +66,122 @@ def test_stage_zensical_docs_writes_language_specific_project_config(
     ) == "# English\n"
 
 
+def test_translate_nav_translates_titled_sections_and_keeps_plain_pages() -> None:
+    """Translate dict-based nav sections while leaving plain page strings intact."""
+    section_names = {"デモ": {"en": "Demo"}}
+    nav = ["index.md", {"デモ": ["demo/a.md", "demo/b.md"]}]
+
+    result = docs.translate_nav(nav, "en", section_names)
+
+    assert result == ["index.md", {"Demo": ["demo/a.md", "demo/b.md"]}]
+
+
+def test_translate_nav_item_aborts_on_missing_translation(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Abort and warn when a nav section title has no translation for the language."""
+    with pytest.raises(typer.Abort):
+        docs.translate_nav_item({"デモ": []}, "en", {})
+    assert "Missing nav section translation" in capsys.readouterr().out
+
+    with pytest.raises(typer.Abort):
+        docs.translate_nav_item({"デモ": []}, "fr", {"デモ": {"en": "Demo"}})
+
+
+def test_get_nav_section_names_loads_yaml_table(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Load the nav section translation table from docs/nav_section_names.yml."""
+    table_path = tmp_path / "nav_section_names.yml"
+    table_path.write_text('"デモ":\n  en: "Demo"\n', encoding="utf-8")
+    monkeypatch.setattr(docs, "nav_section_names_path", table_path)
+
+    assert docs.get_nav_section_names() == {"デモ": {"en": "Demo"}}
+
+
+def test_stage_zensical_docs_translates_nav_for_non_japanese_language(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Translate nav section titles when staging a non-Japanese language."""
+    monkeypatch.chdir(tmp_path)
+    docs_root = tmp_path / "docs"
+    ja_root = docs_root / "ja"
+    en_root = docs_root / "en"
+    (ja_root / "docs").mkdir(parents=True)
+    (en_root / "docs").mkdir(parents=True)
+    (ja_root / "overrides").mkdir()
+    (ja_root / "docs" / "index.md").write_text("# Japanese\n", encoding="utf-8")
+    (en_root / "docs" / "index.md").write_text("# English\n", encoding="utf-8")
+    (docs_root / "missing-translation.md").write_text(
+        "Missing translation\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "macros.py").write_text("", encoding="utf-8")
+    (tmp_path / "pyproject.toml").write_text("", encoding="utf-8")
+
+    monkeypatch.setattr(docs, "docs_path", docs_root)
+    monkeypatch.setattr(docs, "ja_docs_path", ja_root)
+    monkeypatch.setattr(docs, "zensical_src_path", tmp_path / "site_zensical_src")
+    monkeypatch.setattr(
+        docs,
+        "get_updated_config_content",
+        lambda: {
+            "project": {"theme": {}, "nav": [{"デモ": ["demo/a.md"]}]},
+            "theme": {},
+        },
+    )
+    monkeypatch.setattr(
+        docs,
+        "get_nav_section_names",
+        lambda: {"デモ": {"en": "Demo"}},
+    )
+
+    config_path = docs.stage_zensical_docs("en")
+
+    config = tomllib.loads(config_path.read_text(encoding="utf-8"))
+    assert config["project"]["nav"] == [{"Demo": ["demo/a.md"]}]
+
+
+def test_stage_zensical_docs_aborts_when_nav_translation_missing(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Stop staging when a nav section title has no translation table entry."""
+    monkeypatch.chdir(tmp_path)
+    docs_root = tmp_path / "docs"
+    ja_root = docs_root / "ja"
+    en_root = docs_root / "en"
+    (ja_root / "docs").mkdir(parents=True)
+    (en_root / "docs").mkdir(parents=True)
+    (ja_root / "overrides").mkdir()
+    (ja_root / "docs" / "index.md").write_text("# Japanese\n", encoding="utf-8")
+    (en_root / "docs" / "index.md").write_text("# English\n", encoding="utf-8")
+    (docs_root / "missing-translation.md").write_text(
+        "Missing translation\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "macros.py").write_text("", encoding="utf-8")
+    (tmp_path / "pyproject.toml").write_text("", encoding="utf-8")
+
+    monkeypatch.setattr(docs, "docs_path", docs_root)
+    monkeypatch.setattr(docs, "ja_docs_path", ja_root)
+    monkeypatch.setattr(docs, "zensical_src_path", tmp_path / "site_zensical_src")
+    monkeypatch.setattr(
+        docs,
+        "get_updated_config_content",
+        lambda: {
+            "project": {"theme": {}, "nav": [{"デモ": ["demo/a.md"]}]},
+            "theme": {},
+        },
+    )
+    monkeypatch.setattr(docs, "get_nav_section_names", dict)
+
+    with pytest.raises(typer.Abort):
+        docs.stage_zensical_docs("en")
+
+
 def test_make_permalink_line_avoids_duplicate_generated_slugs() -> None:
     """Give repeated headings unique generated anchors."""
     extractor = docs.VisibleTextExtractor()
