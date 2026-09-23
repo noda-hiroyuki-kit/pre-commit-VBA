@@ -695,7 +695,7 @@ def add_permalinks_pages(
         help="Update existing permalinks.",
     ),
 ) -> None:
-    """Add or update header permalinks in specific pages of Japanese docs."""
+    """Add or update header permalinks in specific pages of English docs."""
     for md_file in pages:
         add_permalinks_page(md_file, update_existing=update_existing)
 
