@@ -115,14 +115,14 @@ def test_add_permalinks_page_skips_headings_in_code_blocks(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """Do not add anchors to Markdown headings inside fenced code blocks."""
-    docs_root = tmp_path / "docs" / "ja" / "docs"
+    docs_root = tmp_path / "docs" / "en" / "docs"
     docs_root.mkdir(parents=True)
     page = docs_root / "index.md"
     page.write_text(
         "# Visible\n\n```markdown\n# Example\n```\n",
         encoding="utf-8",
     )
-    monkeypatch.setattr(docs, "ja_docs_path", tmp_path / "docs" / "ja")
+    monkeypatch.setattr(docs, "en_docs_path", tmp_path / "docs" / "en")
 
     docs.add_permalinks_page(page)
 
@@ -460,24 +460,24 @@ def test_permalink_states_validation_and_delegates(
         )
         == "# Title { #title_1 }\n"
     )
-    docs_root = tmp_path / "docs" / "ja" / "docs"
+    docs_root = tmp_path / "docs" / "en" / "docs"
     docs_root.mkdir(parents=True)
     outside = tmp_path / "outside.md"
     outside.write_text("# Outside\n", encoding="utf-8")
-    monkeypatch.setattr(docs, "ja_docs_path", tmp_path / "docs" / "ja")
+    monkeypatch.setattr(docs, "en_docs_path", tmp_path / "docs" / "en")
     with pytest.raises(RuntimeError, match="inside"):
         docs.add_permalinks_page(outside)
     page = docs_root / "api.md"
     page.write_text("# API\n", encoding="utf-8")
     monkeypatch.setattr(docs, "non_translated_sections", ("api.md",))
     monkeypatch.chdir(tmp_path)
-    docs.add_permalinks_page(Path("docs/ja/docs/api.md"))
+    docs.add_permalinks_page(Path("docs/en/docs/api.md"))
     assert page.read_text(encoding="utf-8") == "# API\n"
     nested_api = docs_root / "api" / "index.md"
     nested_api.parent.mkdir()
     nested_api.write_text("# Nested API\n", encoding="utf-8")
     monkeypatch.setattr(docs, "non_translated_sections", ("api/",))
-    docs.add_permalinks_page(Path("docs/ja/docs/api/index.md"))
+    docs.add_permalinks_page(Path("docs/en/docs/api/index.md"))
     assert nested_api.read_text(encoding="utf-8") == "# Nested API\n"
     tilde_page = docs_root / "tilde.md"
     tilde_page.write_text(
@@ -495,7 +495,7 @@ def test_permalink_states_validation_and_delegates(
     monkeypatch.setattr(docs, "add_permalinks_page", page_mock)
     docs.add_permalinks_pages([page_a, page_b], update_existing=True)
     assert page_mock.call_count == 2
-    monkeypatch.setattr(docs, "ja_docs_path", tmp_path)
+    monkeypatch.setattr(docs, "en_docs_path", tmp_path)
     (tmp_path / "one.md").write_text("# One\n", encoding="utf-8")
     docs.add_permalinks()
     assert page_mock.call_count > 2
