@@ -1,8 +1,6 @@
 # Copyright (c) 2026 Noda Hiroyuki
 """Load the shared Zensical macros module for the Japanese documentation."""
 
-# ruff: noqa: INP001
-
 import importlib.util
 from pathlib import Path
 
