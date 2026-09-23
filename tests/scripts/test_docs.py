@@ -66,6 +66,214 @@ def test_stage_zensical_docs_writes_language_specific_project_config(
     ) == "# English\n"
 
 
+def test_translate_nav_translates_titled_sections_and_keeps_plain_pages() -> None:
+    """Translate dict-based nav sections while leaving plain page strings intact."""
+    section_names = {"デモ": {"en": "Demo"}}
+    nav = ["index.md", {"デモ": ["demo/a.md", "demo/b.md"]}]
+
+    result = docs.translate_nav(nav, "en", section_names)
+
+    assert result == ["index.md", {"Demo": ["demo/a.md", "demo/b.md"]}]
+
+
+def test_translate_nav_translates_titled_pages() -> None:
+    """Translate dict-based page titles while leaving page paths intact."""
+    section_names = {"ホーム": {"en": "Home"}}
+    nav = [{"ホーム": "index.md"}]
+
+    result = docs.translate_nav(nav, "en", section_names)
+
+    assert result == [{"Home": "index.md"}]
+
+
+def test_translate_nav_translates_nested_titled_sections() -> None:
+    """Translate nested dict-based nav sections recursively."""
+    section_names = {
+        "デモ": {"en": "Demo"},
+        "手順": {"en": "Steps"},
+    }
+    nav = [{"デモ": [{"手順": ["demo/step-01.md"]}]}]
+
+    result = docs.translate_nav(nav, "en", section_names)
+
+    assert result == [{"Demo": [{"Steps": ["demo/step-01.md"]}]}]
+
+
+def test_translate_nav_item_aborts_on_missing_translation(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Abort and warn when a nav section title has no translation for the language."""
+    with pytest.raises(typer.Abort):
+        docs.translate_nav_item({"デモ": []}, "en", {})
+    assert "Missing nav title translation" in capsys.readouterr().out
+
+    with pytest.raises(typer.Abort):
+        docs.translate_nav_item({"デモ": []}, "fr", {"デモ": {"en": "Demo"}})
+    assert "Missing nav title translation" in capsys.readouterr().out
+
+
+def test_translate_nav_item_aborts_on_invalid_children(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Abort and warn when a nav section has an unsupported children type."""
+    with pytest.raises(typer.Abort):
+        docs.translate_nav_item(
+            {"デモ": {"子": "index.md"}}, "en", {"デモ": {"en": "Demo"}}
+        )
+
+    assert "expected a string or list" in capsys.readouterr().out
+
+
+def test_get_nav_section_names_loads_yaml_table(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Load the nav section translation table from docs/nav_section_names.yml."""
+    table_path = tmp_path / "nav_section_names.yml"
+    table_path.write_text('"デモ":\n  en: "Demo"\n', encoding="utf-8")
+    monkeypatch.setattr(docs, "nav_section_names_path", table_path)
+
+    assert docs.get_nav_section_names() == {"デモ": {"en": "Demo"}}
+
+
+def test_get_nav_section_names_aborts_on_invalid_yaml_shape(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Abort when the nav section translation table has an invalid shape."""
+    table_path = tmp_path / "nav_section_names.yml"
+    table_path.write_text("- invalid\n", encoding="utf-8")
+    monkeypatch.setattr(docs, "nav_section_names_path", table_path)
+
+    with pytest.raises(typer.Abort):
+        docs.get_nav_section_names()
+
+    assert str(table_path) in capsys.readouterr().out
+
+    table_path.write_text('"デモ":\n  en: ["Demo"]\n', encoding="utf-8")
+
+    with pytest.raises(typer.Abort):
+        docs.get_nav_section_names()
+
+
+def test_get_nav_section_names_aborts_on_missing_or_invalid_yaml(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Abort with a path-specific message when the nav table cannot be loaded."""
+    missing_path = tmp_path / "missing-nav-section-names.yml"
+    monkeypatch.setattr(docs, "nav_section_names_path", missing_path)
+
+    with pytest.raises(typer.Abort):
+        docs.get_nav_section_names()
+
+    assert str(missing_path) in capsys.readouterr().out
+
+    invalid_path = tmp_path / "invalid-nav-section-names.yml"
+    invalid_path.write_text('"デモ": [\n', encoding="utf-8")
+    monkeypatch.setattr(docs, "nav_section_names_path", invalid_path)
+
+    with pytest.raises(typer.Abort):
+        docs.get_nav_section_names()
+
+    assert str(invalid_path) in capsys.readouterr().out
+
+
+def test_stage_zensical_docs_translates_nav_for_non_japanese_language(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Translate nav section titles when staging a non-Japanese language."""
+    monkeypatch.chdir(tmp_path)
+    docs_root = tmp_path / "docs"
+    ja_root = docs_root / "ja"
+    en_root = docs_root / "en"
+    (ja_root / "docs").mkdir(parents=True)
+    (en_root / "docs").mkdir(parents=True)
+    (ja_root / "overrides").mkdir()
+    (ja_root / "docs" / "index.md").write_text("# Japanese\n", encoding="utf-8")
+    (en_root / "docs" / "index.md").write_text("# English\n", encoding="utf-8")
+    (docs_root / "missing-translation.md").write_text(
+        "Missing translation\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "macros.py").write_text("", encoding="utf-8")
+    (tmp_path / "pyproject.toml").write_text("", encoding="utf-8")
+
+    monkeypatch.setattr(docs, "docs_path", docs_root)
+    monkeypatch.setattr(docs, "ja_docs_path", ja_root)
+    monkeypatch.setattr(docs, "zensical_src_path", tmp_path / "site_zensical_src")
+    monkeypatch.setattr(
+        docs,
+        "get_updated_config_content",
+        lambda: {
+            "project": {"theme": {}, "nav": [{"デモ": ["demo/a.md"]}]},
+            "theme": {},
+        },
+    )
+    monkeypatch.setattr(
+        docs,
+        "get_nav_section_names",
+        lambda: {"デモ": {"en": "Demo"}},
+    )
+
+    config_path = docs.stage_zensical_docs("en")
+
+    config = tomllib.loads(config_path.read_text(encoding="utf-8"))
+    assert config["project"]["nav"] == [{"Demo": ["demo/a.md"]}]
+
+    monkeypatch.setattr(
+        docs,
+        "get_updated_config_content",
+        lambda: {"project": {"theme": {}, "nav": "invalid"}, "theme": {}},
+    )
+    with pytest.raises(typer.Abort):
+        docs.stage_zensical_docs("en")
+
+    assert "Invalid project.nav: expected a list" in capsys.readouterr().out
+
+
+def test_stage_zensical_docs_aborts_when_nav_translation_missing(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Stop staging when a nav section title has no translation table entry."""
+    monkeypatch.chdir(tmp_path)
+    docs_root = tmp_path / "docs"
+    ja_root = docs_root / "ja"
+    en_root = docs_root / "en"
+    (ja_root / "docs").mkdir(parents=True)
+    (en_root / "docs").mkdir(parents=True)
+    (ja_root / "overrides").mkdir()
+    (ja_root / "docs" / "index.md").write_text("# Japanese\n", encoding="utf-8")
+    (en_root / "docs" / "index.md").write_text("# English\n", encoding="utf-8")
+    (docs_root / "missing-translation.md").write_text(
+        "Missing translation\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "macros.py").write_text("", encoding="utf-8")
+    (tmp_path / "pyproject.toml").write_text("", encoding="utf-8")
+
+    monkeypatch.setattr(docs, "docs_path", docs_root)
+    monkeypatch.setattr(docs, "ja_docs_path", ja_root)
+    monkeypatch.setattr(docs, "zensical_src_path", tmp_path / "site_zensical_src")
+    monkeypatch.setattr(
+        docs,
+        "get_updated_config_content",
+        lambda: {
+            "project": {"theme": {}, "nav": [{"デモ": ["demo/a.md"]}]},
+            "theme": {},
+        },
+    )
+    monkeypatch.setattr(docs, "get_nav_section_names", dict)
+
+    with pytest.raises(typer.Abort):
+        docs.stage_zensical_docs("en")
+
+
 def test_make_permalink_line_avoids_duplicate_generated_slugs() -> None:
     """Give repeated headings unique generated anchors."""
     extractor = docs.VisibleTextExtractor()
@@ -222,24 +430,23 @@ def test_stage_translation_and_japanese_config(
     translated = tmp_path / "translated"
     (staged / "api").mkdir(parents=True)
     translated.mkdir()
-    (staged / "translated.md").write_text("# Original\n", encoding="utf-8")
+    (staged / "translated.md").write_bytes(b"# Original\r\n")
     (staged / "translation-banner.md").write_text("Banner\n", encoding="utf-8")
-    (staged / "missing.md").write_text("# Missing\n\nBody\n", encoding="utf-8")
+    (staged / "missing.md").write_bytes(b"# Missing\r\n\r\nBody\r\n")
     (staged / "api" / "skip.md").write_text("# API\n", encoding="utf-8")
-    (translated / "translated.md").write_text("# Translated\n", encoding="utf-8")
-    (translated / "translation-only.md").write_text(
-        "# Translation only\n",
-        encoding="utf-8",
-    )
+    (translated / "translated.md").write_bytes(b"# Translated\r\n")
+    (translated / "translation-only.md").write_bytes(b"# Translation only\r\n")
+    (translated / "image.bin").write_bytes(b"\x00\xff\x01\xfe")
     (translated / "translation-banner.md").write_text("Do not copy\n", encoding="utf-8")
     monkeypatch.setattr(docs, "non_translated_sections", ("api/",))
     docs.stage_translated_docs(staged, translated, "Needs translation")
-    assert (staged / "translated.md").read_text(encoding="utf-8") == "# Translated\n"
-    assert (staged / "translation-only.md").read_text(
-        encoding="utf-8",
-    ) == "# Translation only\n"
+    assert (staged / "translated.md").read_bytes() == b"# Translated\n"
+    assert (staged / "translation-only.md").read_bytes() == b"# Translation only\n"
+    assert (staged / "image.bin").read_bytes() == b"\x00\xff\x01\xfe"
     assert (staged / "translation-banner.md").read_text(encoding="utf-8") == "Banner\n"
-    assert "Needs translation" in (staged / "missing.md").read_text(encoding="utf-8")
+    assert (staged / "missing.md").read_bytes() == (
+        b"# Missing\n\nNeeds translation\n\nBody\n"
+    )
     assert (staged / "api" / "skip.md").read_text(encoding="utf-8") == "# API\n"
     docs_root = tmp_path / "docs"
     ja_root = docs_root / "ja"

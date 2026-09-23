@@ -48,7 +48,7 @@ Create a PR from `main` to `develop`.
 After merge, sync your local repository.
 
 ```powershell
-git checkout develop
+git switch develop
 git pull
 ```
 

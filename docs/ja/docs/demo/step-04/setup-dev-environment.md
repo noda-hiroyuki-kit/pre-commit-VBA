@@ -15,13 +15,13 @@ git pull
 git switch -c feature/setup-dev-environment
 ```
 
-## 手順 2: `uv` と `pre-commit` を入れる { #step-2-install-uv-and-pre-commit }
+## 手順 2: `uv` と `prek` を入れる { #step-2-install-uv-and-prek }
 
 ```console
 mise use uv@latest
-uv init
-uv add --dev pre-commit
-uv run pre-commit install
+uv init --bare
+uv add --dev prek
+uv run prek install
 ```
 
 ## 手順 3: 設定ファイルを作る { #step-3-create-configuration-files }
@@ -48,8 +48,7 @@ uv run pre-commit install
                   - --no-progress
                   - --no-summary
                 stages: [commit-msg]
-          - repo: https://github.com/pre-commit/pre-commit-hooks
-            rev: v6.0.0
+          - repo: builtin
             hooks:
               - id: trailing-whitespace
                 args: [--markdown-linebreak-ext=md]
@@ -87,7 +86,9 @@ uv run pre-commit install
             ],
             "words": [
                 "EDITMSG",
-                "Predeclared"
+                "Predeclared",
+                "prek",
+                "VBIDE"
             ]
         }
         ```
@@ -96,8 +97,8 @@ uv run pre-commit install
 
 ```powershell
 git add .
-uv run pre-commit
-uv run pre-commit run --all-files
+uv run prek
+uv run prek run --all-files
 git commit -m "chore: set up development environment"
 ```
 
@@ -118,5 +119,5 @@ git branch -D feature/setup-dev-environment
 
 ## 確認ポイント { #checkpoints }
 
-- `uv run pre-commit run --all-files` が通る.
+- `uv run prek run --all-files` が通る.
 - `develop` に設定ファイルが入っている.

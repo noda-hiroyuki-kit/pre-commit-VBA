@@ -48,6 +48,7 @@ en_docs_path = Path(docs_path, "en")
 ja_config_path = Path(ja_docs_path, zensical_name)
 site_path = Path("site").absolute()
 zensical_src_path = Path("site_zensical_src").absolute()
+nav_section_names_path = Path(docs_path, "nav_section_names.yml")
 
 header_pattern = re.compile(r"^(#{1,6}) (.+?)(?:\s*\{\s*(#.*)\s*\})?\s*$")
 header_with_permalink_pattern = re.compile(r"^(#{1,6}) (.+?)(\s*\{\s*#.*\s*\})\s*$")
@@ -250,6 +251,7 @@ def stage_translated_docs(
                 staged_file.write_text(
                     translated_file.read_text(encoding="utf-8"),
                     encoding="utf-8",
+                    newline="\n",
                 )
         elif not is_non_translated_path(relative_path):
             staged_file.write_text(
@@ -258,6 +260,7 @@ def stage_translated_docs(
                     missing_translation,
                 ),
                 encoding="utf-8",
+                newline="\n",
             )
 
     for translated_file in lang_docs_path.rglob("*"):
@@ -268,10 +271,14 @@ def stage_translated_docs(
             continue
         staged_file = staged_docs_path / relative_path
         staged_file.parent.mkdir(parents=True, exist_ok=True)
-        staged_file.write_text(
-            translated_file.read_text(encoding="utf-8"),
-            encoding="utf-8",
-        )
+        if translated_file.suffix == ".md":
+            staged_file.write_text(
+                translated_file.read_text(encoding="utf-8"),
+                encoding="utf-8",
+                newline="\n",
+            )
+        else:
+            shutil.copy2(translated_file, staged_file)
 
 
 def make_root_asset_paths(project_config: dict[str, object]) -> None:
@@ -288,6 +295,99 @@ def make_root_asset_paths(project_config: dict[str, object]) -> None:
         if not isinstance(paths, list):
             paths = []
         project_config[key] = ["/" + str(path).lstrip("/") for path in paths]
+
+
+def get_nav_section_names() -> dict[str, dict[str, str]]:
+    """Load the ja→language translation table for nav section titles."""
+    try:
+        raw_section_names_text = nav_section_names_path.read_text(encoding="utf-8")
+    except FileNotFoundError as exc:
+        typer.echo(
+            f"Could not read nav section names from {nav_section_names_path}: {exc}"
+        )
+        raise typer.Abort from exc
+    try:
+        raw_section_names = yaml.safe_load(raw_section_names_text)
+    except yaml.YAMLError as exc:
+        typer.echo(
+            f"Could not parse nav section names from {nav_section_names_path}: {exc}"
+        )
+        raise typer.Abort from exc
+    if not isinstance(raw_section_names, dict):
+        typer.echo(
+            f"Invalid nav section names in {nav_section_names_path}: "
+            "expected a mapping of section names to language mappings",
+        )
+        raise typer.Abort
+
+    section_names: dict[str, dict[str, str]] = {}
+    for title, translations in raw_section_names.items():
+        if not isinstance(title, str) or not isinstance(translations, dict):
+            typer.echo(
+                f"Invalid nav section names in {nav_section_names_path}: "
+                "expected string titles and language mappings",
+            )
+            raise typer.Abort
+        if any(
+            not isinstance(lang, str) or not isinstance(name, str)
+            for lang, name in translations.items()
+        ):
+            typer.echo(
+                f"Invalid nav section names in {nav_section_names_path}: "
+                "expected string language names and translations",
+            )
+            raise typer.Abort
+        section_names[title] = dict(translations)
+    return section_names
+
+
+NavItem = str | dict[str, str | list["NavItem"]]
+
+
+def translate_nav_item(
+    item: NavItem,
+    lang: str,
+    section_names: dict[str, dict[str, str]],
+) -> NavItem:
+    """Translate a single nav entry's navigation title."""
+    if not isinstance(item, dict):
+        return item
+    translated: dict[str, str | list[NavItem]] = {}
+    for title, children in item.items():
+        translations = section_names.get(title)
+        if translations is None or lang not in translations:
+            typer.echo(
+                f"Missing nav title translation for: {title!r} (lang: {lang}), "
+                "update it in docs/nav_section_names.yml",
+            )
+            raise typer.Abort
+        children_value: object = children
+        if isinstance(children_value, str):
+            translated[translations[lang]] = children_value
+        elif isinstance(children_value, list):
+            translated[translations[lang]] = [
+                translate_nav_item(child, lang, section_names)
+                for child in children_value
+            ]
+        else:
+            typer.echo(
+                f"Invalid nav children for {title!r}: expected a string or list, "
+                f"got {type(children_value).__name__}",
+            )
+            raise typer.Abort
+    return translated
+
+
+def translate_nav(
+    nav: list[NavItem],
+    lang: str,
+    section_names: dict[str, dict[str, str]],
+) -> list[NavItem]:
+    """Translate nav section titles for the target language.
+
+    Missing translations abort the build so untranslated labels are never shipped.
+    """
+    return [translate_nav_item(item, lang, section_names) for item in nav]
 
 
 def stage_zensical_docs(lang: str) -> Path:
@@ -335,6 +435,18 @@ def stage_zensical_docs(lang: str) -> Path:
         # The root Japanese build owns shared static assets; translated builds should
         # reference those root paths instead of emitting language-local copies.
         make_root_asset_paths(project_config)
+        if "nav" in project_config:
+            nav = project_config["nav"]
+            if not isinstance(nav, list):
+                typer.echo(
+                    f"Invalid project.nav: expected a list, got {type(nav).__name__}",
+                )
+                raise typer.Abort
+            project_config["nav"] = translate_nav(
+                nav,
+                lang,
+                get_nav_section_names(),
+            )
     config_path = lang_stage_path / zensical_name
     config_path.write_text(
         tomli_w.dumps(config),

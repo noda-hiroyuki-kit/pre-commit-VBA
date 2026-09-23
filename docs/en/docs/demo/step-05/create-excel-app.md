@@ -22,18 +22,18 @@ git switch -c feature/create-app
 2. Add procedures in the VBE.
 3. Save the workbook.
 
-## Step 3: Run `pre-commit` { #step-3-run-pre-commit }
+## Step 3: Run `prek` { #step-3-run-prek }
 
 ```console
 git add .
-uv run pre-commit
+uv run prek
 ```
 
 On the first run, extraction happens, so it exits with an error.  
 Therefore, run it again.
 
 ```console
-uv run pre-commit
+uv run prek
 ```
 
 ## Step 4: Commit and Push { #step-4-commit-and-push }
@@ -51,5 +51,5 @@ Set base to `develop` and merge it.
 ## Checkpoints { #checkpoints }
 
 - Extracted VBA files are updated.
-- `uv run pre-commit` finally passes.
+- `uv run prek` finally passes.
 - Changes are included in `develop`.
