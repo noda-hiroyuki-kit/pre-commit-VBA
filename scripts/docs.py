@@ -299,9 +299,20 @@ def make_root_asset_paths(project_config: dict[str, object]) -> None:
 
 def get_nav_section_names() -> dict[str, dict[str, str]]:
     """Load the ja→language translation table for nav section titles."""
-    raw_section_names = yaml.safe_load(
-        nav_section_names_path.read_text(encoding="utf-8"),
-    )
+    try:
+        raw_section_names_text = nav_section_names_path.read_text(encoding="utf-8")
+    except FileNotFoundError as exc:
+        typer.echo(
+            f"Could not read nav section names from {nav_section_names_path}: {exc}"
+        )
+        raise typer.Abort from exc
+    try:
+        raw_section_names = yaml.safe_load(raw_section_names_text)
+    except yaml.YAMLError as exc:
+        typer.echo(
+            f"Could not parse nav section names from {nav_section_names_path}: {exc}"
+        )
+        raise typer.Abort from exc
     if not isinstance(raw_section_names, dict):
         typer.echo(
             f"Invalid nav section names in {nav_section_names_path}: "

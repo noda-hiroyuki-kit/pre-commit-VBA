@@ -156,6 +156,30 @@ def test_get_nav_section_names_aborts_on_invalid_yaml_shape(
         docs.get_nav_section_names()
 
 
+def test_get_nav_section_names_aborts_on_missing_or_invalid_yaml(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Abort with a path-specific message when the nav table cannot be loaded."""
+    missing_path = tmp_path / "missing-nav-section-names.yml"
+    monkeypatch.setattr(docs, "nav_section_names_path", missing_path)
+
+    with pytest.raises(typer.Abort):
+        docs.get_nav_section_names()
+
+    assert str(missing_path) in capsys.readouterr().out
+
+    invalid_path = tmp_path / "invalid-nav-section-names.yml"
+    invalid_path.write_text('"デモ": [\n', encoding="utf-8")
+    monkeypatch.setattr(docs, "nav_section_names_path", invalid_path)
+
+    with pytest.raises(typer.Abort):
+        docs.get_nav_section_names()
+
+    assert str(invalid_path) in capsys.readouterr().out
+
+
 def test_stage_zensical_docs_translates_nav_for_non_japanese_language(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
