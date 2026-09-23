@@ -76,6 +76,16 @@ def test_translate_nav_translates_titled_sections_and_keeps_plain_pages() -> Non
     assert result == ["index.md", {"Demo": ["demo/a.md", "demo/b.md"]}]
 
 
+def test_translate_nav_translates_titled_pages() -> None:
+    """Translate dict-based page titles while leaving page paths intact."""
+    section_names = {"ホーム": {"en": "Home"}}
+    nav = [{"ホーム": "index.md"}]
+
+    result = docs.translate_nav(nav, "en", section_names)
+
+    assert result == [{"Home": "index.md"}]
+
+
 def test_translate_nav_translates_nested_titled_sections() -> None:
     """Translate nested dict-based nav sections recursively."""
     section_names = {

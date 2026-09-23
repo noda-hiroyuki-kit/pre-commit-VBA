@@ -302,7 +302,7 @@ def get_nav_section_names() -> dict[str, dict[str, str]]:
     return section_names
 
 
-NavItem = str | dict[str, list["NavItem"]]
+NavItem = str | dict[str, str | list["NavItem"]]
 
 
 def translate_nav_item(
@@ -313,7 +313,7 @@ def translate_nav_item(
     """Translate a single nav entry's section title, if it is a titled section."""
     if not isinstance(item, dict):
         return item
-    translated: dict[str, list[NavItem]] = {}
+    translated: dict[str, str | list[NavItem]] = {}
     for title, children in item.items():
         translations = section_names.get(title)
         if translations is None or lang not in translations:
@@ -322,9 +322,12 @@ def translate_nav_item(
                 "update it in docs/nav_section_names.yml",
             )
             raise typer.Abort
-        translated[translations[lang]] = [
-            translate_nav_item(child, lang, section_names) for child in children
-        ]
+        if isinstance(children, str):
+            translated[translations[lang]] = children
+        else:
+            translated[translations[lang]] = [
+                translate_nav_item(child, lang, section_names) for child in children
+            ]
     return translated
 
 
