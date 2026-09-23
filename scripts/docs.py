@@ -349,7 +349,7 @@ def translate_nav_item(
     lang: str,
     section_names: dict[str, dict[str, str]],
 ) -> NavItem:
-    """Translate a single nav entry's section title, if it is a titled section."""
+    """Translate a single nav entry's navigation title."""
     if not isinstance(item, dict):
         return item
     translated: dict[str, str | list[NavItem]] = {}
