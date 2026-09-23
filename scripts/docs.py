@@ -296,9 +296,34 @@ def make_root_asset_paths(project_config: dict[str, object]) -> None:
 
 def get_nav_section_names() -> dict[str, dict[str, str]]:
     """Load the ja→language translation table for nav section titles."""
-    section_names: dict[str, dict[str, str]] = yaml.safe_load(
+    raw_section_names = yaml.safe_load(
         nav_section_names_path.read_text(encoding="utf-8"),
     )
+    if not isinstance(raw_section_names, dict):
+        typer.echo(
+            f"Invalid nav section names in {nav_section_names_path}: "
+            "expected a mapping of section names to language mappings",
+        )
+        raise typer.Abort
+
+    section_names: dict[str, dict[str, str]] = {}
+    for title, translations in raw_section_names.items():
+        if not isinstance(title, str) or not isinstance(translations, dict):
+            typer.echo(
+                f"Invalid nav section names in {nav_section_names_path}: "
+                "expected string titles and language mappings",
+            )
+            raise typer.Abort
+        if any(
+            not isinstance(lang, str) or not isinstance(name, str)
+            for lang, name in translations.items()
+        ):
+            typer.echo(
+                f"Invalid nav section names in {nav_section_names_path}: "
+                "expected string language names and translations",
+            )
+            raise typer.Abort
+        section_names[title] = dict(translations)
     return section_names
 
 

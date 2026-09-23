@@ -123,6 +123,27 @@ def test_get_nav_section_names_loads_yaml_table(
     assert docs.get_nav_section_names() == {"デモ": {"en": "Demo"}}
 
 
+def test_get_nav_section_names_aborts_on_invalid_yaml_shape(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Abort when the nav section translation table has an invalid shape."""
+    table_path = tmp_path / "nav_section_names.yml"
+    table_path.write_text("- invalid\n", encoding="utf-8")
+    monkeypatch.setattr(docs, "nav_section_names_path", table_path)
+
+    with pytest.raises(typer.Abort):
+        docs.get_nav_section_names()
+
+    assert str(table_path) in capsys.readouterr().out
+
+    table_path.write_text('"デモ":\n  en: ["Demo"]\n', encoding="utf-8")
+
+    with pytest.raises(typer.Abort):
+        docs.get_nav_section_names()
+
+
 def test_stage_zensical_docs_translates_nav_for_non_japanese_language(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
