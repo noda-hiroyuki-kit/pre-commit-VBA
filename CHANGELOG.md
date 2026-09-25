@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.4] - 2026-09-25
+
+### Changed
+
+- Raise the minimum `uv_build` requirement from 0.12.13 to 0.12.14.  
+  `uv_build` の最小要件を 0.12.13 から 0.12.14 へ引き上げ.
+- Bump minimum `zensical` requirement from 0.0.61 to 0.0.62. ([#184])  
+  `zensical` の最小要件を 0.0.61 から 0.0.62 へ引き上げ.
+
 ## [0.4.3] - 2026-09-24
 
 ### Changed
@@ -402,7 +411,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release as first version
 
-[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.4.3...HEAD
+[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.4.4...HEAD
+[0.4.4]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.4.3...v0.4.4
 [0.4.3]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/compare/v0.4.0...v0.4.1
@@ -479,3 +489,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#167]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/167
 [#168]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/168
 [#172]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/172
+[#184]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/184
