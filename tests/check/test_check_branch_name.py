@@ -72,35 +72,6 @@ class TestGetOfficeFileVersion:
         assert sut == "v0.1.0"  # noqa: S101
 
 
-def test_get_document_version() -> None:
-    """Test get document version."""
-    sut = get_office_file_version(
-        Path(
-            Path.cwd(),
-            "tests",
-            "word",
-            "extract",
-            "with_codes",
-            "test-doc.docm",
-        ),
-    )
-    assert sut == "v0.0.1"  # noqa: S101
-
-
-def test_get_presentation_version() -> None:
-    """Test get presentation version."""
-    sut = get_office_file_version(
-        Path(
-            Path.cwd(),
-            "tests",
-            "powerpoint",
-            "extract",
-            "test.pptm",
-        ),
-    )
-    assert sut == "v0.1.0"  # noqa: S101
-
-
 class TestGetVersionFromBranchName:
     """Test class for get_version_from_branch_name."""
 
