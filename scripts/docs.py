@@ -421,7 +421,8 @@ def stage_zensical_docs(lang: str) -> Path:
 
     shutil.copytree(ja_docs_path / "overrides", lang_stage_path / "overrides")
 
-    config = get_updated_config_content()
+    use_site_url = os.environ.get("GITHUB_ACTIONS", "").lower() == "true"
+    config = get_updated_config_content(use_site_url=use_site_url)
     project_config = config["project"]
     project_config["docs_dir"] = "content"
     project_config["site_dir"] = "site"
@@ -621,12 +622,12 @@ def live() -> None:
     )
 
 
-def get_updated_config_content() -> dict[str, Any]:
+def get_updated_config_content(*, use_site_url: bool = False) -> dict[str, Any]:
     """Return the Japanese Zensical config with the alternate language links added."""
     config = get_ja_config()
-    # Alternate links are root-relative so local previews stay on the local
-    # site instead of jumping to the deployed production docs.
-    languages = [{"ja": "/"}]
+    # Local previews use root-relative links; deployed builds need the project prefix.
+    root_url = site_url if use_site_url else "/"
+    languages = [{"ja": root_url}]
     new_alternate: list[dict[str, str]] = []
     #
     # Language names sourced from https://quickref.me/iso-639-1
@@ -642,7 +643,7 @@ def get_updated_config_content() -> dict[str, Any]:
             # Skip languages that are not yet ready
             continue
         code = lang_path.name
-        languages.append({code: f"/{code}/"})
+        languages.append({code: f"{root_url}{code}/"})
     for lang_dict in languages:
         code = next(iter(lang_dict.keys()))
         url = lang_dict[code]
