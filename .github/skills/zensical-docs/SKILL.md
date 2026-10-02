@@ -6,128 +6,43 @@ license: MIT
 
 # Create and Update Zensical Documentation
 
-Use this skill when the task is to add, revise, or reorganize documentation pages built with Zensical.
+## Usage
 
-This includes editing existing Markdown files under `docs/`, adding new pages, updating navigation in `zensical.toml`, and keeping English and Japanese documentation aligned when appropriate.
+Use this skill to add, revise, or reorganize Markdown documentation built with Zensical, including page content, navigation, examples, and English/Japanese variants.
 
-## Trigger Conditions
+## Process
 
-- A request asks to create a new documentation page for the docs site.
-- A request asks to update or fix existing documentation content.
-- A request asks to add examples, command output, navigation entries, or bilingual documentation for the Zensical site.
+1. Identify whether the request affects content, navigation, documentation configuration, or language variants. Confirm the target audience and languages when unclear.
+2. Read related pages under `docs/`, check the corresponding English and Japanese pages, and inspect `zensical.toml` before changing navigation.
+3. Match nearby page structure, front matter, heading levels, examples, code fences, and tone. Keep language variants aligned unless the request limits the scope.
+4. Make only the changes needed. Preserve relative links, anchors, Zensical macros, and extension-dependent markup.
+5. Build the documentation when the environment supports it:
 
-## Step-by-Step Procedure
+   ```console
+   uv run zensical build --clean
+   ```
 
-### 1. Understand the Documentation Request
+   If the change also affects product behavior or code, run the relevant checks, including `uv run tox -e 3.14` for tests.
+6. Check links, file paths, and navigation entries. If only one language was changed, note the translation gap.
 
-- Identify whether the change is a content fix, a new page, a navigation change, or a bilingual update.
-- Confirm the target audience and language scope:
-  - English only
-  - Japanese only
-  - Both English and Japanese
-- Clarify whether the task affects docs content only or also documentation configuration.
-
-### 2. Inspect Related Documentation Files
-
-- Read the relevant files under `docs/`.
-- Check whether the page exists in both `docs/en/` and `docs/ja/`.
-- If adding a page, inspect `zensical.toml` navigation before deciding where it should appear.
-- Review nearby pages to match heading levels, front matter, wording, and example style.
-
-### 3. Follow Repository Documentation Conventions
-
-#### Docs Structure
-
-- Main docs live under `docs/`.
-- English pages live under `docs/en/`.
-- Japanese pages live under `docs/ja/`.
-- Shared landing information may live in `docs/index.md`.
-
-#### Navigation
-
-- Zensical navigation is defined in `zensical.toml`.
-- When adding a new page that should appear in the sidebar, update the `project.nav` section in `zensical.toml`.
-- Keep navigation order consistent with existing English and Japanese sections.
-
-#### Content Style
-
-- Keep changes focused and minimal.
-- Match the tone and formatting used in neighboring docs pages.
-- Use concrete examples when explaining commands or workflows.
-- Preserve existing code fence styles such as `console`, `powershell`, `yaml`, and titled fences where already used.
-
-#### Japanese Writing Style
-
-When writing or editing Japanese documentation:
-
-- Use `. ` for sentence-ending periods, not `。` or `．`.
-- Use `, ` for commas within sentences, not `、` or `，`.
-- Apply this rule consistently across all Japanese pages under `docs/ja/`.
-
-#### Dynamic Content and Extensions
-
-- This docs site uses Zensical macros. Preserve macro usage such as `{{project_version}}` when relevant.
-- The site enables the `Termynal` Markdown extension. Use existing Termynal patterns when documenting interactive command output.
-- Do not remove or break existing extension-dependent markup unless the task explicitly requires it.
-
-### 4. Keep Language Variants Consistent
-
-- If a page has both English and Japanese versions, update both unless the request clearly limits the change to one language.
-- If only one language is changed, note the gap so reviewers can decide whether translation follow-up is needed.
-- Keep page structure aligned across languages when possible, even if wording differs naturally.
-
-### 5. Implement the Documentation Change
-
-- Edit the minimum set of files needed.
-- For new pages:
-  - Create the Markdown file under the correct language directory.
-  - Add front matter or icons if sibling pages use them.
-  - Add the page to `zensical.toml` navigation when needed.
-- For updates:
-  - Preserve existing links, anchors, and document flow unless the task requires restructuring.
-
-### 6. Validate the Documentation
-
-Run the documentation build when the environment supports it.
-
-```powershell
-uv run zensical build --clean
-```
-
-- For docs-only changes, prioritize confirming the docs build succeeds.
-- If the task also changes code samples, macros behavior, or docs-related configuration beyond page content, run the broader repository checks when available:
-
-```powershell
-uv run ruff format
-uv run ruff check
-uv run mypy src/
-uv run tox -e 3.14
-```
-
-- If the environment does not have `uv` or `uvx`, record that limitation clearly in the final report.
-- Check for broken relative links, incorrect file paths, and mismatched navigation entries.
-
-### 7. Communicate the Result
-
-- Summarize which docs files changed.
-- State whether navigation was updated.
-- State whether both English and Japanese pages were updated.
-- Report which validation steps ran successfully and which could not run.
-
-## Boundaries and Escalation
-
-- Do not modify `.env`.
-- Do not manually edit `uv.lock`.
-- Do not make unrelated code changes while editing docs.
-- Ask for confirmation before changing production-impacting configuration outside normal docs setup.
-- If the requested docs change implies a behavior change in the product, ask whether implementation should be updated separately.
+For Japanese pages, use `. ` for sentence-ending periods and `, ` for commas, consistent with existing repository content.
 
 ## References
 
-- AGENTS.md
-- CONTRIBUTING.md
-- docs/index.md
-- docs/en/
-- docs/ja/
-- zensical.toml
-- .github/workflows/docs.yml
+- `CONTRIBUTING.md`
+- `docs/index.md`
+- `docs/en/`
+- `docs/ja/`
+- `zensical.toml`
+- `.github/workflows/docs.yml`
+
+## Output
+
+Summarize the changed documentation files, whether navigation was updated, which languages were changed, and the results of documentation and other relevant validation.
+
+## Completion Conditions
+
+- Page content and navigation are consistent with repository conventions, and links and paths are checked.
+- Corresponding language variants are aligned or any remaining gap is reported.
+- Applicable documentation build and test checks are run, or the environmental limitation is stated clearly.
+- Product behavior changes are not made implicitly as part of documentation work.
