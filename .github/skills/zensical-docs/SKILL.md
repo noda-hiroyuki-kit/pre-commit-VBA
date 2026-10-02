@@ -101,7 +101,7 @@ uv run zensical build --clean
 uv run ruff format
 uv run ruff check
 uv run mypy src/
-uv run tox -e 3.14
+uv run tox
 ```
 
 - If the environment does not have `uv` or `uvx`, record that limitation clearly in the final report.
@@ -124,7 +124,7 @@ uv run tox -e 3.14
 
 ## References
 
-- AGENTS.md
+- .github/copilot-instructions.md
 - CONTRIBUTING.md
 - docs/index.md
 - docs/en/

@@ -56,7 +56,7 @@ license: MIT
 
 ### 5. References
 
-- AGENTS.md
+- .github/copilot-instructions.md
 - CONTRIBUTING.md
 - README.md
 
@@ -66,7 +66,7 @@ license: MIT
 - Format: `uv run ruff format`
 - Lint: `uv run ruff check`
 - Type check: `uv run mypy src/`
-- Tests: `uv run tox -e 3.14`
+- Tests: `uv run tox`
 
 ## Authoring Notes
 

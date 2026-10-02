@@ -100,7 +100,7 @@ Issue bodies must be bilingual in this order:
 
 ## References
 
-- AGENTS.md
+- .github/copilot-instructions.md
 - CONTRIBUTING.md
 - README.md
 - .github/ISSUE_TEMPLATE/bug_report.md
