@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add repository-specific Copilot custom agents and standardize their associated skills.
+  リポジトリ固有の Copilot カスタムエージェントを追加し, 関連するスキルの構成を統一.
+
 ## [0.4.4] - 2026-09-27
 
 ### Changed
