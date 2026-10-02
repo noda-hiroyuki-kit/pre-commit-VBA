@@ -4,22 +4,29 @@ description: Template for authoring additional repository-specific skills in the
 license: MIT
 ---
 
-# Skill Authoring Template
+## When to Use
 
-Use this skill as a reference when creating another skill for this repository.
+Use this skill as a reference when creating or revising a repository-specific
+Copilot skill.
 
-## Recommended Directory Layout
+## Process
 
-Create a dedicated subdirectory under `.github/skills/` and place a `SKILL.md` file inside it.
+1. Create a dedicated lowercase, hyphenated directory under `.github/skills/`.
+2. Place a `SKILL.md` file in that directory.
+3. Add front matter with `name`, `description`, and `license`.
+4. Document the skill's purpose, triggers, procedure, boundaries, and
+   references.
+5. Read existing skills and review the new skill for consistency.
+6. Add scripts or extra resources only when the workflow requires them.
 
-Example:
+Recommended layout:
 
 ```text
 .github/skills/example-skill/
 └── SKILL.md
 ```
 
-## Suggested Front Matter
+Example front matter:
 
 ```yaml
 ---
@@ -29,47 +36,35 @@ license: MIT
 ---
 ```
 
-## Suggested Body Structure
+## Reference Materials and Decision Criteria
 
-### 1. Overview
-
-- Describe what the skill is for.
-- Explain when it should be used.
-
-### 2. Trigger Conditions
-
-- List the kinds of requests that should activate the skill.
-
-### 3. Step-by-Step Procedure
-
-- Clarify the goal and constraints.
-- Read related files, tests, and configuration.
-- Keep scope focused.
-- Avoid unrelated modifications.
-- Follow repository validation and communication expectations.
-
-### 4. Boundaries and Escalation
-
-- Do not modify `.env`.
-- Do not manually edit `uv.lock`.
-- Ask for confirmation before making major or production-impacting changes.
-
-### 5. References
-
-- .github/copilot-instructions.md
-- CONTRIBUTING.md
-- README.md
-
-## Repository Conventions to Reuse
-
-- Python: 3.14
+- Existing skills under `.github/skills/`.
+- `.github/copilot-instructions.md`
+- `CONTRIBUTING.md`
+- `README.md`
+- Python 3.14
 - Format: `uv run ruff format`
 - Lint: `uv run ruff check`
 - Type check: `uv run mypy src/`
-- Tests: `uv run tox`
+- Tests and full validation: `uv run tox`
+- Keep descriptions specific so Copilot can decide when to load the skill.
 
-## Authoring Notes
+## Output Format
+
+The completed skill must contain:
+
+- YAML front matter with `name`, `description`, and `license`.
+- A clear purpose and usage scope.
+- Trigger conditions.
+- Step-by-step procedure.
+- Boundaries and escalation rules.
+- References to relevant repository materials.
+
+## Completion and Stop Conditions
 
 - Keep skill names lowercase and use hyphens for spaces.
-- Keep the description specific so Copilot can decide when to load the skill.
-- Add scripts or extra resources in the same skill directory only when they are required by the workflow.
+- Do not modify `.env`.
+- Do not manually edit `uv.lock`.
+- Ask for confirmation before making major or production-impacting changes.
+- Stop when the skill is complete, focused, consistent with existing skills, and
+  contains no unnecessary scripts or resources.
