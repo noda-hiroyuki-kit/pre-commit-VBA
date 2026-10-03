@@ -417,15 +417,15 @@ dev = [
     { name = "pytest", specifier = ">=9.1.1" },
     { name = "pytest-cov", specifier = ">=7.1.0" },
     { name = "pytest-randomly", specifier = ">=5.0.0" },
-    { name = "python-slugify", specifier = ">=9.0.0" },
+    { name = "python-slugify", specifier = ">=9.1.0" },
     { name = "pyyaml", specifier = ">=6.0.3" },
     { name = "ruff", specifier = ">=0.16.8" },
     { name = "termynal", specifier = ">=0.14.0" },
     { name = "tomli-w", specifier = ">=1.2.0" },
-    { name = "tox", specifier = ">=4.61.5" },
+    { name = "tox", specifier = ">=4.63.0" },
     { name = "tox-uv", specifier = ">=1.36.0" },
     { name = "types-pyyaml", specifier = ">=6.0.12.20260815" },
-    { name = "zensical", specifier = ">=0.0.62" },
+    { name = "zensical", specifier = ">=0.0.63" },
     { name = "zizmor", specifier = ">=1.30.1" },
 ]
 
