@@ -29,7 +29,7 @@ documentation pages built with Zensical.
 10. Validate with:
 
     ```powershell
-    uv run zensical build --clean
+    uv run scripts/docs.py build-all
     ```
 
 11. For code samples or broader configuration changes, also run:
