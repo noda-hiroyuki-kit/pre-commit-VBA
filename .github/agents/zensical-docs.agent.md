@@ -12,7 +12,7 @@ tools: [read, search, edit, execute]
 ## Inputs and Reference Materials
 
 - Existing English and Japanese documentation pages.
-- `zensical.toml` navigation and configuration.
+- `docs/ja/zensical.toml` navigation and configuration.
 - Existing macros, extensions, links, and code-fence conventions.
 
 ## Tools and Editable Scope
