@@ -2,7 +2,14 @@
 name: issue-create
 description: Create a well-structured GitHub issue for this repository when the user asks to report a bug, request a feature, or track a task.
 model: gpt-5.4-mini
-tools: [read, search, edit, execute]
+tools:
+  - read
+  - search
+  - edit
+  - execute
+  - github-mcp-server/search_issues
+  - github-mcp-server/issue_read
+  - github-mcp-server/issue_write
 ---
 
 ## Role and Scope
