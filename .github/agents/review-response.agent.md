@@ -2,7 +2,13 @@
 name: review-response
 description: Analyze and address pull request review comments one at a time with explicit user approval and focused validation.
 model: gpt-5.6-luna
-tools: [read, search, edit, execute]
+tools:
+  - read
+  - search
+  - edit
+  - execute
+  - github-mcp-server/pull_request_read
+  - web/fetch
 ---
 
 ## Role and Scope
