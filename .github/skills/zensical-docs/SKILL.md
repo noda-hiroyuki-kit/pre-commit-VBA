@@ -21,7 +21,7 @@ documentation pages built with Zensical.
 2. Confirm the target audience and language scope: English, Japanese, or both.
 3. Read the relevant files under `docs/`.
 4. Check whether the page exists in both `docs/en/` and `docs/ja/`.
-5. If adding a page, inspect `zensical.toml` navigation.
+5. If adding a page, inspect `docs/ja/zensical.toml` navigation.
 6. Review nearby pages for heading levels, front matter, wording, and examples.
 7. Edit the minimum set of files.
 8. Update `project.nav` when a new page should appear in the sidebar.
@@ -47,7 +47,7 @@ documentation pages built with Zensical.
 - English pages live under `docs/en/`.
 - Japanese pages live under `docs/ja/`.
 - Shared landing information may live in `docs/index.md`.
-- Navigation is defined in `zensical.toml`.
+- Navigation is defined in `docs/ja/zensical.toml`.
 - Match neighboring documentation tone and formatting.
 - Use concrete examples and preserve existing `console`, `powershell`,
   `yaml`, and titled code fences.
@@ -62,7 +62,7 @@ documentation pages built with Zensical.
   - `docs/index.md`
   - `docs/en/`
   - `docs/ja/`
-  - `zensical.toml`
+  - `docs/ja/zensical.toml`
   - `.github/workflows/docs.yml`
 
 ## Output Format
