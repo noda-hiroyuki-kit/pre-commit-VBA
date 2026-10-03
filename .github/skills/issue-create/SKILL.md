@@ -12,10 +12,12 @@ request a feature, or track a task in this repository.
 ## Process
 
 1. Determine the owner and repository from the current context.
-2. Identify the issue kind: bug or feature request.
-3. Load the matching template:
+2. Identify the issue kind: bug, feature request, or task.
+3. For bugs and feature requests, load the matching template:
    - `.github/ISSUE_TEMPLATE/bug_report.md`
    - `.github/ISSUE_TEMPLATE/feature_request.md`
+   For tasks, draft a bilingual issue using the fallback format below and
+   confirm that format with the user before creating the issue.
 4. Collect all required information and ask concise follow-up questions for
    missing sections.
 5. Search existing issues for likely duplicates. If likely duplicates exist,
@@ -47,6 +49,13 @@ request a feature, or track a task in this repository.
   - English: `**Is your feature request related to a problem? Please describe.**`,
     `**Describe the solution you'd like**`,
     `**Describe alternatives you've considered**`, `**Additional context**`
+- For tasks without a dedicated template, use this fallback format:
+  - Japanese: `**タスクの概要**`, `**背景・目的**`, `**完了条件**`,
+    `**補足**`
+  - English: `**Task summary**`, `**Background and goal**`,
+    `**Acceptance criteria**`, `**Additional context**`
+- Present the fallback format to the user for confirmation before creating a
+  task issue.
 - References:
   - `.github/copilot-instructions.md`
   - `CONTRIBUTING.md`
