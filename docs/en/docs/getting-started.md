@@ -63,6 +63,10 @@ This page explains setup using `mise`. If you already have `uv` or `prek`, you d
     ```console
     git add .
     ```
+4. Run `prek` again to confirm that the staged changes pass the hooks.
+    ```console
+    prek
+    ```
 
 ### Use `pre_commit_vba.py` directly { #use-pre-commit-vba-py-directly_1 }
 
