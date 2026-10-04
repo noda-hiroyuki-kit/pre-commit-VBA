@@ -15,58 +15,63 @@ git pull
 git switch -c feature/setup-dev-environment
 ```
 
-## Step 2: Install `uv` and `prek` { #step-2-install-uv-and-prek }
+## Step 2: Install `prek` { #step-2-install-prek }
 
 ```console
-mise use uv@latest
-uv init --bare
-uv add --dev prek
-uv run prek install
+mise use prek@latest
+prek init
 ```
 
 ## Step 3: Create Configuration Files { #step-3-create-configuration-files }
 
-1. Create `.pre-commit-config.yaml`.
+1. Edit `prek.toml`.
 
-    ???+ info ".pre-commit-config.yaml"
-        ```yaml title=".pre-commit-config.yaml"
-        ---
-        repos:
-          - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
-            rev: v{{project_version}}
-            hooks:
-              - id: extract-vba-code
-              - id: check-office-file-integrity
-          - repo: https://github.com/streetsidesoftware/cspell-cli
-            rev: v10.2.0
-            hooks:
-              - id: cspell  # Spell check changed files
-              - id: cspell  # Spell check the commit message
-                name: check commit message spelling
-                args:
-                  - --no-must-find-files
-                  - --no-progress
-                  - --no-summary
-                stages: [commit-msg]
-          - repo: builtin
-            hooks:
-              - id: trailing-whitespace
-                args: [--markdown-linebreak-ext=md]
-              - id: end-of-file-fixer
-              - id: check-toml
-              - id: check-xml
-              - id: destroyed-symlinks
-              - id: check-json
-              - id: mixed-line-ending
-                args: [--fix=lf]
-          - repo: https://github.com/adrienverge/yamllint.git
-            rev: v1.38.0
-            hooks:
-              - id: yamllint
-                args:
-                  - --strict
-                  - -d
-                  - "{extends: default, rules: {indentation: {spaces: 2}}}"
+    ???+ info "prek.toml"
+        ```toml title="prek.toml"
+        # Configuration file for `prek`, a git hook framework written in Rust.
+        # See https://prek.j178.dev for more information.
+        #:schema https://www.schemastore.org/prek.json
+
+        [[repos]]
+        repo = "https://github.com/noda-hiroyuki-kit/pre-commit-VBA"
+        rev = "v{{project_version}}"
+        hooks = [
+          { id = "extract-vba-code" },
+          { id = "check-office-file-integrity" },
+        ]
+
+        [[repos]]
+        repo = "https://github.com/streetsidesoftware/cspell-cli"
+        rev = "v10.2.0"
+
+        [[repos.hooks]]
+        id = "cspell"
+        name = "Spell check changed files"
+
+        [[repos.hooks]]
+        id = "cspell"
+        name = "check commit message spelling"
+        args = ["--no-must-find-files", "--no-progress", "--no-summary"]
+        stages = ["commit-msg"]
+
+        [[repos]]
+        repo = "builtin"
+        hooks = [
+          { id = "trailing-whitespace", args = ["--markdown-linebreak-ext=md"] },
+          { id = "end-of-file-fixer" },
+          { id = "check-toml" },
+          { id = "check-xml" },
+          { id = "destroyed-symlinks" },
+          { id = "check-json" },
+          { id = "mixed-line-ending", args = ["--fix=lf"] },
+        ]
+
+        [[repos]]
+        repo = "https://github.com/adrienverge/yamllint.git"
+        rev = "v1.38.0"
+        hooks = [
+          { id = "yamllint", args = ["--strict", "-d", "{extends: default, rules: {indentation: {spaces: 2}}}"] },
+        ]
         ```
 
 2. Create `cspell.json`.
@@ -97,8 +102,7 @@ uv run prek install
 
 ```powershell
 git add .
-uv run prek
-uv run prek run --all-files
+prek run --all-files
 git commit -m "chore: set up development environment"
 ```
 
@@ -119,5 +123,5 @@ git branch -D feature/setup-dev-environment
 
 ## Checkpoints { #checkpoints }
 
-- `uv run prek run --all-files` passes.
+- `prek run --all-files` passes.
 - Configuration files are included in `develop`.
