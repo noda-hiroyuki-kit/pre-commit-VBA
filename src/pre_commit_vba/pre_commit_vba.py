@@ -1226,7 +1226,7 @@ def check(
             exist_office_file = True
             if has_rubberduck_addin_references(office_file_path):
                 logger.error(
-                    "Rubberduck Addin reference detected: %s",
+                    "Rubberduck Add-in reference detected: %s",
                     office_file_path,
                 )
                 sys.exit(1)
