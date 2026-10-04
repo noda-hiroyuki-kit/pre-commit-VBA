@@ -63,6 +63,10 @@ icon: lucide/package-open
     ```console
     git add .
     ```
+4. ステージングした変更に対してフックが成功することを確認するため, `prek` を再実行します.
+    ```console
+    prek
+    ```
 
 ### `pre_commit_vba.py` を直接使う { #use-pre-commit-vba-py-directly_1 }
 
