@@ -10,6 +10,9 @@ tools:
   - github-mcp-server/search_issues
   - github-mcp-server/issue_read
   - github-mcp-server/issue_write
+  - github-mcp-server/list_issue_types
+  - github-mcp-server/list_repository_collaborators
+  - labels_fetch
 ---
 
 ## Role and Scope
