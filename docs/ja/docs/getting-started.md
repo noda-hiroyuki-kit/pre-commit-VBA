@@ -6,37 +6,29 @@ icon: lucide/package-open
 
 ## インストール方法 { #installation }
 
-このページは `mise` 前提で説明します.  
-`uv` がある場合は `mise` は不要です.  
-`mise` は[公式手順](https://mise.jdx.dev/getting-started.html)で導入してください.
+このページでは `mise` を使った手順を説明します. `uv` または `prek` がすでにある場合, そのツールのインストールに `mise` は不要です. `mise` は[公式手順](https://mise.jdx.dev/getting-started.html)で導入してください.
 
-### pre-commit フックとして使う { #use-as-a-pre-commit-hook }
+### `prek` で使う { #use-as-a-pre-commit-hook }
 
-1. ブックの管理フォルダへ移動します.  
-   このフォルダを `vba_root_folder` とします.
-2. `pre-commit` を導入します.
-    1. `mise` で `uv` を入れます.
-        ```console
-        mise use uv@latest
+1. Gitで管理するマクロ付きOfficeファイルがあるフォルダへ移動します. このフォルダを `vba_root_folder` とします.
+2. `prek` を導入します.
+    1. `mise` で `prek` をインストールします.
+        ```toml
+        mise use prek@latest
         ```
-    2. `uv` を初期化します.
+    2. `prek` でリポジトリを初期化します. Gitフックが設定され, 初期状態の `prek.toml` が生成されます.
         ```console
-        uv init
+        prek init
         ```
-    3. `pre-commit` を追加します.
+    3. `prek.toml` を編集し, 以下を追加します.
         ```console
-        uv add pre-commit
-        uv run pre-commit install
-        ```
-    4. `.pre-commit-config.yaml` を作成します.
-        ```yaml title=".pre-commit-config.yaml"
-        ---
-        repos:
-          - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
-            rev: v{{project_version}}
-            hooks:
-              - id: extract-vba-code
-              - id: check-office-file-integrity
+        [[repos]]
+        repo = "https://github.com/noda-hiroyuki-kit/pre-commit-VBA"
+        rev = "v{{project_version}}"
+        hooks = [
+          { id = "extract-vba-code" },
+          { id = "check-office-file-integrity" },
+        ]
         ```
 
         !!! info
@@ -44,44 +36,46 @@ icon: lucide/package-open
 
 ### `pre_commit_vba.py` を直接使う { #use-pre-commit-vba-py-directly }
 
-1. `vba_root_folder` へ移動します.
-2. `mise` で `uv` を入れます.
+1. Gitで管理するマクロ付きOfficeファイルがあるフォルダへ移動します. このフォルダを `vba_root_folder` とします.
+2. `mise` で `uv` をインストールします.
     ```console
     mise use uv@latest
     ```
-3. `uv` を初期化します.
+3. `uv` を `--bare` オプション付きで初期化します.
     ```console
-    uv init
+    uv init --bare
     ```
-4. `pre_commit_vba.py` をコピーします.
+4. リポジトリの `src/pre_commit_vba` にある `pre_commit_vba.py` を `vba_root_folder` にコピーします.
 
 ## 使用方法 { #usage }
 
-### pre-commit フックとして使う { #use-as-a-pre-commit-hook_1 }
+### `prek` で使う { #use-as-a-pre-commit-hook_1 }
 
-1. マクロ付きOfficeファイル(例: sample-app.xlsm)をステージングします.
+1. 対象のマクロ付きOfficeファイルをステージングします.
     ```console
-    git add sample-app.xlsm
-    ```  
-2. `pre-commit` を実行します.
+    git add .
+    ```
+2. `prek` を実行します.
     ```console
-    uv run pre-commit
-    ```  
-3. `pre-commit` を再実行します. (展開コードは前回実行時にステージングされます.)
+    prek
+    ```
+3. 抽出されたコードをGitで管理するため, ステージングします.
     ```console
-    uv run pre-commit
+    git add .
     ```
 
 ### `pre_commit_vba.py` を直接使う { #use-pre-commit-vba-py-directly_1 }
 
-#### コード抽出 { #extract-code }
+#### Officeファイルからコードを抽出する { #extract-code }
 
+`vba_root_folder` で以下のコマンドを実行します.
 ```console
 uv run pre_commit_vba.py extract
 ```
 
-#### ブランチ名とバージョンとの照合 { #check-branch-name-against-version }
+#### releaseブランチ名とOfficeファイル内のバージョンを照合する { #check-branch-name-against-version }
 
+`vba_root_folder` で以下のコマンドを実行します. Officeファイル内のバージョンがreleaseブランチ名と一致すると, `Version check passed.` が出力されます.
 ```console
 uv run pre_commit_vba.py check
 ```
