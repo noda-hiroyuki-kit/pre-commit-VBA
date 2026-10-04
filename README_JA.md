@@ -9,34 +9,36 @@
 
 ## 概要
 
-VBAコードをgitで管理するため, OfficeファイルよりVBAコードを抽出するpre-commit フックです.  
-Pythonのスクリプトしても利用可能です.  
+VBAコードをgitで管理するため, OfficeファイルからVBAコードを抽出するpre-commitフックです.
+Pythonスクリプトとしても利用できます.
 
 ### pre-commitで, pre-commit-hookとして使用
 
-以下のようにあなたの`.pre-commit-config.yaml`に追加してください.
+以下のように`prek.toml`に追加してください.
 
 ```
-  - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
-    rev: v0.4.4
-    hooks:
-      - id: extract-vba-code
-      - id: check-office-file-integrity
+[[repos]]
+repo = "https://github.com/noda-hiroyuki-kit/pre-commit-VBA"
+rev = "v0.4.4"
+hooks = [
+  { id = "extract-vba-code" },
+  { id = "check-office-file-integrity" },
+]
 ```
 
-### `pre_commit_vba.py`をコマンドで走らせて使用
+### `pre_commit_vba.py`をコマンドで実行して使用
 
 uvをインストールしたのち,
 ```console
 uv run pre_commit_vba.py extract
 ```
-でOfficeファイルよりコードをutf-8形式で出力します.
+これにより, OfficeファイルからコードをUTF-8形式で出力します.
 
 また, Gitのreleaseブランチで作業している際に,
 ```console
 uv run pre_commit_vba.py check
 ```
-を実行すると, Officeファイルの文書のバージョンとブランチ名を比較して一致している場合は
+を実行すると, Officeファイル内のバージョンとブランチ名を比較し, 一致している場合は
 ```console
 Version check passed.
 ```
@@ -44,87 +46,81 @@ Version check passed.
 
 ## インストール方法
 
-いずれの方法も`mise`を利用した方法を記載しています.  
-[`mise`](https://mise.jdx.dev/getting-started.html)を参考に`mise`をインストールしてください.
-`uv`が利用できる場合は, `mise`は不要です.
+いずれの方法も`mise`を利用した手順です.
+[`mise`](https://mise.jdx.dev/getting-started.html)を参考に, `mise`をインストールしてください.
 
-### pre-commitで, pre-commit-hookとして使用
+### `prek`で, hookとして使用
 
-1. `git`管理するマクロ付き Office ファイルのあるフォルダ(以下, vba_root_folderという)に移動する.
-2. `.pre-commit`をインストールする.
-    1. `uv`を`mise`を使ってインストールする.
+1. `git`で管理するマクロ付きOfficeファイルのあるフォルダ（以下, vba_root_folder）に移動する.
+2. `prek`をインストールする.
+    1. `mise`を使って`prek`をインストールする.
         ```
-        mise use uv@latest
+        mise use prek@latest
         ```
-    2. `uv`を初期化する.
+    2. リポジトリを初期化する. スタート用の`prek.toml`が生成される.
         ```
-        uv init
+        prek init
         ```
-    3. `pre-commit`をインストールする.
+    3. `prek.toml`を編集し, 以下を追記する.
         ```
-        uv add pre-commit
-        uv run pre-commit install
+        [[repos]]
+        repo = "https://github.com/noda-hiroyuki-kit/pre-commit-VBA"
+        rev = "v0.4.4"
+        hooks = [
+            { id = "extract-vba-code" },
+            { id = "check-office-file-integrity" },
+        ]
         ```
-    4. `.pre-commit-config.yaml`を作成し, 以下を記載する.
-        ```
-        ---
-        repos:
-          - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
-            rev: v0.4.4
-            hooks:
-              - id: extract-vba-code
-              - id: check-office-file-integrity
-        ```
-### `pre_commit_vba.py`をコマンドで走らせて使用
+### `pre_commit_vba.py`をコマンドで実行して使用
 
-1. `git`管理するマクロ付き Office ファイルのあるフォルダ(以下, vba_root_folderという)に移動する.
-2. `mise`で `uv`をインストールする.
+1. `git`で管理するマクロ付きOfficeファイルのあるフォルダ（以下, vba_root_folder）に移動する.
+2. `mise`で`uv`をインストールする.
     ```console
     mise use uv@latest
     ```
 3. `uv`を初期化する.
     ```
-    uv init
+    uv init --bare
     ```
-3. `src/pre_commit_vba`にある`pre_commit_vba.py`をvba_root_folderにコピーする.
+4. `src/pre_commit_vba`にある`pre_commit_vba.py`をvba_root_folderにコピーする.
 
 
 ## 使用方法
 
-### pre-commitで, pre-commit-hookとして使用
+### prekで, pre-commit-hookとして使用
 
-1. 対象のマクロ付き Office ファイルを`git`でステージングする.
+1. 対象のマクロ付きOfficeファイルを`git`でステージングする.
     ```
     git add .
     ```
-2. uvで`pre-commit`を動作させる.
+2. `prek`を実行する.
     ```
-    uv run pre-commit
+    prek
     ```
-3. コードが展開されるので, コードをステージングし`git`で管理する.
+3. コードが展開されるので, コードをステージングして`git`で管理する.
     ```
     git add .
     ```
 
-### `pre_commit_vba.py`をコマンドで走らせて使用
+### `pre_commit_vba.py`をコマンドで実行して使用
 
-#### Office ファイルにあるコードを抽出する場合
+#### Officeファイルにあるコードを抽出する場合
 
-vba_root_folderにて, 以下のコマンドを実行.
+vba_root_folderで, 以下のコマンドを実行します.
 ```console
 uv run pre_commit_vba.py extract
 ```
 
 #### releaseブランチ名とOffice ファイルのバージョン情報を比較チェックする場合
 
-vba_root_folderにて, 以下のコマンドを実行.
+vba_root_folderで, 以下のコマンドを実行します.
 ```PowerShell
 uv run pre_commit_vba.py check
 ```
 
 #### コマンドラインについて
 
-以下は, コマンド(`uv run typer src\pre_commit_vba\pre_commit_vba.py utils docs`)にて生成したドキュメント.
+以下は, コマンド（`uv run typer src\pre_commit_vba\pre_commit_vba.py utils docs`）で生成したドキュメントです.
 
 ---
 **Usage**:
@@ -142,7 +138,7 @@ $ [OPTIONS] COMMAND [ARGS]...
 **Commands**:
 
 * `extract`: Extract VBA code from Office files.
-* `check`: Check Office file version and detect...
+* `check`: Check Office file version and detect Rubberduck Add-in references.
 
 ## `extract`
 
@@ -169,7 +165,7 @@ $ extract [OPTIONS]
 
 ## `check`
 
-Check Office file version and detect Rubberduck Addin references.
+Check Office file version and detect Rubberduck Add-in references.
 
 **Usage**:
 
@@ -196,7 +192,7 @@ $ check [OPTIONS]
 
 [gitのbranch名,tag名をpythonで取得する](https://qiita.com/mynkit/items/73b20fb0ad124c0ea8e9)
 
-### tests/test.xlsm
+### tests/excel/extract/with_codes/v0.0.1-alpha/test.xlsm
 
 [git repository office custom ui editor](https://github.com/OfficeDev/office-custom-ui-editor)
 
