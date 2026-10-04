@@ -1,7 +1,7 @@
 ---
 name: issue-create
 description: Create a well-structured GitHub issue for this repository when the user asks to report a bug, request a feature, or track a task.
-model: gpt-5.4-mini
+model: gpt-5.6-luna
 tools:
   - read
   - search
