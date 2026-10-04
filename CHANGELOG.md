@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Update the README and English and Japanese guides to use `prek`, clarify setup and VBA extraction workflows, and standardize the Rubberduck Add-in spelling.<br>
+  README と英語・日本語のガイドを `prek` に対応させ, 環境構築と VBA 抽出の手順を明確化し, Rubberduck Add-in の表記を統一.
 - Refine repository skills for issue creation, review responses, skill authoring, and zensical documentation.  
   issue 作成、review response、skill 作成、zensical ドキュメント用の repository skill 手順を整理.
 - Raise the minimum `uv_build` requirement from 0.12.15 to 0.12.18.  
