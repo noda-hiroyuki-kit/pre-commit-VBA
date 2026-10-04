@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add repository-specific Copilot instructions and agents for issue creation, pull request reviews, skill authoring, and zensical documentation.  
+  issue 作成、pull request review、skill 作成、zensical ドキュメント向けの repository-specific Copilot instructions と agents を追加.
+
+### Changed
+
+- Refine repository skills for issue creation, review responses, skill authoring, and zensical documentation.  
+  issue 作成、review response、skill 作成、zensical ドキュメント用の repository skill 手順を整理.
+- Raise the minimum `uv_build` requirement from 0.12.15 to 0.12.18.  
+  `uv_build` の最小要件を 0.12.15 から 0.12.18 へ引き上げ.
+- Bump minimum `zensical` requirement from 0.0.63 to 0.0.64.  
+  `zensical` の最小要件を 0.0.63 から 0.0.64 へ引き上げ.
+- Bump minimum `python-slugify` requirement from 9.1.0 to 9.1.1.  
+  `python-slugify` の最小要件を 9.1.0 から 9.1.1 へ引き上げ.
+- Bump minimum `tox` requirement from 4.61.5 to 4.63.0. ([#189])  
+  `tox` の最小要件を 4.61.5 から 4.63.0 へ引き上げ.
+- Bump minimum `zensical` requirement from 0.0.62 to 0.0.63. ([#189])  
+  `zensical` の最小要件を 0.0.62 から 0.0.63 へ引き上げ.
+- Bump minimum `python-slugify` requirement from 9.0.0 to 9.1.0. ([#189])  
+  `python-slugify` の最小要件を 9.0.0 から 9.1.0 へ引き上げ.
+
 ## [0.4.4] - 2026-09-27
 
 ### Changed
@@ -494,3 +516,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#168]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/168
 [#172]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/172
 [#184]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/184
+[#189]: https://github.com/noda-hiroyuki-kit/pre-commit-VBA/pull/189
