@@ -13,7 +13,7 @@ icon: lucide/package-open
 1. Gitで管理するマクロ付きOfficeファイルがあるフォルダへ移動します. このフォルダを `vba_root_folder` とします.
 2. `prek` を導入します.
     1. `mise` で `prek` をインストールします.
-        ```toml
+        ```console
         mise use prek@latest
         ```
     2. `prek` でリポジトリを初期化します. Gitフックが設定され, 初期状態の `prek.toml` が生成されます.
@@ -21,7 +21,7 @@ icon: lucide/package-open
         prek init
         ```
     3. `prek.toml` を編集し, 以下を追加します.
-        ```console
+        ```toml
         [[repos]]
         repo = "https://github.com/noda-hiroyuki-kit/pre-commit-VBA"
         rev = "v{{project_version}}"
