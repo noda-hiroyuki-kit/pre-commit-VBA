@@ -13,7 +13,7 @@ This page explains setup using `mise`. If you already have `uv` or `prek`, you d
 1. Move to the folder containing the macro-enabled Office files you want to manage with Git. This folder is referred to as `vba_root_folder`.
 2. Install `prek`.
     1. Install `prek` with `mise`.
-        ```toml
+        ```console
         mise use prek@latest
         ```
     2. Initialize the repository with `prek`. This sets up the Git hook and creates a starter `prek.toml`.
@@ -21,7 +21,7 @@ This page explains setup using `mise`. If you already have `uv` or `prek`, you d
         prek init
         ```
     3. Edit `prek.toml` and add the following:
-        ```console
+        ```toml
         [[repos]]
         repo = "https://github.com/noda-hiroyuki-kit/pre-commit-VBA"
         rev = "v{{project_version}}"
