@@ -101,6 +101,10 @@ Version check passed.
     ```
     git add .
     ```
+4. `prek`を再実行し, 更新後のステージ内容でフックが成功することを確認する.
+    ```
+    prek
+    ```
 
 ### `pre_commit_vba.py`をコマンドで実行して使用
 
