@@ -51,7 +51,7 @@ Version check passed.
 
 ### `prek`で, hookとして使用
 
-1. `git`で管理するマクロ付きOfficeファイルのあるフォルダ（以下, vba_root_folder）に移動する.
+1. `git`で管理するマクロ付きOfficeファイルのあるフォルダ (以下, vba_root_folder) に移動する.
 2. `prek`をインストールする.
     1. `mise`を使って`prek`をインストールする.
         ```
@@ -73,7 +73,7 @@ Version check passed.
         ```
 ### `pre_commit_vba.py`をコマンドで実行して使用
 
-1. `git`で管理するマクロ付きOfficeファイルのあるフォルダ（以下, vba_root_folder）に移動する.
+1. `git`で管理するマクロ付きOfficeファイルのあるフォルダ (以下, vba_root_folder) に移動する.
 2. `mise`で`uv`をインストールする.
     ```console
     mise use uv@latest
@@ -120,7 +120,7 @@ uv run pre_commit_vba.py check
 
 #### コマンドラインについて
 
-以下は, コマンド（`uv run typer src\pre_commit_vba\pre_commit_vba.py utils docs`）で生成したドキュメントです.
+以下は, コマンド (`uv run typer src\pre_commit_vba\pre_commit_vba.py utils docs`) で生成したドキュメントです.
 
 ---
 **Usage**:
