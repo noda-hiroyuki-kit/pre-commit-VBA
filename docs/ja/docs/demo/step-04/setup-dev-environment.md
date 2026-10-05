@@ -111,6 +111,11 @@ prek install
 ```powershell
 git add .
 prek run --all-files
+```
+
+フックがファイルを変更した場合は変更内容を確認し, すべてのフックが成功するまで `git add .` と `prek run --all-files` を繰り返します. 成功した後にコミットします.
+
+```powershell
 git commit -m "chore: set up development environment"
 ```
 

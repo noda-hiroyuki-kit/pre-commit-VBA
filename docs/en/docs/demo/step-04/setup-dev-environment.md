@@ -111,6 +111,11 @@ prek install
 ```powershell
 git add .
 prek run --all-files
+```
+
+If the hooks modify files, review the changes, then repeat `git add .` and `prek run --all-files` until all hooks pass. Commit only after a successful run.
+
+```powershell
 git commit -m "chore: set up development environment"
 ```
 
