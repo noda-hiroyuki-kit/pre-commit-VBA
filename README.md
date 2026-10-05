@@ -100,6 +100,10 @@ Please refer to [`mise`](https://mise.jdx.dev/getting-started.html) for installa
     ```
     git add .
     ```
+4. Run `prek` again to confirm that the staged changes pass the hooks.
+    ```
+    prek
+    ```
 
 ### Usage by running `pre_commit_vba.py` as a command
 
