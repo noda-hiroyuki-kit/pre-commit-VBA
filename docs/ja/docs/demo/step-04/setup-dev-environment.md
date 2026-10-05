@@ -32,6 +32,8 @@ prek init
         # See https://prek.j178.dev for more information.
         #:schema https://www.schemastore.org/prek.json
 
+        default_install_hook_types = ["pre-commit", "commit-msg"]
+
         [[repos]]
         repo = "https://github.com/noda-hiroyuki-kit/pre-commit-VBA"
         rev = "v{{project_version}}"
@@ -98,7 +100,13 @@ prek init
         }
         ```
 
-## 手順 4: フックを実行して整形 { #step-4-run-hooks-and-format }
+## 手順 4: フックを設定 { #step-4-set-hooks }
+
+```powershell
+prek install
+```
+
+## 手順 5: フックを実行して整形 { #step-5-run-hooks-and-format }
 
 ```powershell
 git add .
@@ -106,7 +114,7 @@ prek run --all-files
 git commit -m "chore: set up development environment"
 ```
 
-## 手順 5: `develop` にマージ { #step-5-merge-into-develop }
+## 手順 6: `develop` にマージ { #step-6-merge-into-develop }
 
 ```powershell
 git push -u origin feature/setup-dev-environment
