@@ -1,4 +1,4 @@
-# Copilot instructions for pre-commit-VBA
+# Copilot instructions for pre-commit-vba
 
 ## Project overview
 
