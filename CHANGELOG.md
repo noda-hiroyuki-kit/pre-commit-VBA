@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.5] - 2026-10-06
+
 ### Added
 
 - Add repository-specific Copilot instructions and agents for issue creation, pull request reviews, skill authoring, and zensical documentation.  
@@ -443,7 +445,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Release as first version
 
-[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-vba/compare/v0.4.4...HEAD
+[unreleased]: https://github.com/noda-hiroyuki-kit/pre-commit-vba/compare/v0.4.5...HEAD
+[0.4.5]: https://github.com/noda-hiroyuki-kit/pre-commit-vba/compare/v0.4.4...v0.4.5
 [0.4.4]: https://github.com/noda-hiroyuki-kit/pre-commit-vba/compare/v0.4.3...v0.4.4
 [0.4.3]: https://github.com/noda-hiroyuki-kit/pre-commit-vba/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/noda-hiroyuki-kit/pre-commit-vba/compare/v0.4.1...v0.4.2
