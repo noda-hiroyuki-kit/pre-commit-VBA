@@ -5,7 +5,7 @@
 [![prek](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/j178/prek/master/docs/assets/badge-v0.json)](https://github.com/j178/prek)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENCE)
 
-[Document](https://noda-hiroyuki-kit.github.io/pre-commit-VBA/)
+[Document](https://noda-hiroyuki-kit.github.io/pre-commit-vba)
 
 ## Overview
 
