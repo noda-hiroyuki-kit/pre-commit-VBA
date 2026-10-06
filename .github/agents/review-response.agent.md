@@ -8,7 +8,7 @@ tools:
   - edit
   - execute
   - github-mcp-server/pull_request_read
-  - web
+  - web/fetch
 ---
 
 ## Role and Scope
