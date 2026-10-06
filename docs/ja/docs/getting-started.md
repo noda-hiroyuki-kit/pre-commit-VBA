@@ -23,7 +23,7 @@ icon: lucide/package-open
     3. `prek.toml` を編集し, 以下を追加します.
         ```toml
         [[repos]]
-        repo = "https://github.com/noda-hiroyuki-kit/pre-commit-VBA"
+        repo = "https://github.com/noda-hiroyuki-kit/pre-commit-vba"
         rev = "v{{project_version}}"
         hooks = [
           { id = "extract-vba-code" },

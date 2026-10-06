@@ -17,7 +17,7 @@ Add the following to your `prek.toml`:
 
 ```
 [[repos]]
-repo = "https://github.com/noda-hiroyuki-kit/pre-commit-VBA"
+repo = "https://github.com/noda-hiroyuki-kit/pre-commit-vba"
 rev = "v0.4.4"
 hooks = [
   { id = "extract-vba-code" },
@@ -63,7 +63,7 @@ Please refer to [`mise`](https://mise.jdx.dev/getting-started.html) for installa
     3. Edit `prek.toml` and add the following:
         ```
         [[repos]]
-        repo = "https://github.com/noda-hiroyuki-kit/pre-commit-VBA"
+        repo = "https://github.com/noda-hiroyuki-kit/pre-commit-vba"
         rev = "v0.4.4"
         hooks = [
           { id = "extract-vba-code" },

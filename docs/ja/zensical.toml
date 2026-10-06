@@ -37,8 +37,8 @@ copyright = """
 Copyright &copy; 2026 Noda Hiroyuki
 """
 
-repo_url = "https://github.com/noda-hiroyuki-kit/pre-commit-VBA"
-repo_name = "noda-hiroyuki-kit/pre-commit-VBA"
+repo_url = "https://github.com/noda-hiroyuki-kit/pre-commit-vba"
+repo_name = "noda-hiroyuki-kit/pre-commit-vba"
 watch = ["pyproject.toml"]
 
 # Zensical supports both implicit navigation and explicitly defined navigation.

@@ -23,7 +23,7 @@ This page explains setup using `mise`. If you already have `uv` or `prek`, you d
     3. Edit `prek.toml` and add the following:
         ```toml
         [[repos]]
-        repo = "https://github.com/noda-hiroyuki-kit/pre-commit-VBA"
+        repo = "https://github.com/noda-hiroyuki-kit/pre-commit-vba"
         rev = "v{{project_version}}"
         hooks = [
           { id = "extract-vba-code" },

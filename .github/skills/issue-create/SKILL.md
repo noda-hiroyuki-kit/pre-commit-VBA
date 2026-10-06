@@ -62,8 +62,8 @@ request a feature, or track a task in this repository.
   - `README.md`
   - `.github/ISSUE_TEMPLATE/bug_report.md`
   - `.github/ISSUE_TEMPLATE/feature_request.md`
-  - `https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/55`
-  - `https://github.com/noda-hiroyuki-kit/pre-commit-VBA/issues/47`
+  - `https://github.com/noda-hiroyuki-kit/pre-commit-vba/issues/55`
+  - `https://github.com/noda-hiroyuki-kit/pre-commit-vba/issues/47`
 
 ## Output Format
 

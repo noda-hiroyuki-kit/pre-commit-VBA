@@ -35,7 +35,7 @@ prek init
         default_install_hook_types = ["pre-commit", "commit-msg"]
 
         [[repos]]
-        repo = "https://github.com/noda-hiroyuki-kit/pre-commit-VBA"
+        repo = "https://github.com/noda-hiroyuki-kit/pre-commit-vba"
         rev = "v{{project_version}}"
         hooks = [
           { id = "extract-vba-code" },

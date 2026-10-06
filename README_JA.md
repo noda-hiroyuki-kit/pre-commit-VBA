@@ -18,7 +18,7 @@ Pythonスクリプトとしても利用できます.
 
 ```
 [[repos]]
-repo = "https://github.com/noda-hiroyuki-kit/pre-commit-VBA"
+repo = "https://github.com/noda-hiroyuki-kit/pre-commit-vba"
 rev = "v0.4.4"
 hooks = [
   { id = "extract-vba-code" },
@@ -64,7 +64,7 @@ Version check passed.
     3. `prek.toml`を編集し, 以下を追記する.
         ```
         [[repos]]
-        repo = "https://github.com/noda-hiroyuki-kit/pre-commit-VBA"
+        repo = "https://github.com/noda-hiroyuki-kit/pre-commit-vba"
         rev = "v0.4.4"
         hooks = [
             { id = "extract-vba-code" },
