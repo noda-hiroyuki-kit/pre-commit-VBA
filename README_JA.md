@@ -19,7 +19,7 @@ Pythonスクリプトとしても利用できます.
 ```
 [[repos]]
 repo = "https://github.com/noda-hiroyuki-kit/pre-commit-vba"
-rev = "v0.4.4"
+rev = "v0.4.5"
 hooks = [
   { id = "extract-vba-code" },
   { id = "check-office-file-integrity" },
@@ -65,7 +65,7 @@ Version check passed.
         ```
         [[repos]]
         repo = "https://github.com/noda-hiroyuki-kit/pre-commit-vba"
-        rev = "v0.4.4"
+        rev = "v0.4.5"
         hooks = [
             { id = "extract-vba-code" },
             { id = "check-office-file-integrity" },
