@@ -24,8 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `zensical` の最小要件を 0.0.63 から 0.0.65 へ引き上げ.
 - Bump minimum `python-slugify` requirement from 9.1.0 to 9.1.1.  
   `python-slugify` の最小要件を 9.1.0 から 9.1.1 へ引き上げ.
-- Bump minimum `tox` requirement from 4.63.0 to 4.64.2.  
-  `tox` の最小要件を 4.63.0 から 4.64.2 へ引き上げ.
+- Bump minimum `tox` requirement from 4.63.0 to 4.64.3.  
+  `tox` の最小要件を 4.63.0 から 4.64.3 へ引き上げ.
 - Bump minimum `ruff` requirement from 0.16.8 to 0.16.9.  
   `ruff` の最小要件を 0.16.8 から 0.16.9 へ引き上げ.
 - Bump minimum `tox` requirement from 4.61.5 to 4.63.0. ([#189])  
