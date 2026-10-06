@@ -1212,7 +1212,7 @@ def check(
         typer.Option("--version", callback=version_callback, is_eager=True),
     ] = None,
 ) -> None:
-    """Check Office file version and detect Rubberduck Addin references."""
+    """Check Office file version and detect Rubberduck Add-in references."""
     try:
         branch_version = get_version_from_branch_name()
         exist_office_file: bool = False
@@ -1226,7 +1226,7 @@ def check(
             exist_office_file = True
             if has_rubberduck_addin_references(office_file_path):
                 logger.error(
-                    "Rubberduck Addin reference detected: %s",
+                    "Rubberduck Add-in reference detected: %s",
                     office_file_path,
                 )
                 sys.exit(1)

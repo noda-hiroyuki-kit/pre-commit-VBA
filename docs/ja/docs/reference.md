@@ -51,7 +51,7 @@ uv run pre_commit_vba.py check
 3. セマンティックバージョンを抽出できない場合はエラー終了します.
 4. 対象ファイルごとに以下を検査します.
     - BuiltinDocumentProperties("Document version") とブランチ名 (`v{semver}`) の一致
-    - Rubberduck Addin 参照設定がないか.
+    - Rubberduck Add-in 参照設定がないか.
 5. 不一致または参照検出時はエラー終了します.
 6. 対象ファイルが存在しない場合は警告ログで正常終了します.
 

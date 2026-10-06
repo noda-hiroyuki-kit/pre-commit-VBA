@@ -15,7 +15,7 @@ The steps are ordered so that even beginners can reproduce them.
 Make sure the following tools and services are available.
 
 - `git`
-- `mise` or `uv`
+- `mise`
 - GitHub account
 - Excel (an environment that can handle macro-enabled workbooks)
 
