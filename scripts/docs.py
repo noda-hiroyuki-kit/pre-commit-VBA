@@ -37,7 +37,7 @@ SUPPORTED_LANGS = {
 
 app = typer.Typer()
 
-site_url = "https://noda-hiroyuki-kit.github.io/pre-commit-VBA/"
+site_url = "https://noda-hiroyuki-kit.github.io/pre-commit-vba/"
 zensical_name = "zensical.toml"
 
 non_translated_sections: tuple[str, ...] = ()

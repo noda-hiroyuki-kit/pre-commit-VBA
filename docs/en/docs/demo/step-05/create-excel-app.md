@@ -26,14 +26,14 @@ git switch -c feature/create-app
 
 ```console
 git add .
-uv run prek
+prek
 ```
 
-On the first run, extraction happens, so it exits with an error.  
-Therefore, run it again.
+On the first run, the hook extracts the code and exits with an error because the extracted files have changed. Stage the extracted code, then run the hook again.
 
 ```console
-uv run prek
+git add .
+prek
 ```
 
 ## Step 4: Commit and Push { #step-4-commit-and-push }
@@ -51,5 +51,5 @@ Set base to `develop` and merge it.
 ## Checkpoints { #checkpoints }
 
 - Extracted VBA files are updated.
-- `uv run prek` finally passes.
+- `prek` finally passes.
 - Changes are included in `develop`.

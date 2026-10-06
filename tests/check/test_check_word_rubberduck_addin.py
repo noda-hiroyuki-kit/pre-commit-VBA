@@ -1,5 +1,5 @@
 # Copyright (c) 2026 Noda Hiroyuki
-"""Tests for Word Rubberduck Addin reference detection in check command."""
+"""Tests for Word Rubberduck Add-in reference detection in check command."""
 
 from pathlib import Path
 from unittest import mock
@@ -52,30 +52,30 @@ class TestHasRubberduckAddinReferences:
     """Tests for has_rubberduck_addin_references function."""
 
     def test_returns_true_for_document_with_rubberduck_reference(self) -> None:
-        """Test returns True when document has Rubberduck Addin reference."""
+        """Test returns True when document has Rubberduck Add-in reference."""
         sut = has_rubberduck_addin_references(RUBBERDUCK_DOCUMENT)
         assert sut is True  # noqa: S101
 
     def test_returns_false_for_document_without_rubberduck_reference(self) -> None:
-        """Test returns False when document has no Rubberduck Addin reference."""
+        """Test returns False when document has no Rubberduck Add-in reference."""
         sut = has_rubberduck_addin_references(NORMAL_DOCUMENT)
         assert sut is False  # noqa: S101
 
     def test_returns_false_for_document_without_active_rubberduck_reference(
         self,
     ) -> None:
-        """Test returns False when document has no active Rubberduck Addin reference."""
+        """Test returns False without an active Rubberduck Add-in reference."""
         sut = has_rubberduck_addin_references(WITHOUT_ACTIVE_RUBBERDUCK_DOCUMENT)
         assert sut is False  # noqa: S101
 
 
 class TestCheckCommandRubberduckAddin:
-    """Tests for check command Rubberduck Addin reference detection."""
+    """Tests for check command Rubberduck Add-in reference detection."""
 
     def test_check_exits_nonzero_when_document_with_rubberduck_addin_referenced(
         self,
     ) -> None:
-        """Test check command exits 1 when Rubberduck Addin reference is detected."""
+        """Test check command exits 1 when Rubberduck Add-in reference is detected."""
         with (
             mock.patch.object(
                 pre_commit_vba,
@@ -97,7 +97,7 @@ class TestCheckCommandRubberduckAddin:
     def test_check_exits_zero_when_document_without_rubberduck_addin_referenced(
         self,
     ) -> None:
-        """Test check command exits 0 for inactive Rubberduck Addin.
+        """Test check command exits 0 for inactive Rubberduck Add-in.
 
         This covers the document with no active reference.
         """
@@ -122,7 +122,7 @@ class TestCheckCommandRubberduckAddin:
     def test_check_exits_zero_when_document_without_active_rubberduck_addin_referenced(
         self,
     ) -> None:
-        """Test check command exits 0 for inactive Rubberduck Addin.
+        """Test check command exits 0 for inactive Rubberduck Add-in.
 
         This covers the document with no active reference.
         """

@@ -26,14 +26,14 @@ git switch -c feature/create-app
 
 ```console
 git add .
-uv run prek
+prek
 ```
 
-初回は, コードの抽出あるため, エラーで終了します.  
-そのため, 再実行します.
+初回はコードが抽出され, 抽出ファイルに変更があるためエラーで終了します. 抽出されたコードをステージングしてから, フックを再実行します.
 
 ```console
-uv run prek
+git add .
+prek
 ```
 
 ## 手順 4: コミットしてプッシュ { #step-4-commit-and-push }
@@ -51,5 +51,5 @@ base を `develop` にしてマージします.
 ## 確認ポイント { #checkpoints }
 
 - 抽出された VBA ファイルが更新される.
-- `uv run prek` が最終的に通る.
+- `prek` が最終的に通る.
 - `develop` に変更が入る.

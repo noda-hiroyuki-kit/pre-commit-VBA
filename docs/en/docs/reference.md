@@ -51,7 +51,7 @@ uv run pre_commit_vba.py check
 3. If a semantic version cannot be extracted, exit with an error.
 4. For each target Office file, validate the following.
     - Whether BuiltinDocumentProperties("Document version") matches the branch name (`v{semver}`)
-    - Whether a Rubberduck Addin reference exists
+    - Whether a Rubberduck Add-in reference exists
 5. If a mismatch or reference detection occurs, exit with an error.
 6. If no target file exists, output a warning log and exit successfully.
 

@@ -5,23 +5,25 @@
 [![prek](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/j178/prek/master/docs/assets/badge-v0.json)](https://github.com/j178/prek)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENCE)
 
-[Document](https://noda-hiroyuki-kit.github.io/pre-commit-VBA/)
+[Document](https://noda-hiroyuki-kit.github.io/pre-commit-vba)
 
 ## Overview
 
-This is a pre-commit hook that extracts VBA code from Office files to manage VBA code with git.  
-It can also be used as a Python script.
+This pre-commit hook extracts VBA code from Office files so you can manage it in Git. You can also run it directly as a Python script.
 
 ### Usage as a pre-commit hook
 
-Add the following to your `.pre-commit-config.yaml`:
+Add the following to your `prek.toml`:
 
 ```
-  - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
-    rev: v0.4.4
-    hooks:
-      - id: extract-vba-code
-      - id: check-office-file-integrity
+[[repos]]
+repo = "https://github.com/noda-hiroyuki-kit/pre-commit-vba"
+rev = "v0.4.5"
+hooks = [
+  { id = "extract-vba-code" },
+  { id = "check-office-file-integrity" },
+]
+
 ```
 
 ### Usage by running `pre_commit_vba.py` as a command
@@ -36,7 +38,7 @@ Also, when working on a Git release branch,
 ```console
 uv run pre_commit_vba.py check
 ```
-will compare the document version of the Office file and the branch name. If they match, it will output:
+will compare the version recorded in the Office file with the release branch name. If they match, it will output:
 ```console
 Version check passed.
 ```
@@ -44,35 +46,29 @@ Version check passed.
 ## Installation
 
 The following instructions use `mise`.  
-Please refer to `mise` for installation.
-If you can use `uv`, `mise` is not required.
+Please refer to [`mise`](https://mise.jdx.dev/getting-started.html) for installation.
 
 ### Usage as a pre-commit hook
 
 1. Move to the folder containing the macro-enabled Office file you want to manage with `git` (hereafter referred to as vba_root_folder).
-2. Install `.pre-commit`.
-    1. Install `uv` using `mise`.
+2. Install `prek`.
+    1. Install `prek` using `mise`.
         ```
-        mise use uv@latest
+        mise use prek@latest
         ```
-    2. Initialize `uv`.
+    2. Run `prek init` to set up the Git hooks in the repository and generate a starter `prek.toml`.
         ```
-        uv init
+        prek init
         ```
-    3. Install `pre-commit`.
+    3. Edit `prek.toml` and add the following:
         ```
-        uv add pre-commit
-        uv run pre-commit install
-        ```
-    4. Create `.pre-commit-config.yaml` and add the following:
-        ```
-        ---
-        repos:
-          - repo: https://github.com/noda-hiroyuki-kit/pre-commit-vba
-            rev: v0.4.4
-            hooks:
-              - id: extract-vba-code
-              - id: check-office-file-integrity
+        [[repos]]
+        repo = "https://github.com/noda-hiroyuki-kit/pre-commit-vba"
+        rev = "v0.4.5"
+        hooks = [
+          { id = "extract-vba-code" },
+          { id = "check-office-file-integrity" },
+        ]
         ```
 ### Usage by running `pre_commit_vba.py` as a command
 
@@ -83,9 +79,9 @@ If you can use `uv`, `mise` is not required.
     ```
 3. Initialize `uv`.
     ```
-    uv init
+    uv init --bare
     ```
-3. Copy `pre_commit_vba.py` from `src/pre_commit_vba` to vba_root_folder.
+4. Copy `pre_commit_vba.py` from `src/pre_commit_vba` to vba_root_folder.
 
 
 ## Usage
@@ -96,13 +92,17 @@ If you can use `uv`, `mise` is not required.
     ```
     git add .
     ```
-2. Run `pre-commit` with uv.
+2. Run `prek`.
     ```
-    uv run pre-commit
+    prek
     ```
 3. The code will be extracted, so stage the code and manage it with `git`.
     ```
     git add .
+    ```
+4. Run `prek` again to confirm that the staged changes pass the hooks.
+    ```
+    prek
     ```
 
 ### Usage by running `pre_commit_vba.py` as a command
@@ -141,7 +141,7 @@ $ [OPTIONS] COMMAND [ARGS]...
 **Commands**:
 
 * `extract`: Extract VBA code from Office files.
-* `check`: Check Office file version and detect...
+* `check`: Check Office file version and detect Rubberduck Add-in references.
 
 ## `extract`
 
@@ -168,7 +168,7 @@ $ extract [OPTIONS]
 
 ## `check`
 
-Check Office file version and detect Rubberduck Addin references.
+Check Office file version and detect Rubberduck Add-in references.
 
 **Usage**:
 
@@ -195,7 +195,7 @@ See [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
 
 [Get git branch name and tag name in python](https://qiita.com/mynkit/items/73b20fb0ad124c0ea8e9)
 
-### test.xlsm
+### tests/excel/extract/with_codes/v0.0.1-alpha/test.xlsm
 
 [git repository office custom ui editor](https://github.com/OfficeDev/office-custom-ui-editor)
 

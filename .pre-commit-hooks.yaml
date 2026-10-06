@@ -9,7 +9,7 @@
   pass_filenames: false
 - id: check-office-file-integrity
   name: Check Office file integrity
-  description: Checks Office file versions against the current branch name and detects Rubberduck Addin references.
+  description: Checks Office file versions against the current branch name and detects Rubberduck Add-in references.
   entry: pre-commit-vba
   args: [check]
   language: python
@@ -17,7 +17,7 @@
   pass_filenames: false
 - id: check-excel-book-version
   name: "[DEPRECATED] Compatibility alias for check-office-file-integrity"
-  description: Deprecated compatibility alias for check-office-file-integrity. Checks Office file versions against the current branch name and detects Rubberduck Addin references.
+  description: Deprecated compatibility alias for check-office-file-integrity. Checks Office file versions against the current branch name and detects Rubberduck Add-in references.
   entry: pre-commit-vba
   args: [check]
   language: python
