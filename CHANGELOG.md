@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Bump minimum `prek` requirement from 0.5.3 to 0.5.4. ([#198])  
+  `prek` の最小要件を 0.5.3 から 0.5.4 へ引き上げ.
+- Bump minimum `python-slugify` from 9.1.1 to 9.1.2. ([#198])  
+  `python-slugify` を 9.1.1 から 9.1.2 へ引き上げ.
+- Bump minimum  `tox` from 4.64.3 to 4.64.4. ([#198])  
+  `tox` を 4.64.3 から 4.64.4 へ引き上げ.
+- Bump minimum  `zensical` from 0.0.65 to 0.0.66.  ([#198])  
+  `zensical` を 0.0.65 から 0.0.66 へ引き上げ.
+
 ## [0.4.5] - 2026-10-07
 
 ### Added
@@ -526,3 +537,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#172]: https://github.com/noda-hiroyuki-kit/pre-commit-vba/pull/172
 [#184]: https://github.com/noda-hiroyuki-kit/pre-commit-vba/pull/184
 [#189]: https://github.com/noda-hiroyuki-kit/pre-commit-vba/pull/189
+[#198]: https://github.com/noda-hiroyuki-kit/pre-commit-vba/pull/198
